@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import java.util.regex.Pattern;
 
 public class Register extends AppCompatActivity {
-    private EditText InEmail, InPass;
+    private EditText InEmail, InPass, InPassConf;
     private Button BtLogin, BtDaftar;
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;
@@ -31,6 +31,7 @@ public class Register extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         InEmail = (EditText) findViewById(R.id.email);
         InPass = (EditText) findViewById(R.id.password);
+        InPassConf = (EditText) findViewById(R.id.confpassword);
         BtDaftar = (Button) findViewById(R.id.signUp);
         mAuth = FirebaseAuth.getInstance();
         progressBar = (ProgressBar) findViewById(R.id.progressReg);
@@ -40,6 +41,7 @@ public class Register extends AppCompatActivity {
     public void signUp(View view) {
         String email = InEmail.getText().toString();
         String password = InPass.getText().toString();
+        String confpassword = InPassConf.getText().toString();
 //        String type = "login";
 //        BackgroundWorker backgroundWorker = new BackgroundWorker(this);
 //        backgroundWorker.execute(type, email, password);
@@ -66,6 +68,18 @@ public class Register extends AppCompatActivity {
             InPass.setError("Password harus lebih dari 6");
             InPass.requestFocus();
             return;
+        } else if (confpassword.isEmpty()) {
+            progressBar.setVisibility(View.GONE);
+            InPassConf.setError("Konfirmasi password");
+            InPassConf.requestFocus();
+            return;
+        } else if (password.equals(confpassword)) {
+            progressBar.setVisibility(View.GONE);
+            InPassConf.setError("Password tidak sama");
+            InPass.setError("Password tidak sama");
+            InPassConf.requestFocus();
+            InPass.requestFocus();
+            return;
         }
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -81,9 +95,9 @@ public class Register extends AppCompatActivity {
                         } else {
                             Toast.makeText(getApplicationContext(), "Pendaftaran tidak sukses", Toast.LENGTH_SHORT).show();
                             if (task.getException() instanceof FirebaseAuthUserCollisionException) {
-                                Toast.makeText(getApplicationContext(), "Kamu sudah terdaftar",Toast.LENGTH_SHORT).show();
-                            }else {
-                                Toast.makeText(getApplication(),task.getException().getMessage(),Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Kamu sudah terdaftar", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getApplication(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
 

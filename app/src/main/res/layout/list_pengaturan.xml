@@ -6,7 +6,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:orientation="horizontal">
 
         <ImageView
@@ -15,23 +15,20 @@
             android:layout_height="50dp"
             android:paddingRight="10dp" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="16dp">
+            android:layout_height="50dp">
+
 
             <TextView
-
-                android:id="@+id/namaguru"
+                android:id="@+id/nama"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:textSize="16dp"
                 android:textStyle="bold" />
 
-
-
-        </LinearLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 

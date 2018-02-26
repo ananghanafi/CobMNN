@@ -6,6 +6,7 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -53,6 +54,22 @@ public class Login extends AppCompatActivity {
         String email = InEmail.getText().toString();
         String password = InPass.getText().toString();
         progressBar.setVisibility(View.VISIBLE);
+        if (email.isEmpty()) {
+            progressBar.setVisibility(View.GONE);
+            InEmail.setError("Email harus diisi!!!");
+            InEmail.requestFocus();
+            return;
+        } else if (password.isEmpty()) {
+            progressBar.setVisibility(View.GONE);
+            InPass.setError("Password harus diisi!!!");
+            InPass.requestFocus();
+            return;
+        }else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            progressBar.setVisibility(View.GONE);
+            InEmail.setError("Masukkan email yang benar");
+            InEmail.requestFocus();
+            return;
+        }
 //        finish();
 //        String type = "login";
 //        BackgroundWorker backgroundWorker = new BackgroundWorker(this);
