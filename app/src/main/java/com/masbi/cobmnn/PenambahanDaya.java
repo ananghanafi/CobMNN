@@ -1,13 +1,17 @@
 package com.masbi.cobmnn;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -26,6 +30,13 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
+import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.masbi.cobmnn.tools.MapWrapperLayout;
 import com.masbi.cobmnn.tools.OnInfoWindowElemTouchListener;
 
@@ -48,11 +59,95 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
     private ViewGroup infoWindow;
     private TextView infoTitle;
     private OnInfoWindowElemTouchListener infoButtonListener;
+    private DatabaseReference databaseReference;
+    private StorageReference storageReference;
+    FirebaseDatabase database;
+    DatabaseReference myRef;
+    TextView harga;
+    String pilihan[];
+    String[] hargaBaru;
+    int posisi;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                String value = dataSnapshot.getValue(String.class);
+            //    Log.d(TAG, "Value is: " + value);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+           //     Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_penambahan_daya);
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("message");
+        harga = (TextView) findViewById(R.id.harga);
+        String setHarga;
+        pilihan = new String[]{
+                "Cupcake",
+                "Donut",
+                "Eclair",
+                "Froyo",
+                "Gingerbread",
+                "Honeycomb",
+                "Ice Cream Sandwich",
+                "Jelly Bean",
+                "KitKat",
+                "Lollipop",
+                "Marshmallow",
+                "Nougat",
+                "Oreo"
+        };
+        hargaBaru = new String[]{
+                "10000",
+                "10001",
+                "10002",
+                "10003",
+                "10004",
+                "10005",
+                "10006",
+                "10007",
+                "10008",
+                "10009",
+                "10010",
+                "10011",
+                "10012",
+                "10013",
+
+        };
+        MaterialSpinner spinnerBaru = (MaterialSpinner) findViewById(R.id.spinnerBaru);
+        spinnerBaru.setItems(pilihan);
+        spinnerBaru.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                posisi = position;
+                Snackbar.make(view, "Besar daya " + pilihan[position] + " seharga " + hargaBaru[position], Snackbar.LENGTH_LONG).show();
+                //  String setHarga = harga.setText();
+                //    Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
+            }
+        });
+        spinnerBaru.setOnNothingSelectedListener(new MaterialSpinner.OnNothingSelectedListener() {
+
+            @Override
+            public void onNothingSelected(MaterialSpinner spinner) {
+                Snackbar.make(spinner, "Belum di pilih", Snackbar.LENGTH_LONG).show();
+            }
+        });
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -213,7 +308,7 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
                 System.out.println("Alamat " + addresses);
                 lat = mMap.getMyLocation().getLatitude();
                 lng = mMap.getMyLocation().getLongitude();
-                System.out.println("Alamatbt "+addresses);
+                System.out.println("Alamatbt " + addresses);
                 System.out.println("latitude " + lat);
                 System.out.println("longitude " + lng);
                 //  Toast.makeText(PenambahanDaya.this, marker.getTitle() + "'s button clicked!", Toast.LENGTH_SHORT).show();
@@ -279,8 +374,31 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
     public void btPesanTambahDaya(View view) {
         lat = mMap.getMyLocation().getLatitude();
         lng = mMap.getMyLocation().getLongitude();
-        System.out.println("Alamatbt "+addresses);
+        System.out.println("Alamatbt " + addresses);
         System.out.println("latitude " + lat);
         System.out.println("longitude " + lng);
+        harga.setText("Besar daya " + pilihan[posisi] + " seharga " + hargaBaru[posisi]);
+        AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
+        alBuilder.setTitle("Pemesanan");
+        //  alBuilder.setIcon(R.drawable.ic_clear_black_24dp);
+        alBuilder.setMessage("Anda yakin pesan penambahan daya dengan besar daya " + pilihan[posisi]
+                + " seharga " + hargaBaru[posisi]).setCancelable(false)
+                .setPositiveButton("ya", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        System.out.println("Pilihan Ya");
+                        Toast.makeText(PenambahanDaya.this, "Pemesanan sedang di proses",Toast.LENGTH_SHORT).show();
+                        PenambahanDaya.this.finish();
+                    }
+                }).setNegativeButton("tidak", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                System.out.println("Pilihan Tidak");
+
+                dialogInterface.cancel();
+            }
+        });
+        AlertDialog alertDialog = alBuilder.create();
+        alertDialog.show();
     }
 }

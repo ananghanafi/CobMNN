@@ -1,15 +1,22 @@
 package com.masbi.cobmnn;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.StrictMode;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -26,14 +33,29 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.masbi.cobmnn.tools.MapWrapperLayout;
 import com.masbi.cobmnn.tools.OnInfoWindowElemTouchListener;
 
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Scanner;
 
 public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallback {
 
@@ -44,15 +66,138 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
     FloatingSearchView mSearchView;
     MapWrapperLayout mapWrapperLayout;
     List<Address> addresses;
-
+    TextView harga;
+    String pilihan[];
+    String[] hargaBaru;
+    int posisi;
     private ViewGroup infoWindow;
     private TextView infoTitle;
     private OnInfoWindowElemTouchListener infoButtonListener;
+    FirebaseDatabase database;
+    DatabaseReference myRef, pesan;
+    EditText nama, alamat, nohp;
+    int userId;
+    String namaS, alamatS, nohpS, id;
+
+//    public PemasanganBaru(String nama, String alamat, String noHP) {
+//        this.namaS = nama;
+//        this.alamatS = alamat;
+//        this.nohpS = noHP;
+//    }
+//
+//
+//    public String getId() {
+//        return id;
+//    }
+//
+//    public void setId(String id) {
+//        this.id = id;
+//    }
+//
+//    public String getText() {
+//        return namaS;
+//    }
+//
+//    public void setText(String text) {
+//        this.namaS = namaS;
+//    }
+//
+//    public String getName() {
+//        return alamatS;
+//    }
+//
+//    public void setName(String name) {
+//        this.alamatS = alamatS;
+//    }
+//
+//    public String getPhotoUrl() {
+//        return nohpS;
+//    }
+//
+//    public void setPhotoUrl(String photoUrl) {
+//        this.nohpS = nohpS;
+//    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pemasangan_baru);
+        harga = (TextView) findViewById(R.id.harga);
+        nama = (EditText) findViewById(R.id.namaBaru);
+        alamat = (EditText) findViewById(R.id.alamatBaru);
+        nohp = (EditText) findViewById(R.id.nohpBaru);
+        String setHarga;
+        final int[] cek ;
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference();
+        pesan = myRef.child("users");
+//        pesan.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for (DataSnapshot user : dataSnapshot.getChildren()) {
+//
+//                    //   String iduser= (String) user.child("users").getValue();
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+        //  pesan = myRef.child("nama").child("alamat").child("nohp").child("daya").child("biaya").child("lat").child("lon");
+        pilihan = new String[]{
+                "Cupcake",
+                "Donut",
+                "Eclair",
+                "Froyo",
+                "Gingerbread",
+                "Honeycomb",
+                "Ice Cream Sandwich",
+                "Jelly Bean",
+                "KitKat",
+                "Lollipop",
+                "Marshmallow",
+                "Nougat",
+                "Oreo"
+        };
+        hargaBaru = new String[]{
+                "10000",
+                "10001",
+                "10002",
+                "10003",
+                "10004",
+                "10005",
+                "10006",
+                "10007",
+                "10008",
+                "10009",
+                "10010",
+                "10011",
+                "10012",
+                "10013",
+
+        };
+        MaterialSpinner spinnerBaru = (MaterialSpinner) findViewById(R.id.spinnerBaru);
+        spinnerBaru.setItems(pilihan);
+        spinnerBaru.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                posisi = position;
+                Snackbar.make(view, "Besar daya " + pilihan[position] + " seharga " + hargaBaru[position], Snackbar.LENGTH_LONG).show();
+                //  String setHarga = harga.setText();
+                //    Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
+            }
+        });
+        spinnerBaru.setOnNothingSelectedListener(new MaterialSpinner.OnNothingSelectedListener() {
+
+            @Override
+            public void onNothingSelected(MaterialSpinner spinner) {
+                Snackbar.make(spinner, "Belum di pilih", Snackbar.LENGTH_LONG).show();
+            }
+        });
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -212,7 +357,7 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
                 System.out.println("Alamat " + addresses);
                 lat = mMap.getMyLocation().getLatitude();
                 lng = mMap.getMyLocation().getLongitude();
-                System.out.println("Alamatbt "+addresses);
+                System.out.println("Alamatbt " + addresses);
                 System.out.println("latitude " + lat);
                 System.out.println("longitude " + lng);
                 //  Toast.makeText(PenambahanDaya.this, marker.getTitle() + "'s button clicked!", Toast.LENGTH_SHORT).show();
@@ -278,8 +423,203 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
     public void btPesanPasangBaru(View view) {
         lat = mMap.getMyLocation().getLatitude();
         lng = mMap.getMyLocation().getLongitude();
-        System.out.println("Alamatbt "+addresses);
+        System.out.println("Alamatbt " + addresses);
         System.out.println("latitude " + lat);
         System.out.println("longitude " + lng);
+        harga.setText("Besar daya " + pilihan[posisi] + " seharga " + hargaBaru[posisi]);
+        AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
+        alBuilder.setTitle("Pemesanan");
+        //  alBuilder.setIcon(R.drawable.ic_clear_black_24dp);
+        alBuilder.setMessage("Anda yakin pesan penambahan baru dengan besar daya " + pilihan[posisi]
+                + " seharga " + hargaBaru[posisi]).setCancelable(false)
+                .setPositiveButton("ya", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        System.out.println("Pilihan Ya");
+                        Toast.makeText(PemasanganBaru.this, "Pemesanan sedang di proses", Toast.LENGTH_SHORT).show();
+                        userId = userId + 1;
+                        //       sendNotication();
+                        saveDatabase(userId);
+                        //   PemasanganBaru.this.finish();
+                        System.out.println("Cek Pmasangan baru");
+                    }
+                }).setNegativeButton("tidak", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                System.out.println("Pilihan Tidak");
+
+                dialogInterface.cancel();
+            }
+        });
+        AlertDialog alertDialog = alBuilder.create();
+        alertDialog.show();
+    }
+
+    private void saveDatabase(int userid) {
+        //Tidak Boleh Kosong
+        String str_nama = nama.getText().toString();
+        String str_alamat = alamat.getText().toString();
+        String str_nohp = nohp.getText().toString();
+//        AmbilData user = new AmbilData(str_alamat);
+
+        AmbilData user = new AmbilData("Pemasangan Baru ", str_nama, str_alamat, str_nohp
+                , pilihan[posisi], hargaBaru[posisi], lat, lng);
+        pesan.child("" + userId).setValue(user);
+//        pesan.child("users")
+//                .push().setValue(user);
+//       pesan.setValue("users", str_nama);
+//        pesan.setValue(str_nama);
+//        System.out.println("Nama: " + str_nama);
+//        Map<String, PemasanganBaru> user = new HashMap<>();
+//
+//        user.put("cobaNama", new PemasanganBaru("" + str_nama, "" + str_alamat, "" + str_nohp));
+//        String value = dataSnapshot.getValue(String.class);
+//        Toast.makeText(PemasanganBaru.this, "Nama " + value, Toast.LENGTH_SHORT).show();
+        System.out.println("Storage Firebase = gs://mapsplnbp-1517890549610.appspot.com");
+        System.out.println("Database Firebase = https://mapsplnbp-1517890549610.firebaseio.com/");
+//        pesan.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+//        final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        //       final String userId = "nama";
+//        pesan.child("users").child(userId).addListenerForSingleValueEvent(
+//                new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        // Get user value
+//
+//                        writeNewPost(str_nama, str_alamat, str_nohp, userId);
+//
+////                        // [START_EXCLUDE]
+////                        if (user == null) {
+////                            // User is null, error out
+////                            Toast.makeText(PemasanganBaru.this,
+////                                    "Error: could not fetch user.",
+////                                    Toast.LENGTH_SHORT).show();
+////                        } else {
+////                            // Write new post
+////                            writeNewPost(userId, nama, alamat, nohp);
+////                        }
+//
+//                        // Finish this Activity, back to the stream
+//                        //   setEditingEnabled(true);
+//                        finish();
+//                        // [END_EXCLUDE]
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//
+//                        // [START_EXCLUDE]
+//                        //   setEditingEnabled(true);
+//                        // [END_EXCLUDE]
+//                    }
+//                });
+//        // [END single_value_read]
+    }
+
+//    // [START write_fan_out]
+//    private void writeNewPost(String userId, String username, String title, String body) {
+//        // Create new post at /user-posts/$userid/$postid and at
+//        // /posts/$postid simultaneously
+//        String key = pesan.child("posts").push().getKey();
+//        Post post = new Post(userId, username, title, body);
+//        Map<String, Object> postValues = post.toMap();
+//
+//        Map<String, Object> childUpdates = new HashMap<>();
+//        childUpdates.put("/posts/" + key, postValues);
+//        childUpdates.put("/user-posts/" + userId + "/" + key, postValues);
+//
+//        pesan.updateChildren(childUpdates);
+//    }
+//    // [END write_fan_out]
+
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        pesan.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                String value = dataSnapshot.getValue(String.class);
+//            //    Toast.makeText(PemasanganBaru.this, "Nama " + value , Toast.LENGTH_SHORT).show();
+//                System.out.println("Value "+value);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                Toast.makeText(PemasanganBaru.this, "Error", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+
+    private void sendNotication() {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                int SDK_INT = Build.VERSION.SDK_INT;
+                if (SDK_INT > 8) {
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+                    try {
+                        String jsonResponse;
+
+                        URL url = new URL("https://onesignal.com/api/v1/notifications");
+                        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                        connection.setUseCaches(false);
+                        connection.setDoInput(true);
+                        connection.setDoInput(true);
+                        String jaj = "ananghanafi13@gamil.com";
+
+                        connection.setRequestProperty("Content-Type", "aplication/json charset=UTF-8");
+                        connection.setRequestProperty("Authorization", "Basic ZDY3MDI4M2EtMDIzOS00NGUyLWIyYzAtMzg5ZDNiYzAxZDMz");
+                        connection.setRequestMethod("POST");
+
+                        String strJsonBody = "{"
+                                + "\"app_id\":\"f476f46a-3dc4-4b69-9959-51fce19465d4\","
+                                + "\"filters\":[{\"field\",\"tag\",\"key\":\"User_ID\",\"relation\":\"value\":\"" + jaj + "\"}],"
+                                + "\"data\":[\"foo\": \"bar\"],"
+                                + "\"contents\":[\"en\": \"Ada pesanan\"],"
+                                + "}";
+
+                        System.out.println("JsonBody " + strJsonBody);
+                        byte[] sendByte = strJsonBody.getBytes("UTF-8");
+                        connection.setFixedLengthStreamingMode(sendByte.length);
+
+                        OutputStream outputStream = connection.getOutputStream();
+                        outputStream.write(sendByte);
+
+                        int httpResponse = connection.getResponseCode();
+                        System.out.println("http response: " + httpResponse);
+
+                        if (httpResponse == HttpURLConnection.HTTP_OK && httpResponse < HttpURLConnection.HTTP_BAD_REQUEST) {
+                            Scanner scanner = new Scanner(connection.getInputStream(), "UTF-8");
+                            jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
+                            scanner.close();
+
+                        } else {
+                            Scanner scanner = new Scanner(connection.getErrorStream(), "UTF-8");
+                            jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
+                            scanner.close();
+                        }
+                        System.out.println("jsonRespone" + jsonResponse);
+
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("");
+                }
+            }
+        });
+
     }
 }

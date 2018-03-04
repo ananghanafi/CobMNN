@@ -9,6 +9,15 @@
     android:padding="16dp"
     tools:context="com.masbi.cobmnn.PemasanganBaru">
 
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:orientation="vertical">-->
+
+    <!--<RelativeLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content">-->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,6 +51,7 @@
                     android:text="Nama" />
 
                 <EditText
+                    android:id="@+id/namaBaru"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="nama" />
@@ -53,6 +63,7 @@
                     android:text="Alamat" />
 
                 <EditText
+                    android:id="@+id/alamatBaru"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="alamat" />
@@ -64,30 +75,83 @@
                     android:text="No Handphone" />
 
                 <EditText
+                    android:id="@+id/nohpBaru"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="no.hp" />
 
 
                 <com.jaredrummler.materialspinner.MaterialSpinner
-                    android:id="@+id/spinner"
+                    android:id="@+id/spinnerBaru"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingBottom="16dp"
                     android:paddingTop="16dp"
                     app:ms_dropdown_height="wrap_content"
                     app:ms_dropdown_max_height="350dp" />
 
-                <Button
-                    android:background="@color/colorPrimary"
-                    android:id="@+id/btPesanTambahDaya1"
+                <LinearLayout
+                    android:paddingBottom="16dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Pesan"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingBottom="5dp"
+                        android:text="Biaya"
+                        android:textColor="@android:color/black"
+                        android:textSize="18dp" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@color/colorAccent">
+
+                        <TextView
+                            android:id="@+id/harga"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:textAppearance="?android:attr/textAppearance"
+                            android:textColor="#000000"
+                            android:textSize="15sp" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btPesanBaru"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorAccent"
                     android:onClick="btPesanPasangBaru"
-                    />
+                    android:text="Pesan" />
+
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/button"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:orientation="vertical">-->
+
+    <!--<Button-->
+    <!--android:id="@+id/btPesanTambahDaya1"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="50dp"-->
+    <!--android:layout_gravity="fill_horizontal"-->
+    <!--android:background="@color/colorPrimary"-->
+    <!--android:gravity="center"-->
+    <!--android:onClick="btPesanPasangBaru"-->
+    <!--android:text="Pesan" />-->
+    <!--</LinearLayout>-->
+    <!--</RelativeLayout>-->
+    <!--</LinearLayout>-->
 
     <com.arlib.floatingsearchview.FloatingSearchView
         android:id="@+id/floating_search_view"
