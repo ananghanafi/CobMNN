@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -74,7 +75,7 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
     private TextView infoTitle;
     private OnInfoWindowElemTouchListener infoButtonListener;
     FirebaseDatabase database;
-    DatabaseReference myRef, pesan;
+    DatabaseReference myRef, pesan, pp;
     EditText nama, alamat, nohp;
     int userId;
     String namaS, alamatS, nohpS, id;
@@ -128,10 +129,12 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
         alamat = (EditText) findViewById(R.id.alamatBaru);
         nohp = (EditText) findViewById(R.id.nohpBaru);
         String setHarga;
-        final int[] cek ;
+        final int[] cek;
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
+        pp = FirebaseDatabase.getInstance().getReference();
         pesan = myRef.child("users");
+
 //        pesan.addValueEventListener(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(DataSnapshot dataSnapshot) {
@@ -146,37 +149,38 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
 //
 //            }
 //        });
+//        pesan.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                cek((Map<String, Object>) dataSnapshot.getValue());
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+
+
         //  pesan = myRef.child("nama").child("alamat").child("nohp").child("daya").child("biaya").child("lat").child("lon");
         pilihan = new String[]{
-                "Cupcake",
-                "Donut",
-                "Eclair",
-                "Froyo",
-                "Gingerbread",
-                "Honeycomb",
-                "Ice Cream Sandwich",
-                "Jelly Bean",
-                "KitKat",
-                "Lollipop",
-                "Marshmallow",
-                "Nougat",
-                "Oreo"
+                "450 VA",
+                "900 VA",
+                "1300 VA",
+                "2200 VA",
+                "3500 VA",
+                "4400 VA",
+                "5500 VA",
+
         };
         hargaBaru = new String[]{
-                "10000",
-                "10001",
-                "10002",
-                "10003",
-                "10004",
-                "10005",
-                "10006",
-                "10007",
-                "10008",
-                "10009",
-                "10010",
-                "10011",
-                "10012",
-                "10013",
+                "1.703.000",
+                "2.170.000",
+                "2.583.000",
+                "3.442.000",
+                "4.766.000",
+                "5.665.600",
+                "6.764.500",
 
         };
         MaterialSpinner spinnerBaru = (MaterialSpinner) findViewById(R.id.spinnerBaru);
@@ -420,6 +424,43 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
         return (int) (dp * scale + 0.5f);
     }
 
+    //
+//    private void cek(Map<String, Object> users) {
+//        ArrayList<Long> number = new ArrayList<>();
+//
+//        for (Map.Entry<String, Object> entry : users.entrySet()) {
+//            Map singleUser = (Map) entry.getValue();
+//            number.add((Long) singleUser.get("1"));
+//        }
+//        System.out.println("Cek Nomor" + number);
+//    }
+    public void btCekBiaya(View view) {
+        harga.setText("Besar daya " + pilihan[posisi] + " seharga " + hargaBaru[posisi]);
+        AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
+        alBuilder.setTitle("Cek Biaya");
+        //  alBuilder.setIcon(R.drawable.ic_clear_black_24dp);
+        alBuilder.setMessage(" " + pilihan[posisi]
+                + " seharga " + hargaBaru[posisi]).setCancelable(false)
+                .setPositiveButton("Lihat Rincian", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        System.out.println("Pilihan Ya");
+                        startActivity(new Intent(PemasanganBaru.this, DriveMcc.class));
+                        System.out.println("Cek Pemasangan baru");
+                    }
+                }).setNegativeButton("Ya", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                System.out.println("Pilihan Tidak");
+                startActivity(new Intent(PemasanganBaru.this, RecycleActivity.class));
+                dialogInterface.cancel();
+            }
+        });
+        AlertDialog alertDialog = alBuilder.create();
+        alertDialog.show();
+
+    }
+
     public void btPesanPasangBaru(View view) {
         lat = mMap.getMyLocation().getLatitude();
         lng = mMap.getMyLocation().getLongitude();
@@ -455,16 +496,21 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
         alertDialog.show();
     }
 
+
     private void saveDatabase(int userid) {
         //Tidak Boleh Kosong
         String str_nama = nama.getText().toString();
         String str_alamat = alamat.getText().toString();
         String str_nohp = nohp.getText().toString();
+        String str_id = pp.push().getKey();
 //        AmbilData user = new AmbilData(str_alamat);
 
-        AmbilData user = new AmbilData("Pemasangan Baru ", str_nama, str_alamat, str_nohp
+//        AmbilData user = new AmbilData("Pemasangan Baru ", str_nama, str_alamat, str_nohp
+//                , pilihan[posisi], hargaBaru[posisi], lat, lng);
+//        pesan.push().setValue(user);
+        AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
                 , pilihan[posisi], hargaBaru[posisi], lat, lng);
-        pesan.child("" + userId).setValue(user);
+        pp.child(str_id).setValue(user);
 //        pesan.child("users")
 //                .push().setValue(user);
 //       pesan.setValue("users", str_nama);
@@ -548,6 +594,19 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
 //        pesan.addValueEventListener(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(DataSnapshot dataSnapshot) {
+//                AmbilData ambilData = dataSnapshot.getValue(AmbilData.class);
+//                System.out.println(ambilData);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+//        pesan.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//
 //                String value = dataSnapshot.getValue(String.class);
 //            //    Toast.makeText(PemasanganBaru.this, "Nama " + value , Toast.LENGTH_SHORT).show();
 //                System.out.println("Value "+value);

@@ -74,7 +74,9 @@
         <activity android:name=".Register" />
         <activity android:name=".EditProfile" />
         <activity android:name=".GantiPassword" />
-        <activity android:name=".GetData"></activity>
+        <activity android:name=".GetData" />
+        <activity android:name=".DriveMcc" />
+        <activity android:name=".RecycleActivity"></activity>
     </application>
 
 </manifest>

@@ -5,7 +5,7 @@ package com.masbi.cobmnn;
  */
 
 public class AmbilData {
-    String pesan, nama, alamat, nohp, daya, harga;
+    String pesan, nama, alamat, nohp, daya, harga, id;
     double lat, lon;
 
     public AmbilData() {
@@ -16,9 +16,10 @@ public class AmbilData {
         this.nama = nama;
     }
 
-    public AmbilData(String pesan, String nama, String alamat, String nohp, String daya, String harga,
+    public AmbilData(String id,String pesan, String nama, String alamat, String nohp, String daya, String harga,
                      double lat, double lon) {
         this.pesan = pesan;
+        this.id = id;
         this.nama = nama;
         this.alamat = alamat;
         this.nohp = nohp;
@@ -28,6 +29,13 @@ public class AmbilData {
         this.lon = lon;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getPesan() {
         return pesan;
