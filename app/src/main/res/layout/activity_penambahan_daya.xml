@@ -9,107 +9,165 @@
     android:padding="16dp"
     tools:context="com.masbi.cobmnn.PenambahanDaya">
 
-    <RelativeLayout
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:orientation="vertical">-->
+
+    <!--<RelativeLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content">-->
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <LinearLayout
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="300dp" />
 
+        <!--<ImageButton-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="300dp"-->
+        <!--android:background="@mipmap/ic_launcher" />-->
 
-            <fragment
-                android:id="@+id/map"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="300dp" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-            <!--<ImageButton-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="300dp"-->
-            <!--android:background="@mipmap/ic_launcher" />-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="16dp"
+                    android:text="Nama" />
 
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/namaDaya"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="nama" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="16dp"
+                    android:text="Alamat" />
+
+                <EditText
+                    android:id="@+id/alamatDaya"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="alamat" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="16dp"
+                    android:text="No Handphone" />
+
+                <EditText
+                    android:id="@+id/nohpDaya"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="no.hp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="16dp"
+                    android:text="Pilih Daya" />
+
+                <com.jaredrummler.materialspinner.MaterialSpinner
+                    android:id="@+id/spinnerBaru"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="16dp"
+                    android:paddingTop="16dp"
+                    app:ms_dropdown_height="wrap_content"
+                    app:ms_dropdown_max_height="350dp" />
+
+                <Button
+                    android:id="@+id/btCekBiaya"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorPrimary"
+                    android:onClick="btCekBiayaDaya"
+                    android:text="Cek Biaya (telp gerai) " />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingBottom="16dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingTop="16dp"
-                        android:text="Nama" />
+                        android:layout_gravity="center_horizontal"
+                        android:paddingBottom="5dp"
+                        android:text="Biaya"
+                        android:textColor="@android:color/black"
+                        android:textSize="18dp" />
 
-                    <EditText
+
+                    <RelativeLayout
+
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="nama" />
+                        android:layout_height="40dp"
+                        android:background="@color/colorAccent">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="16dp"
-                        android:text="Alamat" />
-
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="alamat" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="16dp"
-                        android:text="No Handphone" />
-
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="no.hp" />
-
-
-                    <com.jaredrummler.materialspinner.MaterialSpinner
-                        android:id="@+id/spinnerDaya"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="16dp"
-                        app:ms_dropdown_height="wrap_content"
-                        app:ms_dropdown_max_height="350dp" />
-
-                    <!--<Button-->
-                    <!--android:id="@+id/btPesanTambahDaya1"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:background="@color/colorPrimary"-->
-                    <!--android:onClick="btPesanTambahDaya"-->
-                    <!--android:text="Pesan" />-->
-
-
+                        <TextView
+                            android:id="@+id/harga"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:textAppearance="?android:attr/textAppearance"
+                            android:textColor="#000000"
+                            android:textSize="15sp" />
+                    </RelativeLayout>
                 </LinearLayout>
-            </ScrollView>
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="vertical">
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_gravity="fill_horizontal"
-                android:background="@color/colorPrimary"
-                android:gravity="center"
-                android:onClick="btPesanTambahDaya"
-                android:text="Pesan" />
-        </LinearLayout>
-    </RelativeLayout>
+
+                <Button
+                    android:id="@+id/btPesanTambahDaya"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorAccent"
+                    android:onClick="btPesanTambahDaya"
+                    android:text="Pesan" />
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/button"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:orientation="vertical">-->
+
+    <!--<Button-->
+    <!--android:id="@+id/btPesanTambahDaya1"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="50dp"-->
+    <!--android:layout_gravity="fill_horizontal"-->
+    <!--android:background="@color/colorPrimary"-->
+    <!--android:gravity="center"-->
+    <!--android:onClick="btPesanPasangBaru"-->
+    <!--android:text="Pesan" />-->
+    <!--</LinearLayout>-->
+    <!--</RelativeLayout>-->
+    <!--</LinearLayout>-->
 
     <com.arlib.floatingsearchview.FloatingSearchView
         android:id="@+id/floating_search_view"

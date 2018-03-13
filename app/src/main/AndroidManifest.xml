@@ -76,7 +76,8 @@
         <activity android:name=".GantiPassword" />
         <activity android:name=".GetData" />
         <activity android:name=".DriveMcc" />
-        <activity android:name=".RecycleActivity"></activity>
+        <activity android:name=".RecycleActivity" />
+        <activity android:name=".FormOrderDaya"></activity>
     </application>
 
 </manifest>

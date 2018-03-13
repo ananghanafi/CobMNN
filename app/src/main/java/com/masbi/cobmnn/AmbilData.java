@@ -1,12 +1,16 @@
 package com.masbi.cobmnn;
 
+import java.util.Map;
+
 /**
  * Created by AnangHanafi on 03/03/2018.
  */
 
 public class AmbilData {
-    String pesan, nama, alamat, nohp, daya, harga, id;
-    double lat, lon;
+    String pesan, nama, alamat, nohp, daya, harga, id, lat, lon, time;
+
+    //   Map time;
+    //  double lat, lon;
 
     public AmbilData() {
 
@@ -16,8 +20,8 @@ public class AmbilData {
         this.nama = nama;
     }
 
-    public AmbilData(String id,String pesan, String nama, String alamat, String nohp, String daya, String harga,
-                     double lat, double lon) {
+    public AmbilData(String id, String pesan, String nama, String alamat, String nohp, String daya, String harga,
+                     String lat, String lon, String time) {
         this.pesan = pesan;
         this.id = id;
         this.nama = nama;
@@ -25,6 +29,24 @@ public class AmbilData {
         this.nohp = nohp;
         this.daya = daya;
         this.harga = harga;
+//        this.lat = lat;
+//        this.lon = lon;
+        this.lat = lat;
+        this.lon = lon;
+        this.time = time;
+    }
+
+    public AmbilData(String id, String pesan, String nama, String alamat, String nohp, String daya, String harga,
+                     String lat, String lon) {
+        this.pesan = pesan;
+        this.id = id;
+        this.nama = nama;
+        this.alamat = alamat;
+        this.nohp = nohp;
+        this.daya = daya;
+        this.harga = harga;
+//        this.lat = lat;
+//        this.lon = lon;
         this.lat = lat;
         this.lon = lon;
     }
@@ -85,20 +107,51 @@ public class AmbilData {
         this.harga = harga;
     }
 
-    public double getLat() {
+    //    public double getLat() {
+//        return lat;
+//    }
+//
+//    public void setLat(double lat) {
+//        this.lat = lat;
+//    }
+//
+//    public double getLon() {
+//        return lon;
+//    }
+//
+//    public void setLon(double lon) {
+//        this.lon = lon;
+//    }
+    public String getLat() {
         return lat;
     }
 
-    public void setLat(double lat) {
+    public void setLat(String lat) {
         this.lat = lat;
     }
 
-    public double getLon() {
+    public String getLon() {
         return lon;
     }
 
-    public void setLon(double lon) {
+    public void setLon(String lon) {
         this.lon = lon;
+    }
+
+    //
+//    public Map getTime() {
+//        return time;
+//    }
+//
+//    public void setTime(Map time) {
+//        this.time = time;
+//    }
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
 

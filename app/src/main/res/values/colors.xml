@@ -6,7 +6,12 @@
 
     <color name="colorFAB">#FFEA00</color>
 
-    <color name="colorPrimary">#FFC107</color>
-    <color name="colorPrimaryDark">#ff6f00</color>
-    <color name="colorAccent">#F57F17</color>
+    <!--<color name="colorPrimary">#FFC107</color>-->
+    <!--<color name="colorPrimaryDark">#ff6f00</color>-->
+    <!--<color name="colorAccent">#F57F17</color>-->
+
+    <color name="colorPrimary">#FCCB11</color>
+    <!--<color name="colorPrimaryDark">#CCCBCB</color>-->
+    <color name="colorPrimaryDark">#2E57A5</color>
+    <color name="colorAccent">#C2000B</color>
 </resources>

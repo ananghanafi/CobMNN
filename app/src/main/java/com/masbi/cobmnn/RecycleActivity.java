@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -29,7 +30,9 @@ public class RecycleActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private DatabaseReference mDatabase;
     ListView listView;
-    Arraylist adapter;
+   Arraylist adapter;
+    public static String clickItem;
+
     List<AmbilData> ambilDataList;
 
     @Override
@@ -37,7 +40,7 @@ public class RecycleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_view);
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        adapter = new Arraylist(RecycleActivity.this, ambilDataList);
+//        adapter = new Arraylist(RecycleActivity.this, ambilDataList);
 //        recyclerView = (RecyclerView) findViewById(R.id.tampilanRecycler);
 //        recyclerView.setHasFixedSize(true);
 //        recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -49,15 +52,19 @@ public class RecycleActivity extends AppCompatActivity {
 //        mDatabase.child("" + 1).setValue(user);
         System.out.println("Brosur File : https://drive.google.com/file/d/1WYMYtIDsuu1Kdu0lE5Mt5UooKM_3683v/view");
         System.out.println("Brosur Folder : https://drive.google.com/drive/mobile/folders/12qj40MNw9P0BQwps5oz4FChKZrPzbCfA");
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-            }
-
-
-        });
+//
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+////                DatabaseReference itemRef = adapter.getItem(i);
+////                Toast.makeText(getApplicationContext(), itemRef.getKey(), Toast.LENGTH_SHORT).show();
+//                clickItem = (String)(listView.getItemAtPosition(i));
+//
+//
+//            }
+//
+//
+//        });
     }
 
     //
@@ -77,7 +84,8 @@ public class RecycleActivity extends AppCompatActivity {
                     System.out.println("NO " + i + 1 + "Ambil Data " + ambilData);
                     ambilDataList.add(ambilData);
                 }
-                //  Arraylist adapter = new Arraylist(RecycleActivity.this, ambilDataList);
+                 //  Arraylist adapter = new Arraylist(RecycleActivity.this, ambilDataList);
+                 adapter = new Arraylist(RecycleActivity.this, ambilDataList);
                 listView.setAdapter(adapter);
                 System.out.println(" kclc " + adapter);
             }

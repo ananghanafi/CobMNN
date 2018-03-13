@@ -40,10 +40,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.masbi.cobmnn.tools.MapWrapperLayout;
 import com.masbi.cobmnn.tools.OnInfoWindowElemTouchListener;
+
 
 
 import java.io.IOException;
@@ -62,8 +64,9 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
 
     private GoogleMap mMap;
     Geocoder geocoder;
-    double lat;
-    double lng;
+    String lat, lng, sendLat, sendLng;
+    String time;
+    Map timesmap;
     FloatingSearchView mSearchView;
     MapWrapperLayout mapWrapperLayout;
     List<Address> addresses;
@@ -79,45 +82,6 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
     EditText nama, alamat, nohp;
     int userId;
     String namaS, alamatS, nohpS, id;
-
-//    public PemasanganBaru(String nama, String alamat, String noHP) {
-//        this.namaS = nama;
-//        this.alamatS = alamat;
-//        this.nohpS = noHP;
-//    }
-//
-//
-//    public String getId() {
-//        return id;
-//    }
-//
-//    public void setId(String id) {
-//        this.id = id;
-//    }
-//
-//    public String getText() {
-//        return namaS;
-//    }
-//
-//    public void setText(String text) {
-//        this.namaS = namaS;
-//    }
-//
-//    public String getName() {
-//        return alamatS;
-//    }
-//
-//    public void setName(String name) {
-//        this.alamatS = alamatS;
-//    }
-//
-//    public String getPhotoUrl() {
-//        return nohpS;
-//    }
-//
-//    public void setPhotoUrl(String photoUrl) {
-//        this.nohpS = nohpS;
-//    }
 
 
     @Override
@@ -135,34 +99,7 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
         pp = FirebaseDatabase.getInstance().getReference();
         pesan = myRef.child("users");
 
-//        pesan.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                for (DataSnapshot user : dataSnapshot.getChildren()) {
-//
-//                    //   String iduser= (String) user.child("users").getValue();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-//        pesan.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                cek((Map<String, Object>) dataSnapshot.getValue());
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
 
-
-        //  pesan = myRef.child("nama").child("alamat").child("nohp").child("daya").child("biaya").child("lat").child("lon");
         pilihan = new String[]{
                 "450 VA",
                 "900 VA",
@@ -349,6 +286,17 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
 
         // Setting custom OnTouchListener which deals with the pressed state
         // so it shows up
+//        this.infoButtonListener = new GoogleMap.OnInfoWindowLongClickListener(infoWindow,
+//                getResources().getDrawable(R.color.black),
+//                getResources().getDrawable(R.color.colorAccent)) //btn_default_pressed_holo_light
+//
+//        {
+//
+//            @Override
+//            public void onInfoWindowLongClick (Marker marker){
+//
+//        }
+//        } ;
         this.infoButtonListener = new OnInfoWindowElemTouchListener(infoWindow,
                 getResources().getDrawable(R.color.black), //btn_default_normal_holo_light
                 getResources().getDrawable(R.color.colorAccent)) //btn_default_pressed_holo_light
@@ -357,10 +305,19 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
             protected void onClickConfirmed(View v, Marker marker) {
                 // Here we can perform some action triggered after clicking the button
                 Intent page = new Intent(PemasanganBaru.this, FormOrder.class);
+
+//                System.out.println("Alamat " + addresses);
+//                lat = String.valueOf(mMap.getMyLocation().getLatitude());
+//                lng = String.valueOf(mMap.getMyLocation().getLongitude());
+
+                sendLat = String.valueOf(mMap.getMyLocation().getLatitude());
+                sendLng = String.valueOf(mMap.getMyLocation().getLongitude());
+//                Intent page = new Intent();
+                page.putExtra("lat", sendLat);
+                page.putExtra("lon", sendLng);
                 startActivity(page);
-                System.out.println("Alamat " + addresses);
-                lat = mMap.getMyLocation().getLatitude();
-                lng = mMap.getMyLocation().getLongitude();
+
+                Toast.makeText(PemasanganBaru.this, "lat " + sendLat + " lng " + sendLng, Toast.LENGTH_SHORT).show();
                 System.out.println("Alamatbt " + addresses);
                 System.out.println("latitude " + lat);
                 System.out.println("longitude " + lng);
@@ -413,6 +370,8 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
         mMap.clear();
         mMap.addMarker(markerOptions);
+
+
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
@@ -424,16 +383,7 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
         return (int) (dp * scale + 0.5f);
     }
 
-    //
-//    private void cek(Map<String, Object> users) {
-//        ArrayList<Long> number = new ArrayList<>();
-//
-//        for (Map.Entry<String, Object> entry : users.entrySet()) {
-//            Map singleUser = (Map) entry.getValue();
-//            number.add((Long) singleUser.get("1"));
-//        }
-//        System.out.println("Cek Nomor" + number);
-//    }
+
     public void btCekBiaya(View view) {
         harga.setText("Besar daya " + pilihan[posisi] + " seharga " + hargaBaru[posisi]);
         AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
@@ -448,11 +398,11 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
                         startActivity(new Intent(PemasanganBaru.this, DriveMcc.class));
                         System.out.println("Cek Pemasangan baru");
                     }
-                }).setNegativeButton("Ya", new DialogInterface.OnClickListener() {
+                }).setNegativeButton("Oke", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 System.out.println("Pilihan Tidak");
-                startActivity(new Intent(PemasanganBaru.this, RecycleActivity.class));
+                //  startActivity(new Intent(PemasanganBaru.this, RecycleActivity.class));
                 dialogInterface.cancel();
             }
         });
@@ -462,8 +412,8 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
     }
 
     public void btPesanPasangBaru(View view) {
-        lat = mMap.getMyLocation().getLatitude();
-        lng = mMap.getMyLocation().getLongitude();
+        lat = String.valueOf(mMap.getMyLocation().getLatitude());
+        lng = String.valueOf(mMap.getMyLocation().getLongitude());
         System.out.println("Alamatbt " + addresses);
         System.out.println("latitude " + lat);
         System.out.println("longitude " + lng);
@@ -503,13 +453,21 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
         String str_alamat = alamat.getText().toString();
         String str_nohp = nohp.getText().toString();
         String str_id = pp.push().getKey();
+        timesmap = ServerValue.TIMESTAMP;
+        time = String.valueOf(timesmap);
+        System.out.println("timestamp "+ timesmap);
 //        AmbilData user = new AmbilData(str_alamat);
 
 //        AmbilData user = new AmbilData("Pemasangan Baru ", str_nama, str_alamat, str_nohp
 //                , pilihan[posisi], hargaBaru[posisi], lat, lng);
 //        pesan.push().setValue(user);
+//        AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
+//                , pilihan[posisi], hargaBaru[posisi], lat, lng);
+
         AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
                 , pilihan[posisi], hargaBaru[posisi], lat, lng);
+//        AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
+//                , pilihan[posisi], hargaBaru[posisi], lat, lng, time);
         pp.child(str_id).setValue(user);
 //        pesan.child("users")
 //                .push().setValue(user);
