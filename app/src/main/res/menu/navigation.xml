@@ -9,9 +9,10 @@
         android:icon="@android:drawable/ic_dialog_info"
         android:title="@string/title_dashboard" />
 
+
     <item
         android:id="@+id/navigation_Profile"
-        android:icon="@android:drawable/ic_menu_preferences"
-        android:title="@string/title_notifications" />
+        android:icon="@android:drawable/ic_menu_help"
+        android:title="Bantuan" />
 
 </menu>

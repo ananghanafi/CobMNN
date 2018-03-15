@@ -67,12 +67,12 @@ public class FormOrderDaya extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private StorageReference storageReference;
     FirebaseDatabase database;
-    DatabaseReference myRef, pesan, pp;
+    DatabaseReference myRef, pesan, pemesanan, cekbiaya;
     TextView harga;
     String time;
     String pilihan[];
     String[] hargaBaru;
-    EditText nama, alamat, nohp;
+    EditText nama, alamat, nohp, noplg;
     int userId;
     String namaS, alamatS, nohpS, id;
     int posisi;
@@ -87,6 +87,7 @@ public class FormOrderDaya extends AppCompatActivity {
         nama = (EditText) findViewById(R.id.namaFormDaya);
         alamat = (EditText) findViewById(R.id.alamatFormDaya);
         nohp = (EditText) findViewById(R.id.nohpFormDaya);
+        noplg = (EditText) findViewById(R.id.noFormplg);
 
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("message");
@@ -94,7 +95,8 @@ public class FormOrderDaya extends AppCompatActivity {
         String setHarga;
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
-        pp = FirebaseDatabase.getInstance().getReference();
+        pemesanan = FirebaseDatabase.getInstance().getReference("pemesanan");
+        cekbiaya = FirebaseDatabase.getInstance().getReference("cekbiaya");
         pesan = myRef.child("users");
 
 
@@ -109,13 +111,13 @@ public class FormOrderDaya extends AppCompatActivity {
 
         };
         hargaBaru = new String[]{
-                "1.703.000",
-                "2.170.000",
-                "2.583.000",
-                "3.442.000",
-                "4.766.000",
-                "5.665.600",
-                "6.764.500",
+                "??",
+                "??",
+                "??",
+                "??",
+                "??",
+                "??",
+                "??",
 
         };
         MaterialSpinner spinnerBaru = (MaterialSpinner) findViewById(R.id.spinnerBaru);
@@ -141,9 +143,50 @@ public class FormOrderDaya extends AppCompatActivity {
 
 
     public void btCekBiayaDaya(View view) {
-        harga.setText("Besar daya " + pilihan[posisi] + " seharga " + hargaBaru[posisi]);
-        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:05116723591")));
+        AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
+        alBuilder.setTitle("Pemesanan");
+        //  alBuilder.setIcon(R.drawable.ic_clear_black_24dp);
+        alBuilder.setMessage("Biaya untuk penanabahan daya setiap pelanggan beda-beda, untuk itu isi no pelanggan/no meter nanti kami bantu" +
+                " cek biaya (Sambung Telp Gerai MCC) ").setCancelable(false)
+                .setPositiveButton("ya", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        System.out.println("Pilihan Ya");
+                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:05116723591")));
+                        saveDatabaseDaya();
+                        System.out.println("Cek Pmasangan daya");
+                    }
+                }).setNegativeButton("tidak", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                System.out.println("Pilihan Tidak");
 
+                dialogInterface.cancel();
+            }
+        });
+        AlertDialog alertDialog = alBuilder.create();
+        alertDialog.show();
+
+    }
+
+    private void saveDatabaseDaya() {
+        String str_nama = nama.getText().toString();
+        String str_alamat = alamat.getText().toString();
+        String str_nohp = nohp.getText().toString();
+        String str_noplg = noplg.getText().toString();
+        String str_id = cekbiaya.push().getKey();
+        time = String.valueOf(ServerValue.TIMESTAMP);
+//        AmbilData user = new AmbilData(str_alamat);
+
+//        AmbilData user = new AmbilData("Pemasangan Baru ", str_nama, str_alamat, str_nohp
+//                , pilihan[posisi], hargaBaru[posisi], lat, lng);
+//        pesan.push().setValue(user);
+        AmbilData user = new AmbilData(str_id, "Penambahan Daya ", str_nama, str_alamat, str_nohp
+                , pilihan[posisi], hargaBaru[posisi], lat, lng, str_noplg);
+
+//        AmbilData user = new AmbilData(str_id, "Pemasangan Daya ", str_nama, str_alamat, str_nohp
+//                , pilihan[posisi], hargaBaru[posisi], lat, lng, time);
+        cekbiaya.child(str_id).setValue(user);
     }
 
     public void btPesanTambahDaya(View view) {
@@ -151,12 +194,12 @@ public class FormOrderDaya extends AppCompatActivity {
         System.out.println("Alamatbt " + addresses);
         System.out.println("latitude " + lat);
         System.out.println("longitude " + lng);
-        harga.setText("Besar daya " + pilihan[posisi] + " seharga " + hargaBaru[posisi]);
-        AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
-        alBuilder.setTitle("Pemesanan");
+     //   harga.setText("Besar daya " + pilihan[posisi] + " seharga " + hargaBaru[posisi]);
+        AlertDialog.Builder blBuilder = new AlertDialog.Builder(this);
+        blBuilder.setTitle("Pemesanan");
         //  alBuilder.setIcon(R.drawable.ic_clear_black_24dp);
-        alBuilder.setMessage("Anda yakin pesan penambahan daya dengan besar daya " + pilihan[posisi]
-                + " seharga " + hargaBaru[posisi]).setCancelable(false)
+        blBuilder.setMessage("Anda yakin pesan penambahan daya dengan besar daya " + pilihan[posisi]
+                + " seharga tersebut").setCancelable(false)
                 .setPositiveButton("ya", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -176,7 +219,7 @@ public class FormOrderDaya extends AppCompatActivity {
                 dialogInterface.cancel();
             }
         });
-        AlertDialog alertDialog = alBuilder.create();
+        AlertDialog alertDialog = blBuilder.create();
         alertDialog.show();
     }
 
@@ -186,7 +229,8 @@ public class FormOrderDaya extends AppCompatActivity {
         String str_nama = nama.getText().toString();
         String str_alamat = alamat.getText().toString();
         String str_nohp = nohp.getText().toString();
-        String str_id = pp.push().getKey();
+        String str_id = pemesanan.push().getKey();
+        String str_noplg = noplg.getText().toString();
         time = String.valueOf(ServerValue.TIMESTAMP);
 //        AmbilData user = new AmbilData(str_alamat);
 
@@ -194,11 +238,11 @@ public class FormOrderDaya extends AppCompatActivity {
 //                , pilihan[posisi], hargaBaru[posisi], lat, lng);
 //        pesan.push().setValue(user);
         AmbilData user = new AmbilData(str_id, "Penambahan Daya", str_nama, str_alamat, str_nohp
-                , pilihan[posisi], hargaBaru[posisi], lat, lng);
+                , pilihan[posisi], hargaBaru[posisi], lat, lng, str_noplg);
 
 //        AmbilData user = new AmbilData(str_id, "Pemasangan Daya ", str_nama, str_alamat, str_nohp
 //                , pilihan[posisi], hargaBaru[posisi], lat, lng, time);
-        pp.child(str_id).setValue(user);
+        pemesanan.child(str_id).setValue(user);
 //        pesan.child("users")
 //                .push().setValue(user);
 //       pesan.setValue("users", str_nama);

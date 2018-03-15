@@ -78,7 +78,7 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
     private TextView infoTitle;
     private OnInfoWindowElemTouchListener infoButtonListener;
     FirebaseDatabase database;
-    DatabaseReference myRef, pesan, pp;
+    DatabaseReference myRef, pesan, pemesanan;
     EditText nama, alamat, nohp;
     int userId;
     String namaS, alamatS, nohpS, id;
@@ -96,7 +96,7 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
         final int[] cek;
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
-        pp = FirebaseDatabase.getInstance().getReference();
+        pemesanan = FirebaseDatabase.getInstance().getReference("pemesanan");
         pesan = myRef.child("users");
 
 
@@ -452,7 +452,7 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
         String str_nama = nama.getText().toString();
         String str_alamat = alamat.getText().toString();
         String str_nohp = nohp.getText().toString();
-        String str_id = pp.push().getKey();
+        String str_id = pemesanan.push().getKey();
         timesmap = ServerValue.TIMESTAMP;
         time = String.valueOf(timesmap);
         System.out.println("timestamp "+ timesmap);
@@ -465,10 +465,10 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
 //                , pilihan[posisi], hargaBaru[posisi], lat, lng);
 
         AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
-                , pilihan[posisi], hargaBaru[posisi], lat, lng);
+                , pilihan[posisi], hargaBaru[posisi], lat, lng,"");
 //        AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
 //                , pilihan[posisi], hargaBaru[posisi], lat, lng, time);
-        pp.child(str_id).setValue(user);
+        pemesanan.child(str_id).setValue(user);
 //        pesan.child("users")
 //                .push().setValue(user);
 //       pesan.setValue("users", str_nama);

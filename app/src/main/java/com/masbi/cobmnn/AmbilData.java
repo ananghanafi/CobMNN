@@ -7,7 +7,7 @@ import java.util.Map;
  */
 
 public class AmbilData {
-    String pesan, nama, alamat, nohp, daya, harga, id, lat, lon, time;
+    String pesan, nama, alamat, nohp, daya, harga, id, lat, lon, time, kritik, noplg;
 
     //   Map time;
     //  double lat, lon;
@@ -16,25 +16,26 @@ public class AmbilData {
 
     }
 
-    public AmbilData(String nama) {
-        this.nama = nama;
-    }
-
-    public AmbilData(String id, String pesan, String nama, String alamat, String nohp, String daya, String harga,
-                     String lat, String lon, String time) {
-        this.pesan = pesan;
+    public AmbilData(String id, String kritik) {
         this.id = id;
-        this.nama = nama;
-        this.alamat = alamat;
-        this.nohp = nohp;
-        this.daya = daya;
-        this.harga = harga;
+        this.kritik = kritik;
+    }
+//
+//    public AmbilData(String id, String pesan, String nama, String alamat, String nohp, String daya, String harga,
+//                     String lat, String lon, String time) {
+//        this.pesan = pesan;
+//        this.id = id;
+//        this.nama = nama;
+//        this.alamat = alamat;
+//        this.nohp = nohp;
+//        this.daya = daya;
+//        this.harga = harga;
+////        this.lat = lat;
+////        this.lon = lon;
 //        this.lat = lat;
 //        this.lon = lon;
-        this.lat = lat;
-        this.lon = lon;
-        this.time = time;
-    }
+//        this.time = time;
+//    }
 
     public AmbilData(String id, String pesan, String nama, String alamat, String nohp, String daya, String harga,
                      String lat, String lon) {
@@ -49,6 +50,22 @@ public class AmbilData {
 //        this.lon = lon;
         this.lat = lat;
         this.lon = lon;
+    }
+
+    public AmbilData(String id, String pesan, String nama, String alamat, String nohp, String daya, String harga,
+                     String lat, String lon, String noplg) {
+        this.pesan = pesan;
+        this.id = id;
+        this.nama = nama;
+        this.alamat = alamat;
+        this.nohp = nohp;
+        this.daya = daya;
+        this.harga = harga;
+//        this.lat = lat;
+//        this.lon = lon;
+        this.lat = lat;
+        this.lon = lon;
+        this.noplg = noplg;
     }
 
     public String getId() {
@@ -152,6 +169,22 @@ public class AmbilData {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getKritik() {
+        return kritik;
+    }
+
+    public void setKritik(String kritik) {
+        this.noplg = noplg;
+    }
+
+    public String getNoplg() {
+        return noplg;
+    }
+
+    public void setNoplg(String noplg) {
+        this.noplg = noplg;
     }
 
 

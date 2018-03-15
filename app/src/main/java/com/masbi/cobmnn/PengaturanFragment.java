@@ -6,9 +6,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +24,11 @@ import java.util.List;
 
 
 public class PengaturanFragment extends Fragment {
-
+    EditText kritikSaran;
+    FirebaseDatabase database;
+    DatabaseReference kritikSaranDf;
+    private WebView mywebview;
+    Button kirimSaran;
 
     public PengaturanFragment() {
         // Required empty public constructor
@@ -34,12 +46,37 @@ public class PengaturanFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_pengaturan, container, false);
+        kritikSaran = (EditText) v.findViewById(R.id.inputSaran);
+        kirimSaran = (Button) v.findViewById(R.id.kirimsaran);
+        kritikSaranDf = FirebaseDatabase.getInstance().getReference("pesan");
+        mywebview = (WebView) v.findViewById(R.id.webviewSaran);
+//        String newUA = "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.4) Gecko/20100101 Firefox/4.0";
+//        mywebview.getSettings().setUserAgentString(newUA);
+        mywebview.setFocusable(true);
+        mywebview.setDuplicateParentStateEnabled(true);
+        mywebview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        mywebview.getSettings().setJavaScriptEnabled(true);
+        mywebview.loadUrl("http://drive.google.com/drive/mobile/folders/12qj40MNw9P0BQwps5oz4FChKZrPzbCfA");
+        mywebview.setWebViewClient(new WebViewClient());
+
+        kirimSaran.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+        String str_id = kritikSaranDf.push().getKey();
+        String str_kritik = kritikSaran.getText().toString();
+        AmbilData user = new AmbilData(str_id, str_kritik);
+        kritikSaranDf.child(str_id).setValue(user);
+                Toast.makeText(getActivity(), "Kritik/Saran Sudah dikirim terimakasih ", Toast.LENGTH_SHORT).show();
+            }
+        });
+
 //        String[] namaguru = new String[]{
 //                "Edit Profile ",
 //                "Ganti Password ",
@@ -93,7 +130,16 @@ public class PengaturanFragment extends Fragment {
 //                }
 //            }
 //        });
+
         return v;
     }
 
+
+//    public void kirimSaran(View view) {
+//        String str_id = kritikSaranDf.push().getKey();
+//        String str_kritik = kritikSaran.getText().toString();
+//        AmbilData user = new AmbilData(str_id, str_kritik);
+//        kritikSaranDf.child(str_id).setValue(user);
+//        Toast.makeText(getActivity(), "Kritik/Saran Sudah dikirim terimakasih ", Toast.LENGTH_SHORT).show();
+//    }
 }

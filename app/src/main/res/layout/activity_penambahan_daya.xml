@@ -78,14 +78,26 @@
                     android:id="@+id/nohpDaya"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="no.hp" />
+                    android:hint="no.hp"
+                    android:inputType="number" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="16dp"
-                    android:text="Pilih Daya" />
+                    android:text="No Pelanggan/No Meter" />
 
+                <EditText
+                    android:id="@+id/noplg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="no pelanggan/no meter"
+                    android:inputType="number" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="16dp"
+                    android:text="Pilih Daya" />
                 <com.jaredrummler.materialspinner.MaterialSpinner
                     android:id="@+id/spinnerBaru"
                     android:layout_width="match_parent"
@@ -103,39 +115,12 @@
                     android:onClick="btCekBiayaDaya"
                     android:text="Cek Biaya (telp gerai) " />
 
+
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:paddingBottom="16dp">
+                    android:layout_height="16dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:paddingBottom="5dp"
-                        android:text="Biaya"
-                        android:textColor="@android:color/black"
-                        android:textSize="18dp" />
-
-
-                    <RelativeLayout
-
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:background="@color/colorAccent">
-
-                        <TextView
-                            android:id="@+id/harga"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:textAppearance="?android:attr/textAppearance"
-                            android:textColor="#000000"
-                            android:textSize="15sp" />
-                    </RelativeLayout>
                 </LinearLayout>
-
 
                 <Button
                     android:id="@+id/btPesanTambahDaya"
@@ -177,5 +162,8 @@
         app:floatingSearch_leftActionMode="showSearch"
         app:floatingSearch_searchHint="Search..."
         app:floatingSearch_showSearchKey="true"
-        app:floatingSearch_suggestionsListAnimDuration="250" />
+        app:floatingSearch_suggestionsListAnimDuration="250" >
+
+
+    </com.arlib.floatingsearchview.FloatingSearchView>
 </com.masbi.cobmnn.tools.MapWrapperLayout>
