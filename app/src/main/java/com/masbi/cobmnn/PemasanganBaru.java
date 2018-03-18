@@ -47,7 +47,6 @@ import com.masbi.cobmnn.tools.MapWrapperLayout;
 import com.masbi.cobmnn.tools.OnInfoWindowElemTouchListener;
 
 
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -402,6 +401,8 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 System.out.println("Pilihan Tidak");
+
+                harga.requestFocus();
                 //  startActivity(new Intent(PemasanganBaru.this, RecycleActivity.class));
                 dialogInterface.cancel();
             }
@@ -427,7 +428,7 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         System.out.println("Pilihan Ya");
-                        Toast.makeText(PemasanganBaru.this, "Pemesanan sedang di proses", Toast.LENGTH_SHORT).show();
+
                         userId = userId + 1;
                         //       sendNotication();
                         saveDatabase(userId);
@@ -446,6 +447,10 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
         alertDialog.show();
     }
 
+    public void btUploadFile(View view) {
+        startActivity(new Intent(PemasanganBaru.this, SendGmail.class));
+
+    }
 
     private void saveDatabase(int userid) {
         //Tidak Boleh Kosong
@@ -455,7 +460,27 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
         String str_id = pemesanan.push().getKey();
         timesmap = ServerValue.TIMESTAMP;
         time = String.valueOf(timesmap);
-        System.out.println("timestamp "+ timesmap);
+        System.out.println("timestamp " + timesmap);
+        if (str_nama.isEmpty()) {
+            nama.setError("Nama harus diisi");
+            nama.requestFocus();
+            return;
+        } else if (str_alamat.isEmpty()) {
+            alamat.setError("Alamat harus diisi");
+            alamat.requestFocus();
+            return;
+        } else if (str_nohp.length() < 10) {
+            nohp.setError("Masukan no hanphone dengan benar");
+            nohp.requestFocus();
+            return;
+        } else {
+            AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
+                    , pilihan[posisi], hargaBaru[posisi], lat, lng, "");
+//        AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
+//                , pilihan[posisi], hargaBaru[posisi], lat, lng, time);
+            pemesanan.child(str_id).setValue(user);
+            Toast.makeText(PemasanganBaru.this, "Pemesanan sedang di proses", Toast.LENGTH_SHORT).show();
+        }
 //        AmbilData user = new AmbilData(str_alamat);
 
 //        AmbilData user = new AmbilData("Pemasangan Baru ", str_nama, str_alamat, str_nohp
@@ -464,11 +489,7 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
 //        AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
 //                , pilihan[posisi], hargaBaru[posisi], lat, lng);
 
-        AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
-                , pilihan[posisi], hargaBaru[posisi], lat, lng,"");
-//        AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
-//                , pilihan[posisi], hargaBaru[posisi], lat, lng, time);
-        pemesanan.child(str_id).setValue(user);
+
 //        pesan.child("users")
 //                .push().setValue(user);
 //       pesan.setValue("users", str_nama);

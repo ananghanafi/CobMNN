@@ -97,7 +97,7 @@ public class FormOrder extends AppCompatActivity {
         String setHarga;
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
-        pemesanan = FirebaseDatabase.getInstance().getReference();
+        pemesanan = FirebaseDatabase.getInstance().getReference("pemesanan");
         pesan = myRef.child("users");
 
 
@@ -161,7 +161,7 @@ public class FormOrder extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 System.out.println("Pilihan Tidak");
-            //    startActivity(new Intent(PemasanganBaru.this, RecycleActivity.class));
+                //    startActivity(new Intent(PemasanganBaru.this, RecycleActivity.class));
                 dialogInterface.cancel();
             }
         });
@@ -175,7 +175,7 @@ public class FormOrder extends AppCompatActivity {
         System.out.println("Alamatbt " + addresses);
         System.out.println("latitude " + lat);
         System.out.println("longitude " + lng);
-        harga.setText("Besar daya " + pilihan[posisi] + " seharga " + hargaBaru[posisi]);
+   //     harga.setText("Besar daya " + pilihan[posisi] + " seharga " + hargaBaru[posisi]);
         android.app.AlertDialog.Builder alBuilder = new android.app.AlertDialog.Builder(this);
         alBuilder.setTitle("Pemesanan");
         //  alBuilder.setIcon(R.drawable.ic_clear_black_24dp);
@@ -185,7 +185,6 @@ public class FormOrder extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         System.out.println("Pilihan Ya");
-                        Toast.makeText(FormOrder.this, "Pemesanan sedang di proses", Toast.LENGTH_SHORT).show();
 //                        userId = userId + 1;
                         //       sendNotication();
                         saveDatabase();
@@ -204,6 +203,9 @@ public class FormOrder extends AppCompatActivity {
         alertDialog.show();
     }
 
+    public void btUploadFileForm(View view) {
+        startActivity(new Intent(FormOrder.this, SendGmail.class));
+    }
 
     private void saveDatabase() {
         //Tidak Boleh Kosong
@@ -212,17 +214,37 @@ public class FormOrder extends AppCompatActivity {
         String str_nohp = nohp.getText().toString();
         String str_id = pemesanan.push().getKey();
         time = String.valueOf(ServerValue.TIMESTAMP);
+        if (str_nama.isEmpty()) {
+            nama.setError("Nama harus diisi");
+            nama.requestFocus();
+            return;
+        } else if (str_alamat.isEmpty()) {
+            alamat.setError("Alamat harus diisi");
+            alamat.requestFocus();
+            return;
+        } else if (str_nohp.length() < 10) {
+            nohp.setError("Masukan no hanphone dengan benar");
+            nohp.requestFocus();
+            return;
+        }else {
+            AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
+                    , pilihan[posisi], hargaBaru[posisi], lat, lng, "");
+//        AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
+//                , pilihan[posisi], hargaBaru[posisi], lat, lng, time);
+            pemesanan.child(str_id).setValue(user);
+            Toast.makeText(FormOrder.this, "Pemesanan sedang di proses", Toast.LENGTH_SHORT).show();
+        }
 //        AmbilData user = new AmbilData(str_alamat);
 
 //        AmbilData user = new AmbilData("Pemasangan Baru ", str_nama, str_alamat, str_nohp
 //                , pilihan[posisi], hargaBaru[posisi], lat, lng);
 //        pesan.push().setValue(user);
-        AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
-                , pilihan[posisi], hargaBaru[posisi], lat, lng);
+//        AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
+//                , pilihan[posisi], hargaBaru[posisi], lat, lng);
 
 //        AmbilData user = new AmbilData(str_id, "Pemasangan Daya ", str_nama, str_alamat, str_nohp
 //                , pilihan[posisi], hargaBaru[posisi], lat, lng, time);
-        pemesanan.child(str_id).setValue(user);
+//        pemesanan.child(str_id).setValue(user);
 //        pesan.child("users")
 //                .push().setValue(user);
 //       pesan.setValue("users", str_nama);

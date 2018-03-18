@@ -63,7 +63,8 @@ public class PengaturanFragment extends Fragment {
         mywebview.setDuplicateParentStateEnabled(true);
         mywebview.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         mywebview.getSettings().setJavaScriptEnabled(true);
-        mywebview.loadUrl("http://drive.google.com/drive/mobile/folders/12qj40MNw9P0BQwps5oz4FChKZrPzbCfA");
+        mywebview.loadUrl("\n" +
+                "https://drive.google.com/open?id=1uAKrXLzlf_OKkp6YRoZCkNCVb5v3lxxG");
         mywebview.setWebViewClient(new WebViewClient());
 
         kirimSaran.setOnClickListener(new View.OnClickListener() {

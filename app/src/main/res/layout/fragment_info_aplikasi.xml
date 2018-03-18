@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
     tools:context="com.masbi.cobmnn.InfoAplikasiFragment">
 
     <ScrollView
@@ -34,7 +35,7 @@
                     android:layout_gravity="center"
                     android:paddingTop="16dp"
                     android:text="Gerai Layanan Listrik"
-                    android:textColor="@color/colorPrimaryDark"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="24dp" />
 
                 <TextView

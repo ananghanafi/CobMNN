@@ -143,6 +143,29 @@ public class FormOrderDaya extends AppCompatActivity {
 
 
     public void btCekBiayaDaya(View view) {
+        String str_nama = nama.getText().toString();
+        String str_alamat = alamat.getText().toString();
+        String str_nohp = nohp.getText().toString();
+        String str_noplg = noplg.getText().toString();
+        String str_id = cekbiaya.push().getKey();
+        if (str_nama.isEmpty()) {
+            nama.setError("Nama harus diisi");
+            nama.requestFocus();
+            return;
+        } else if (str_alamat.isEmpty()) {
+            alamat.setError("Alamat harus diisi");
+            alamat.requestFocus();
+            return;
+        }  else if (str_nohp.length() < 10) {
+            nohp.setError("Masukan no hanphone dengan benar");
+            nohp.requestFocus();
+            return;
+        }
+        else if (str_noplg.length() < 11) {
+            noplg.setError("Masukan no pelanggan/no meter dengan benar");
+            noplg.requestFocus();
+            return;
+        }
         AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
         alBuilder.setTitle("Pemesanan");
         //  alBuilder.setIcon(R.drawable.ic_clear_black_24dp);
@@ -168,6 +191,10 @@ public class FormOrderDaya extends AppCompatActivity {
         alertDialog.show();
 
     }
+    public void btUploadFileFormDaya(View view) {
+        startActivity(new Intent(FormOrderDaya.this, SendGmail.class));
+
+    }
 
     private void saveDatabaseDaya() {
         String str_nama = nama.getText().toString();
@@ -177,16 +204,39 @@ public class FormOrderDaya extends AppCompatActivity {
         String str_id = cekbiaya.push().getKey();
         time = String.valueOf(ServerValue.TIMESTAMP);
 //        AmbilData user = new AmbilData(str_alamat);
-
+        if (str_nama.isEmpty()) {
+            nama.setError("Nama harus diisi");
+            nama.requestFocus();
+            return;
+        } else if (str_alamat.isEmpty()) {
+            alamat.setError("Alamat harus diisi");
+            alamat.requestFocus();
+            return;
+        }  else if (str_nohp.length() < 10) {
+            nohp.setError("Masukan no hanphone dengan benar");
+            nohp.requestFocus();
+            return;
+        }
+        else if (str_noplg.length() < 11) {
+            noplg.setError("Masukan no pelanggan/no meter dengan benar");
+            noplg.requestFocus();
+            return;
+        }else {
+            AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
+                    , pilihan[posisi], hargaBaru[posisi], lat, lng, "");
+//        AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
+//                , pilihan[posisi], hargaBaru[posisi], lat, lng, time);
+            cekbiaya.child(str_id).setValue(user);
+        }
 //        AmbilData user = new AmbilData("Pemasangan Baru ", str_nama, str_alamat, str_nohp
 //                , pilihan[posisi], hargaBaru[posisi], lat, lng);
 //        pesan.push().setValue(user);
-        AmbilData user = new AmbilData(str_id, "Penambahan Daya ", str_nama, str_alamat, str_nohp
-                , pilihan[posisi], hargaBaru[posisi], lat, lng, str_noplg);
+//        AmbilData user = new AmbilData(str_id, "Penambahan Daya ", str_nama, str_alamat, str_nohp
+//                , pilihan[posisi], hargaBaru[posisi], lat, lng, str_noplg);
 
 //        AmbilData user = new AmbilData(str_id, "Pemasangan Daya ", str_nama, str_alamat, str_nohp
 //                , pilihan[posisi], hargaBaru[posisi], lat, lng, time);
-        cekbiaya.child(str_id).setValue(user);
+//        cekbiaya.child(str_id).setValue(user);
     }
 
     public void btPesanTambahDaya(View view) {
@@ -204,7 +254,6 @@ public class FormOrderDaya extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         System.out.println("Pilihan Ya");
-                        Toast.makeText(FormOrderDaya.this, "Pemesanan sedang di proses", Toast.LENGTH_SHORT).show();
 //                        userId = userId + 1;
                         //       sendNotication();
                         saveDatabase();
@@ -232,17 +281,42 @@ public class FormOrderDaya extends AppCompatActivity {
         String str_id = pemesanan.push().getKey();
         String str_noplg = noplg.getText().toString();
         time = String.valueOf(ServerValue.TIMESTAMP);
+        if (str_nama.isEmpty()) {
+            nama.setError("Nama harus diisi");
+            nama.requestFocus();
+            return;
+        } else if (str_alamat.isEmpty()) {
+            alamat.setError("Alamat harus diisi");
+            alamat.requestFocus();
+            return;
+        }  else if (str_nohp.length() < 10) {
+            nohp.setError("Masukan no hanphone dengan benar");
+            nohp.requestFocus();
+            return;
+        }
+        else if (str_noplg.length() < 11) {
+            noplg.setError("Masukan no pelanggan/no meter dengan benar");
+            noplg.requestFocus();
+            return;
+        } else {
+            AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
+                    , pilihan[posisi], hargaBaru[posisi], lat, lng, "");
+//        AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
+//                , pilihan[posisi], hargaBaru[posisi], lat, lng, time);
+            pemesanan.child(str_id).setValue(user);
+            Toast.makeText(FormOrderDaya.this, "Pemesanan sedang di proses", Toast.LENGTH_SHORT).show();
+        }
 //        AmbilData user = new AmbilData(str_alamat);
 
 //        AmbilData user = new AmbilData("Pemasangan Baru ", str_nama, str_alamat, str_nohp
 //                , pilihan[posisi], hargaBaru[posisi], lat, lng);
 //        pesan.push().setValue(user);
-        AmbilData user = new AmbilData(str_id, "Penambahan Daya", str_nama, str_alamat, str_nohp
-                , pilihan[posisi], hargaBaru[posisi], lat, lng, str_noplg);
+//        AmbilData user = new AmbilData(str_id, "Penambahan Daya", str_nama, str_alamat, str_nohp
+//                , pilihan[posisi], hargaBaru[posisi], lat, lng, str_noplg);
 
 //        AmbilData user = new AmbilData(str_id, "Pemasangan Daya ", str_nama, str_alamat, str_nohp
 //                , pilihan[posisi], hargaBaru[posisi], lat, lng, time);
-        pemesanan.child(str_id).setValue(user);
+//        pemesanan.child(str_id).setValue(user);
 //        pesan.child("users")
 //                .push().setValue(user);
 //       pesan.setValue("users", str_nama);

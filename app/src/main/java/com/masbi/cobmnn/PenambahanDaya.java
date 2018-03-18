@@ -374,6 +374,28 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
 
 
     public void btCekBiayaDaya(View view) {
+        String str_nama = nama.getText().toString();
+        String str_alamat = alamat.getText().toString();
+        String str_nohp = nohp.getText().toString();
+        String str_noplg = noplg.getText().toString();
+        String str_id = cekbiaya.push().getKey();
+        if (str_nama.isEmpty()) {
+            nama.setError("Nama harus diisi");
+            nama.requestFocus();
+            return;
+        } else if (str_alamat.isEmpty()) {
+            alamat.setError("Alamat harus diisi");
+            alamat.requestFocus();
+            return;
+        } else if (str_nohp.length() < 10) {
+            nohp.setError("Masukan no hanphone dengan benar");
+            nohp.requestFocus();
+            return;
+        } else if (str_noplg.length() < 11) {
+            noplg.setError("Masukan no pelanggan/no meter dengan benar");
+            noplg.requestFocus();
+            return;
+        }
         AlertDialog.Builder blBuilder = new AlertDialog.Builder(this);
         blBuilder.setTitle("Pemesanan");
         //  alBuilder.setIcon(R.drawable.ic_clear_black_24dp);
@@ -408,7 +430,7 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
         System.out.println("Alamatbt " + addresses);
         System.out.println("latitude " + lat);
         System.out.println("longitude " + lng);
-       // harga.setText("Besar daya " + pilihan[posisi] + " seharga " + hargaBaru[posisi]);
+        // harga.setText("Besar daya " + pilihan[posisi] + " seharga " + hargaBaru[posisi]);
         AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
         alBuilder.setTitle("Pemesanan");
         //  alBuilder.setIcon(R.drawable.ic_clear_black_24dp);
@@ -418,7 +440,6 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         System.out.println("Pilihan Ya");
-                        Toast.makeText(PenambahanDaya.this, "Pemesanan sedang di proses", Toast.LENGTH_SHORT).show();
 //                        userId = userId + 1;
                         //       sendNotication();
                         saveDatabase();
@@ -437,6 +458,10 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
         alertDialog.show();
     }
 
+    public void btUploadFileDaya(View view) {
+        startActivity(new Intent(PenambahanDaya.this, SendGmail.class));
+
+    }
 
     private void saveDatabaseDaya() {
         String str_nama = nama.getText().toString();
@@ -445,17 +470,40 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
         String str_noplg = noplg.getText().toString();
         String str_id = cekbiaya.push().getKey();
         time = String.valueOf(ServerValue.TIMESTAMP);
+        if (str_nama.isEmpty()) {
+            nama.setError("Nama harus diisi");
+            nama.requestFocus();
+            return;
+        } else if (str_alamat.isEmpty()) {
+            alamat.setError("Alamat harus diisi");
+            alamat.requestFocus();
+            return;
+        } else if (str_nohp.length() < 10) {
+            nohp.setError("Masukan no hanphone dengan benar");
+            nohp.requestFocus();
+            return;
+        } else if (str_noplg.length() < 11) {
+            noplg.setError("Masukan no pelanggan/no meter dengan benar");
+            noplg.requestFocus();
+            return;
+        } else {
+            AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
+                    , pilihan[posisi], hargaBaru[posisi], lat, lng, "");
+//        AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
+//                , pilihan[posisi], hargaBaru[posisi], lat, lng, time);
+            cekbiaya.child(str_id).setValue(user);
+        }
 //        AmbilData user = new AmbilData(str_alamat);
 
 //        AmbilData user = new AmbilData("Pemasangan Baru ", str_nama, str_alamat, str_nohp
 //                , pilihan[posisi], hargaBaru[posisi], lat, lng);
 //        pesan.push().setValue(user);
-        AmbilData user = new AmbilData(str_id, "Penambahan Daya ", str_nama, str_alamat, str_nohp
-                , pilihan[posisi], hargaBaru[posisi], lat, lng, str_noplg);
+//        AmbilData user = new AmbilData(str_id, "Penambahan Daya ", str_nama, str_alamat, str_nohp
+//                , pilihan[posisi], hargaBaru[posisi], lat, lng, str_noplg);
 
 //        AmbilData user = new AmbilData(str_id, "Pemasangan Daya ", str_nama, str_alamat, str_nohp
 //                , pilihan[posisi], hargaBaru[posisi], lat, lng, time);
-        cekbiaya.child(str_id).setValue(user);
+//        cekbiaya.child(str_id).setValue(user);
     }
 
     private void saveDatabase() {
@@ -466,17 +514,41 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
         String str_noplg = noplg.getText().toString();
         String str_id = pemesanan.push().getKey();
         time = String.valueOf(ServerValue.TIMESTAMP);
+        if (str_nama.isEmpty()) {
+            nama.setError("Nama harus diisi");
+            nama.requestFocus();
+            return;
+        } else if (str_alamat.isEmpty()) {
+            alamat.setError("Alamat harus diisi");
+            alamat.requestFocus();
+            return;
+        } else if (str_nohp.length() < 10) {
+            nohp.setError("Masukan no hanphone dengan benar");
+            nohp.requestFocus();
+            return;
+        } else if (str_noplg.length() < 11) {
+            noplg.setError("Masukan no pelanggan/no meter dengan benar");
+            noplg.requestFocus();
+            return;
+        } else {
+            AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
+                    , pilihan[posisi], hargaBaru[posisi], lat, lng, "");
+//        AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
+//                , pilihan[posisi], hargaBaru[posisi], lat, lng, time);
+            pemesanan.child(str_id).setValue(user);
+            Toast.makeText(PenambahanDaya.this, "Pemesanan sedang di proses", Toast.LENGTH_SHORT).show();
+        }
 //        AmbilData user = new AmbilData(str_alamat);
 
 //        AmbilData user = new AmbilData("Pemasangan Baru ", str_nama, str_alamat, str_nohp
 //                , pilihan[posisi], hargaBaru[posisi], lat, lng);
 //        pesan.push().setValue(user);
-        AmbilData user = new AmbilData(str_id, "Penambahan Daya ", str_nama, str_alamat, str_nohp
-                , pilihan[posisi], hargaBaru[posisi], lat, lng, str_noplg);
+//        AmbilData user = new AmbilData(str_id, "Penambahan Daya ", str_nama, str_alamat, str_nohp
+//                , pilihan[posisi], hargaBaru[posisi], lat, lng, str_noplg);
 
 //        AmbilData user = new AmbilData(str_id, "Pemasangan Daya ", str_nama, str_alamat, str_nohp
 //                , pilihan[posisi], hargaBaru[posisi], lat, lng, time);
-        pemesanan.child(str_id).setValue(user);
+//        pemesanan.child(str_id).setValue(user);
 //        pesan.child("users")
 //                .push().setValue(user);
 //       pesan.setValue("users", str_nama);

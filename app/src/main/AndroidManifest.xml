@@ -77,7 +77,8 @@
         <activity android:name=".GetData" />
         <activity android:name=".DriveMcc" />
         <activity android:name=".RecycleActivity" />
-        <activity android:name=".FormOrderDaya"></activity>
+        <activity android:name=".FormOrderDaya" />
+        <activity android:name=".SendGmail"></activity>
     </application>
 
 </manifest>
