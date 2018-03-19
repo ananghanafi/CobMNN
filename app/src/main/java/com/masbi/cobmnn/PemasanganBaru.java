@@ -302,24 +302,28 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
         {
             @Override
             protected void onClickConfirmed(View v, Marker marker) {
-                // Here we can perform some action triggered after clicking the button
-                Intent page = new Intent(PemasanganBaru.this, FormOrder.class);
+
 
 //                System.out.println("Alamat " + addresses);
 //                lat = String.valueOf(mMap.getMyLocation().getLatitude());
 //                lng = String.valueOf(mMap.getMyLocation().getLongitude());
-
+//
+//                sendLat = String.valueOf(mMap.getMyLocation().getLatitude());
+//                sendLng = String.valueOf(mMap.getMyLocation().getLongitude());
                 sendLat = String.valueOf(mMap.getMyLocation().getLatitude());
                 sendLng = String.valueOf(mMap.getMyLocation().getLongitude());
 //                Intent page = new Intent();
-                page.putExtra("lat", sendLat);
-                page.putExtra("lon", sendLng);
-                startActivity(page);
+
 
                 Toast.makeText(PemasanganBaru.this, "lat " + sendLat + " lng " + sendLng, Toast.LENGTH_SHORT).show();
                 System.out.println("Alamatbt " + addresses);
                 System.out.println("latitude " + lat);
                 System.out.println("longitude " + lng);
+                // Here we can perform some action triggered after clicking the button
+                Intent page = new Intent(PemasanganBaru.this, FormOrder.class);
+                page.putExtra("lat", sendLat);
+                page.putExtra("lon", sendLng);
+                startActivity(page);
                 //  Toast.makeText(PenambahanDaya.this, marker.getTitle() + "'s button clicked!", Toast.LENGTH_SHORT).show();
             }
         };
