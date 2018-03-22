@@ -19,6 +19,9 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -78,9 +81,12 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
     private OnInfoWindowElemTouchListener infoButtonListener;
     FirebaseDatabase database;
     DatabaseReference myRef, pesan, pemesanan;
-    EditText nama, alamat, nohp;
+    EditText nama, alamat, nohp, fittingPaket, sContactPaket, fittingManual, sContactManual;
     int userId;
     String namaS, alamatS, nohpS, id;
+    RadioGroup rg1, rg2;
+    RadioButton rb1, rb2, hh, hh1;
+    LinearLayout denganInstakasi, tanpaInstalasi, paket, manual, pildaya;
 
 
     @Override
@@ -91,15 +97,31 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
         nama = (EditText) findViewById(R.id.namaBaru);
         alamat = (EditText) findViewById(R.id.alamatBaru);
         nohp = (EditText) findViewById(R.id.nohpBaru);
+        fittingPaket = (EditText) findViewById(R.id.fittingLampuBaruPaket);
+        sContactPaket = (EditText) findViewById(R.id.StopContactLampuBaruPaket);
+        fittingManual = (EditText) findViewById(R.id.fittingLampuBaruManual);
+        sContactManual = (EditText) findViewById(R.id.StopContactLampuManual);
         String setHarga;
         final int[] cek;
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
         pemesanan = FirebaseDatabase.getInstance().getReference("pemesanan");
         pesan = myRef.child("users");
+        rg1 = (RadioGroup) findViewById(R.id.pilInstalasi);
+        rg2 = (RadioGroup) findViewById(R.id.pilPaket);
+        hh = (RadioButton) findViewById(R.id.tpInstalasi);
+        hh1 = (RadioButton) findViewById(R.id.dgInstalasi);
+        denganInstakasi = (LinearLayout) findViewById(R.id.denganInstalasi);
+        tanpaInstalasi = (LinearLayout) findViewById(R.id.tanpaInstalasi);
+        paket = (LinearLayout) findViewById(R.id.pilihanPaketPaket);
+        manual = (LinearLayout) findViewById(R.id.pilihanPaketManual);
+        pildaya = (LinearLayout) findViewById(R.id.pilDaya);
+        rb1 = (RadioButton) findViewById(R.id.pilihanManual);
+        rb2 = (RadioButton) findViewById(R.id.pilihanPaket);
 
 
         pilihan = new String[]{
+                "Pilih Daya",
                 "450 VA",
                 "900 VA",
                 "1300 VA",
@@ -110,6 +132,7 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
 
         };
         hargaBaru = new String[]{
+                "--",
                 "1.703.000",
                 "2.170.000",
                 "2.583.000",
@@ -506,101 +529,53 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
 //        Toast.makeText(PemasanganBaru.this, "Nama " + value, Toast.LENGTH_SHORT).show();
         System.out.println("Storage Firebase = gs://mapsplnbp-1517890549610.appspot.com");
         System.out.println("Database Firebase = https://mapsplnbp-1517890549610.firebaseio.com/");
-//        pesan.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-//        final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        //       final String userId = "nama";
-//        pesan.child("users").child(userId).addListenerForSingleValueEvent(
-//                new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(DataSnapshot dataSnapshot) {
-//                        // Get user value
-//
-//                        writeNewPost(str_nama, str_alamat, str_nohp, userId);
-//
-////                        // [START_EXCLUDE]
-////                        if (user == null) {
-////                            // User is null, error out
-////                            Toast.makeText(PemasanganBaru.this,
-////                                    "Error: could not fetch user.",
-////                                    Toast.LENGTH_SHORT).show();
-////                        } else {
-////                            // Write new post
-////                            writeNewPost(userId, nama, alamat, nohp);
-////                        }
-//
-//                        // Finish this Activity, back to the stream
-//                        //   setEditingEnabled(true);
-//                        finish();
-//                        // [END_EXCLUDE]
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//
-//                        // [START_EXCLUDE]
-//                        //   setEditingEnabled(true);
-//                        // [END_EXCLUDE]
-//                    }
-//                });
-//        // [END single_value_read]
+
     }
 
-//    // [START write_fan_out]
-//    private void writeNewPost(String userId, String username, String title, String body) {
-//        // Create new post at /user-posts/$userid/$postid and at
-//        // /posts/$postid simultaneously
-//        String key = pesan.child("posts").push().getKey();
-//        Post post = new Post(userId, username, title, body);
-//        Map<String, Object> postValues = post.toMap();
-//
-//        Map<String, Object> childUpdates = new HashMap<>();
-//        childUpdates.put("/posts/" + key, postValues);
-//        childUpdates.put("/user-posts/" + userId + "/" + key, postValues);
-//
-//        pesan.updateChildren(childUpdates);
-//    }
-//    // [END write_fan_out]
+    public void pilInstall(View view) {
+        boolean pilCek = ((RadioButton) view).isChecked();
+        switch (view.getId()) {
+            case R.id.dgInstalasi:
+                if (pilCek) {
+                    hh.setChecked(false);
+                    tanpaInstalasi.setVisibility(LinearLayout.GONE);
+                    denganInstakasi.setVisibility(LinearLayout.VISIBLE);
+//                    rb1.setChecked(true);
+                    manual.setVisibility(LinearLayout.GONE);
+                    paket.setVisibility(LinearLayout.GONE);
+                    pildaya.setVisibility(LinearLayout.GONE);
+                }
+                break;
+            case R.id.tpInstalasi:
+                if (pilCek) {
+                    Toast.makeText(PemasanganBaru.this, "coba", Toast.LENGTH_SHORT).show();
+                    hh1.setChecked(false);
+                    denganInstakasi.setVisibility(LinearLayout.GONE);
+                    tanpaInstalasi.setVisibility(LinearLayout.VISIBLE);
+                }
+                break;
+        }
+    }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        pesan.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                AmbilData ambilData = dataSnapshot.getValue(AmbilData.class);
-//                System.out.println(ambilData);
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-//        pesan.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//
-//                String value = dataSnapshot.getValue(String.class);
-//            //    Toast.makeText(PemasanganBaru.this, "Nama " + value , Toast.LENGTH_SHORT).show();
-//                System.out.println("Value "+value);
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                Toast.makeText(PemasanganBaru.this, "Error", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
+    public void pilPaket(View view) {
+        boolean pilCek = ((RadioButton) view).isChecked();
+        switch (view.getId()) {
+            case R.id.pilihanPaket:
+                if (pilCek) {
+                    manual.setVisibility(LinearLayout.GONE);
+                    paket.setVisibility(LinearLayout.VISIBLE);
+                    rb1.setChecked(false);
+                }
+                break;
+            case R.id.pilihanManual:
+                if (pilCek) {
+                    paket.setVisibility(LinearLayout.GONE);
+                    manual.setVisibility(LinearLayout.VISIBLE);
+                    rb2.setChecked(false);
+                }
+                break;
+        }
+    }
 
     private void sendNotication() {
         AsyncTask.execute(new Runnable() {

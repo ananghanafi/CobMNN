@@ -47,6 +47,45 @@
                     android:orientation="vertical"
                     android:padding="5dp">
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"></LinearLayout>
+
+
+                    <com.jaredrummler.materialspinner.MaterialSpinner
+                        android:id="@+id/spinnerWilBaru"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="16dp"
+                        android:paddingTop="16dp"
+                        app:ms_dropdown_height="wrap_content"
+                        app:ms_dropdown_max_height="350dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"></LinearLayout>
+
+                    <com.jaredrummler.materialspinner.MaterialSpinner
+                        android:id="@+id/spinnerRayBaru"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="16dp"
+                        android:paddingTop="16dp"
+                        app:ms_dropdown_height="wrap_content"
+                        app:ms_dropdown_max_height="350dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"></LinearLayout>
+
+                    <com.jaredrummler.materialspinner.MaterialSpinner
+                        android:id="@+id/spinnerPemdBaru"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="16dp"
+                        android:paddingTop="16dp"
+                        app:ms_dropdown_height="wrap_content"
+                        app:ms_dropdown_max_height="350dp" />
                     <!--<TextView-->
                     <!--android:layout_width="wrap_content"-->
                     <!--android:layout_height="wrap_content"-->
@@ -58,6 +97,9 @@
                     <!--android:layout_width="match_parent"-->
                     <!--android:layout_height="wrap_content"-->
                     <!--android:hint="nama" />-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"></LinearLayout>
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
@@ -98,6 +140,34 @@
                             android:scrollbars="vertical" />
                     </android.support.design.widget.TextInputLayout>
 
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+
+                        <EditText
+                            android:id="@+id/kelurahanBaru"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="top|left"
+                            android:hint="Kelurahan/desa"
+                            android:scrollbars="vertical" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+
+                        <EditText
+                            android:id="@+id/noBangunanBaru"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="top|left"
+                            android:hint="No. Bangunan"
+                            android:scrollbars="vertical" />
+                    </android.support.design.widget.TextInputLayout>
+
                     <!--<TextView-->
                     <!--android:layout_width="wrap_content"-->
                     <!--android:layout_height="wrap_content"-->
@@ -125,21 +195,226 @@
                             android:scrollbars="vertical" />
                     </android.support.design.widget.TextInputLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="16dp"
-                        android:text="Pilih Daya" />
-
-                    <com.jaredrummler.materialspinner.MaterialSpinner
-                        android:id="@+id/spinnerBaru"
+                    <RadioGroup
+                        android:id="@+id/pilInstalasi"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingBottom="16dp"
-                        android:paddingTop="16dp"
-                        app:ms_dropdown_height="wrap_content"
-                        app:ms_dropdown_max_height="350dp" />
+                        android:layout_gravity="center_horizontal">
 
+                        <GridLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:columnCount="2"
+                            android:gravity="center_horizontal">
+
+                            <RadioButton
+                                android:id="@+id/dgInstalasi"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_columnWeight="1"
+                                android:onClick="pilInstall"
+                                android:text="Dengan Intalasi" />
+
+                            <RadioButton
+                                android:id="@+id/tpInstalasi"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_columnWeight="1"
+                                android:onClick="pilInstall"
+                                android:text="Tanpa Instalasi" />
+                        </GridLayout>
+
+                    </RadioGroup>
+
+                    <LinearLayout
+
+                        android:id="@+id/denganInstalasi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <RadioGroup
+                            android:id="@+id/pilPaket"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center_horizontal">
+
+                            <GridLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:columnCount="2">
+
+                                <RadioButton
+                                    android:id="@+id/pilihanPaket"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_columnWeight="1"
+                                    android:onClick="pilPaket"
+                                    android:text="Paket" />
+
+                                <RadioButton
+                                    android:id="@+id/pilihanManual"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_columnWeight="1"
+                                    android:onClick="pilPaket"
+                                    android:text="Manual" />
+                            </GridLayout>
+
+                        </RadioGroup>
+
+                        <LinearLayout
+                            android:id="@+id/pilihanPaketManual"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+
+                            <android.support.design.widget.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <EditText
+                                    android:id="@+id/fittingLampuBaruManual"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="top|left"
+                                    android:hint="Jumlah Fitting Lampu dan Saklar"
+                                    android:scrollbars="vertical" />
+                            </android.support.design.widget.TextInputLayout>
+
+                            <android.support.design.widget.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <EditText
+                                    android:id="@+id/StopContactLampuManual"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="top|left"
+                                    android:hint="Jumlah Stop Contact"
+                                    android:scrollbars="vertical" />
+                            </android.support.design.widget.TextInputLayout>
+
+                            <android.support.design.widget.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <EditText
+                                    android:id="@+id/mcbLampuBaruManual"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:clickable="false"
+                                    android:editable="false"
+                                    android:focusable="false"
+                                    android:gravity="top|left"
+                                    android:hint="1"
+                                    android:scrollbars="vertical" />
+                            </android.support.design.widget.TextInputLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/pilihanPaketPaket"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+
+                            <android.support.design.widget.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <EditText
+                                    android:id="@+id/fittingLampuBaruPaket"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:clickable="false"
+                                    android:editable="true"
+                                    android:focusable="false"
+                                    android:gravity="top|left"
+                                    android:hint="3"
+                                    android:scrollbars="vertical" />
+                            </android.support.design.widget.TextInputLayout>
+
+                            <android.support.design.widget.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <EditText
+                                    android:id="@+id/StopContactLampuBaruPaket"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:clickable="false"
+                                    android:editable="true"
+                                    android:focusable="false"
+                                    android:gravity="top|left"
+                                    android:hint="1"
+                                    android:scrollbars="vertical" />
+                            </android.support.design.widget.TextInputLayout>
+
+                            <android.support.design.widget.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <EditText
+                                    android:id="@+id/mcbLampuBaruPaket"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:clickable="false"
+                                    android:editable="true"
+                                    android:focusable="false"
+                                    android:gravity="top|left"
+                                    android:hint="1"
+                                    android:scrollbars="vertical" />
+                            </android.support.design.widget.TextInputLayout>
+                        </LinearLayout>
+                        <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:paddingTop="16dp"-->
+                        <!--android:text="Pilih Daya" />-->
+                        <LinearLayout
+                            android:id="@+id/pilDaya"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <com.jaredrummler.materialspinner.MaterialSpinner
+                                android:id="@+id/spinnerBaru"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="16dp"
+                                android:paddingTop="16dp"
+                                app:ms_dropdown_height="wrap_content"
+                                app:ms_dropdown_max_height="350dp" />
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/tanpaInstalasi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+
+                        <com.jaredrummler.materialspinner.MaterialSpinner
+                            android:id="@+id/spinnerBaruNon"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="16dp"
+                            android:paddingTop="16dp"
+                            app:ms_dropdown_height="wrap_content"
+                            app:ms_dropdown_max_height="350dp" />
+
+
+                    </LinearLayout>
                     <!--<Button-->
                     <!--android:id="@+id/btCekBiaya"-->
                     <!--android:layout_width="match_parent"-->

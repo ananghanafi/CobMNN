@@ -73,6 +73,7 @@ public class HomeFragment extends Fragment implements BaseSliderView.OnSliderCli
         mDemoSlider = (SliderLayout) view.findViewById(R.id.slider);
         CardView imgTambah = (CardView) view.findViewById(R.id.penambahanDaya);
         CardView imgPasang = (CardView) view.findViewById(R.id.pemasanganBaru);
+        CardView imgPerbaikan = (CardView) view.findViewById(R.id.perbaikan);
       //  FloatingActionButton fabLogin = (FloatingActionButton) view.findViewById(R.id.fab);
         HashMap<String, String> url_maps = new HashMap<String, String>();
         url_maps.put("Hannibal", "http://www.lesprivatinggrisjogja.com/wp-content/uploads/2015/05/les-privat2.jpg");
@@ -107,6 +108,13 @@ public class HomeFragment extends Fragment implements BaseSliderView.OnSliderCli
             }
         });
         imgPasang.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent pemasangan = new Intent(getActivity(), PemasanganBaru.class);
+                startActivity(pemasangan);
+            }
+        });
+        imgPerbaikan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent pemasangan = new Intent(getActivity(), PemasanganBaru.class);

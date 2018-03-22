@@ -78,8 +78,10 @@
         <activity android:name=".DriveMcc" />
         <activity android:name=".RecycleActivity" />
         <activity android:name=".FormOrderDaya" />
-        <activity android:name=".SendGmail"
-            android:label="mcc.gerai1@gmail.com"></activity>
+        <activity
+            android:name=".SendGmail"
+            android:label="mcc.gerai1@gmail.com" />
+        <activity android:name=".Perbaikan"></activity>
     </application>
 
 </manifest>
