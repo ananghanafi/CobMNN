@@ -42,190 +42,384 @@
                 android:layout_height="wrap_content">
 
                 <LinearLayout
-                    android:padding="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <!--<TextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:paddingTop="16dp"-->
-                    <!--android:text="Nama" />-->
-
-                    <!--<EditText-->
-                    <!--android:id="@+id/namaDaya"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:hint="nama" />-->
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                    android:orientation="vertical"
+                    android:padding="5dp">
 
 
-                        <EditText
-                            android:id="@+id/namaDaya"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="top|left"
-                            android:hint="Nama"
-                            android:scrollbars="vertical" />
-                    </android.support.design.widget.TextInputLayout>
-
-                    <!--<TextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:paddingTop="16dp"-->
-                    <!--android:text="Pilih Daya" />-->
-
-                    <!--<TextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:paddingTop="16dp"-->
-                    <!--android:text="Alamat" />-->
-
-                    <!--<EditText-->
-                    <!--android:id="@+id/alamatDaya"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:hint="alamat" />-->
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-
-                        <EditText
-                            android:id="@+id/alamatDaya"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="top|left"
-                            android:hint="alamat"
-                            android:scrollbars="vertical" />
-                    </android.support.design.widget.TextInputLayout>
-
-                    <!--<TextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:paddingTop="16dp"-->
-                    <!--android:text="Pilih Daya" />-->
-
-                    <!--<TextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:paddingTop="16dp"-->
-                    <!--android:text="No Handphone" />-->
-
-                    <!--<EditText-->
-                    <!--android:id="@+id/nohpDaya"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:hint="no.hp"-->
-                    <!--android:inputType="number" />-->
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-
-                        <EditText
-                            android:id="@+id/nohpDaya"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="top|left"
-                            android:hint="Nomor Handphone"
-                            android:inputType="number"
-                            android:scrollbars="vertical" />
-                    </android.support.design.widget.TextInputLayout>
-
-                    <!--<TextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:paddingTop="16dp"-->
-                    <!--android:text="Pilih Daya" />-->
-
-                    <!--<TextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:paddingTop="16dp"-->
-                    <!--android:text="No Pelanggan/No Meter" />-->
-
-                    <!--<EditText-->
-                    <!--android:id="@+id/noplg"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:hint="no pelanggan/no meter"-->
-                    <!--android:inputType="number" />-->
-
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-
-                        <EditText
-                            android:id="@+id/noplg"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="top|left"
-                            android:hint="Nomor Pelanggan"
-                            android:inputType="number"
-                            android:scrollbars="vertical" />
-                    </android.support.design.widget.TextInputLayout>
-
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="16dp"
-                        android:text="Pilih Daya" />
-
-                    <com.jaredrummler.materialspinner.MaterialSpinner
-                        android:id="@+id/spinnerBaru"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingBottom="16dp"
-                        android:paddingTop="16dp"
-                        app:ms_dropdown_height="wrap_content"
-                        app:ms_dropdown_max_height="350dp" />
-
-                    <!--<Button-->
-                    <!--android:id="@+id/btCekBiaya"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:background="@color/colorPrimary"-->
-                    <!--android:onClick="btCekBiayaDaya"-->
-                    <!--android:text="Cek Biaya (telp gerai) " />-->
-
-
-                    <!--<LinearLayout-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="16dp">-->
-
-                    <!--</LinearLayout>-->
-
-                    <!--<Button-->
-                    <!--android:id="@+id/btPesanTambahDaya"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:background="@color/colorAccent"-->
-                    <!--android:onClick="btPesanTambahDaya"-->
-                    <!--android:text="Pesan" />-->
-
-                    <!--<LinearLayout-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="16dp">-->
-
-                    <!--</LinearLayout>-->
-
-                    <!--<Button-->
-                    <!--android:id="@+id/uploadGmailDaya"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:background="@color/colorAccent"-->
-                    <!--android:onClick="btUploadFileDaya"-->
-                    <!--android:text="Kirim file dengan Gmail" />-->
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="80dp">
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
 
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"></LinearLayout>
+
+
+                        <com.jaredrummler.materialspinner.MaterialSpinner
+                            android:id="@+id/spinnerWilBaru"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="16dp"
+                            android:paddingTop="16dp"
+                            app:ms_dropdown_height="wrap_content"
+                            app:ms_dropdown_max_height="350dp" />
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"></LinearLayout>
+
+
+                        <com.jaredrummler.materialspinner.MaterialSpinner
+                            android:id="@+id/spinnerCabangBaru"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="16dp"
+                            android:paddingTop="16dp"
+                            app:ms_dropdown_height="wrap_content"
+                            app:ms_dropdown_max_height="350dp" />
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"></LinearLayout>
+
+
+                        <com.jaredrummler.materialspinner.MaterialSpinner
+                            android:id="@+id/spinnerRayonBaru"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="16dp"
+                            android:paddingTop="16dp"
+                            app:ms_dropdown_height="wrap_content"
+                            app:ms_dropdown_max_height="350dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"></LinearLayout>
+
+
+                        <com.jaredrummler.materialspinner.MaterialSpinner
+                            android:id="@+id/spinnerGeraiBaru"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="16dp"
+                            android:paddingTop="16dp"
+                            app:ms_dropdown_height="wrap_content"
+                            app:ms_dropdown_max_height="350dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"></LinearLayout>
+                        <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:paddingTop="16dp"-->
+                        <!--android:text="Nama" />-->
+
+                        <!--<EditText-->
+                        <!--android:id="@+id/namaDaya"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:hint="nama" />-->
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+
+                            <EditText
+                                android:id="@+id/namaDaya"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="top|left"
+                                android:hint="Nama"
+                                android:scrollbars="vertical" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:paddingTop="16dp"-->
+                        <!--android:text="Pilih Daya" />-->
+
+                        <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:paddingTop="16dp"-->
+                        <!--android:text="Alamat" />-->
+
+                        <!--<EditText-->
+                        <!--android:id="@+id/alamatDaya"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:hint="alamat" />-->
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+
+                            <EditText
+                                android:id="@+id/alamatDaya"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="top|left"
+                                android:hint="alamat"
+                                android:scrollbars="vertical" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:paddingTop="16dp"-->
+                        <!--android:text="Pilih Daya" />-->
+
+                        <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:paddingTop="16dp"-->
+                        <!--android:text="No Handphone" />-->
+
+                        <!--<EditText-->
+                        <!--android:id="@+id/nohpDaya"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:hint="no.hp"-->
+                        <!--android:inputType="number" />-->
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+
+                            <EditText
+                                android:id="@+id/nohpDaya"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="top|left"
+                                android:hint="Nomor Handphone"
+                                android:inputType="number"
+                                android:scrollbars="vertical" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:paddingTop="16dp"-->
+                        <!--android:text="Pilih Daya" />-->
+
+                        <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:paddingTop="16dp"-->
+                        <!--android:text="No Pelanggan/No Meter" />-->
+
+                        <!--<EditText-->
+                        <!--android:id="@+id/noplg"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:hint="no pelanggan/no meter"-->
+                        <!--android:inputType="number" />-->
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+
+                            <EditText
+                                android:id="@+id/noplg"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="top|left"
+                                android:hint="Nomor Pelanggan"
+                                android:inputType="number"
+                                android:scrollbars="vertical" />
+                        </android.support.design.widget.TextInputLayout>
+
+
+                        <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:paddingTop="16dp"-->
+                        <!--android:text="Pilih Daya" />-->
+                        <com.jaredrummler.materialspinner.MaterialSpinner
+                            android:id="@+id/sDayaDaya"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="16dp"
+                            android:paddingTop="16dp"
+                            app:ms_dropdown_height="wrap_content"
+                            app:ms_dropdown_max_height="350dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"></LinearLayout>
+
+                        <com.jaredrummler.materialspinner.MaterialSpinner
+                            android:id="@+id/sDayaDayaBaru"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="16dp"
+                            android:paddingTop="16dp"
+                            app:ms_dropdown_height="wrap_content"
+                            app:ms_dropdown_max_height="350dp" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"></LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/tampilBiaya"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/colorPrimary"
+                            android:orientation="vertical"
+                            android:paddingBottom="16dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:paddingBottom="5dp"
+                                android:text="Biaya"
+                                android:textColor="@android:color/white"
+                                android:textSize="18dp" />
+
+                            <TableLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:stretchColumns="1">
+
+                                <TableRow>
+
+                                    <TextView
+                                        android:layout_column="1"
+                                        android:padding="5dp"
+                                        android:text="BP PLN" />
+
+                                    <TextView
+                                        android:id="@+id/textBP"
+                                        android:layout_column="1"
+                                        android:padding="5dp"
+                                        android:text="12" />
+                                </TableRow>
+
+                                <TableRow>
+
+                                    <TextView
+                                        android:layout_column="1"
+                                        android:padding="5dp"
+                                        android:text="Biaya Intalasi" />
+
+                                    <TextView
+                                        android:id="@+id/textIntalasi"
+                                        android:layout_column="1"
+                                        android:padding="5dp"
+                                        android:text="12" />
+                                </TableRow>
+
+                                <TableRow>
+
+                                    <TextView
+                                        android:layout_column="1"
+                                        android:padding="5dp"
+                                        android:text="SLO" />
+
+                                    <TextView
+                                        android:id="@+id/textSLO"
+                                        android:layout_column="1"
+                                        android:padding="5dp"
+                                        android:text="12" />
+                                </TableRow>
+
+                                <TableRow>
+
+                                    <TextView
+                                        android:layout_column="1"
+                                        android:padding="5dp"
+                                        android:text="Gambar \nInstalasi" />
+
+                                    <TextView
+                                        android:id="@+id/textGinstalasi"
+                                        android:layout_column="1"
+                                        android:padding="5dp"
+                                        android:text="12" />
+                                </TableRow>
+
+                                <TableRow>
+
+                                    <TextView
+                                        android:layout_column="1"
+                                        android:padding="5dp"
+                                        android:text="Materai" />
+
+                                    <TextView
+                                        android:id="@+id/textMaterai"
+                                        android:layout_column="1"
+                                        android:padding="5dp"
+                                        android:text="12" />
+                                </TableRow>
+                                <TableRow>
+
+                                    <TextView
+                                        android:textColor="@android:color/white"
+                                        android:textSize="18dp"
+                                        android:layout_column="1"
+                                        android:padding="5dp"
+                                        android:text="Jumlah" />
+
+                                    <TextView
+                                        android:textColor="@android:color/white"
+                                        android:textSize="18dp"
+                                        android:id="@+id/textJumlah"
+                                        android:layout_column="1"
+                                        android:padding="5dp"
+                                        android:text="12" />
+                                </TableRow>
+                            </TableLayout>
+                        </LinearLayout>
+
+                        <!--<Button-->
+                        <!--android:id="@+id/btCekBiaya"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:background="@color/colorPrimary"-->
+                        <!--android:onClick="btCekBiayaDaya"-->
+                        <!--android:text="Cek Biaya (telp gerai) " />-->
+
+
+                        <!--<LinearLayout-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="16dp">-->
+
+                        <!--</LinearLayout>-->
+
+                        <!--<Button-->
+                        <!--android:id="@+id/btPesanTambahDaya"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:background="@color/colorAccent"-->
+                        <!--android:onClick="btPesanTambahDaya"-->
+                        <!--android:text="Pesan" />-->
+
+                        <!--<LinearLayout-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="16dp">-->
+
+                        <!--</LinearLayout>-->
+
+                        <!--<Button-->
+                        <!--android:id="@+id/uploadGmailDaya"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:background="@color/colorAccent"-->
+                        <!--android:onClick="btUploadFileDaya"-->
+                        <!--android:text="Kirim file dengan Gmail" />-->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="80dp">
+
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
             </ScrollView>

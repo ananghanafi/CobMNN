@@ -227,11 +227,11 @@ public class FormOrder extends AppCompatActivity {
             nohp.requestFocus();
             return;
         }else {
-            AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
-                    , pilihan[posisi], hargaBaru[posisi], lat, lng, "");
+//            AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
+//                    , pilihan[posisi], hargaBaru[posisi], lat, lng, "");
 //        AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
 //                , pilihan[posisi], hargaBaru[posisi], lat, lng, time);
-            pemesanan.child(str_id).setValue(user);
+ //           pemesanan.child(str_id).setValue(user);
             Toast.makeText(FormOrder.this, "Pemesanan sedang di proses", Toast.LENGTH_SHORT).show();
         }
 //        AmbilData user = new AmbilData(str_alamat);

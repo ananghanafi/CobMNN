@@ -145,7 +145,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:background="@mipmap/icondaya_24"
+                                android:background="@mipmap/iconperbaikan"
                                 tools:ignore="OnClick" />
 
                             <TextView

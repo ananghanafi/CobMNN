@@ -222,11 +222,11 @@ public class FormOrderDaya extends AppCompatActivity {
             noplg.requestFocus();
             return;
         }else {
-            AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
-                    , pilihan[posisi], hargaBaru[posisi], lat, lng, "");
+//            AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
+//                    , pilihan[posisi], hargaBaru[posisi], lat, lng, "");
 //        AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
 //                , pilihan[posisi], hargaBaru[posisi], lat, lng, time);
-            cekbiaya.child(str_id).setValue(user);
+//            cekbiaya.child(str_id).setValue(user);
         }
 //        AmbilData user = new AmbilData("Pemasangan Baru ", str_nama, str_alamat, str_nohp
 //                , pilihan[posisi], hargaBaru[posisi], lat, lng);
@@ -299,11 +299,11 @@ public class FormOrderDaya extends AppCompatActivity {
             noplg.requestFocus();
             return;
         } else {
-            AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
-                    , pilihan[posisi], hargaBaru[posisi], lat, lng, "");
+//            AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
+//                    , pilihan[posisi], hargaBaru[posisi], lat, lng, "");
 //        AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
 //                , pilihan[posisi], hargaBaru[posisi], lat, lng, time);
-            pemesanan.child(str_id).setValue(user);
+ //           pemesanan.child(str_id).setValue(user);
             Toast.makeText(FormOrderDaya.this, "Pemesanan sedang di proses", Toast.LENGTH_SHORT).show();
         }
 //        AmbilData user = new AmbilData(str_alamat);

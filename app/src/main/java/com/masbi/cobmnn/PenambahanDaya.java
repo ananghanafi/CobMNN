@@ -74,7 +74,7 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
     private DatabaseReference databaseReference;
     private StorageReference storageReference;
     FirebaseDatabase database;
-    DatabaseReference myRef, pesan, pemesanan, cekbiaya;
+    DatabaseReference myRef, pesan, pemesanan, cekbiaya, wilayah;
     TextView harga;
     String time;
     String pilihan[];
@@ -82,7 +82,24 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
     EditText nama, alamat, nohp, noplg;
     int userId;
     String namaS, alamatS, nohpS, id;
+    //int posisi;
+    String[] tempc = new String[2];
+    String[] tempr1 = new String[7];
+    String[] tempr1id = new String[7];
+    String[] tempr1a = new String[3];
+    String[] tempr1aid = new String[3];
+    String[] tempr1adayabaru = new String[15];
+    String[] tempr1adayadaya = new String[15];
+    String[] tempCabang1 = new String[2];
     int posisi;
+    int coba, cobaCabang1, cobaCabang2, cobaRayon1, cobaRayon2, cobaRayon3, cobaRayon4, cobaRayon5, cobaRayon6, cobaRayon7, cobaRayon8,
+            cobaPemda1, cobaPemda2, cobaPemda3, cobaPemda4;
+    String str_Wilayah, str_Cabang, str_Rayon, str_Pemda, str_Gerai,
+            str_bpPLN, str_Instalasi, str_Slo, str_gInstalasi, str_Materai,
+            str_adminDaya, str_tokenDaya, str_MateraiDaya, str_daya, str_dayaDaya,
+            str_eLampOut, str_eLampIn, str_elContactOut, str_elContactIn;
+    MaterialSpinner sWilayah, sCabang, sRayon, sPemda, sGerai, sForm, sDayaDayaBaru, sDayaDaya;
+    String strWilayah[], strCabang[], strRayon[], strPemda[], strGerai[], strForm[], strDayaDayaBaru[], strDayaDaya[];
 
 
     @Override
@@ -104,41 +121,84 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
         pemesanan = FirebaseDatabase.getInstance().getReference("pemesanan");
         cekbiaya = FirebaseDatabase.getInstance().getReference("cekbiaya");
         pesan = myRef.child("users");
+        sWilayah = (MaterialSpinner) findViewById(R.id.spinnerWilBaru);
+        sCabang = (MaterialSpinner) findViewById(R.id.spinnerCabangBaru);
+        sRayon = (MaterialSpinner) findViewById(R.id.spinnerRayonBaru);
+        //    sPemda = (MaterialSpinner) findViewById(R.id.spinnerPemdaBaru);
+        sGerai = (MaterialSpinner) findViewById(R.id.spinnerGeraiBaru);
+        sDayaDaya = (MaterialSpinner) findViewById(R.id.sDayaDaya);
+        sDayaDayaBaru = (MaterialSpinner) findViewById(R.id.sDayaDayaBaru);
+        wilayah = FirebaseDatabase.getInstance().getReference("wilayah");
 
-
-        pilihan = new String[]{
-                "450 VA",
-                "900 VA",
-                "1300 VA",
-                "2200 VA",
-                "3500 VA",
-                "4400 VA",
-                "5500 VA",
-
-        };
-        hargaBaru = new String[]{
-                "??",
-                "??",
-                "??",
-                "??",
-                "??",
-                "??",
-                "??",
+        strWilayah = new String[]{
+                "Pilih Wilayah",
+                "Kalimantan Selatan dan Tengah",
+                "Tambah",
 
         };
-        MaterialSpinner spinnerBaru = (MaterialSpinner) findViewById(R.id.spinnerBaru);
-        spinnerBaru.setItems(pilihan);
-        spinnerBaru.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+        sWilayah.setItems(strWilayah);
+        sWilayah.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
 
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                posisi = position;
-                Snackbar.make(view, "Besar daya " + pilihan[position] + " seharga " + hargaBaru[position], Snackbar.LENGTH_LONG).show();
+                switch (position) {
+                    case 0:
+                        System.out.println("cek 1");
+                        break;
+                    case 1:
+                        System.out.println("cek 3");
+                        wilayah.child("-L8RZ6tzs-N_R2LTlzom")
+                                .child("cabang").addValueEventListener(new ValueEventListener() {
+
+                                                                           @Override
+                                                                           public void onDataChange(DataSnapshot dataSnapshot) {
+                                                                               System.out.println("OnData Change");
+                                                                               //           ambilDataList.clear();
+                                                                               int i = 0;
+                                                                               for (DataSnapshot pesanSnpshot : dataSnapshot.getChildren()) {
+                                                                                   //                   pbAll.setVisibility(View.GONE);
+                                                                                   AmbilData ambilData = pesanSnpshot.getValue(AmbilData.class);
+                                                                                   //  ambilDataList.add(ambilData);
+                                                                                   tempc[i] = ambilData.getStr_Cabang();
+                                                                                   //   tempId[i] = ambilData.getId();
+                                                                                   System.out.println("NO " + i + 1 + "Ambil Data " + ambilData);
+                                                                                   System.out.println("" + ambilData.getStr_Cabang());
+                                                                                   //  listView.setAdapter(ambilData.getId());
+                                                                                   i++;
+
+
+                                                                               }
+
+                                                                               coba = tempc.length;
+                                                                               System.out.println("cabang " + coba + tempc[1]);
+//                                                                                                            adapter = new Arraylist(DaftarAplikasi.this, ambilDataList);
+//                                                                                                            listView.setAdapter(adapter);
+
+                                                                               System.out.println("sss " + tempc[0] + tempc[1]);
+                                                                               spinnerCabang();
+                                                                           }
+
+                                                                           @Override
+                                                                           public void onCancelled(DatabaseError databaseError) {
+
+                                                                           }
+
+                                                                       }
+                        );
+
+                        break;
+                    case 2:
+                        System.out.println("cek 4");
+                        Snackbar.make(view, "Segera", Snackbar.LENGTH_LONG).show();
+                        break;
+                }
+
+                //   Snackbar.make(view, "Besar daya " + pilihan[position] + " seharga " + hargaBaru[position], Snackbar.LENGTH_LONG).show();
                 //  String setHarga = harga.setText();
                 //    Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
             }
         });
-        spinnerBaru.setOnNothingSelectedListener(new MaterialSpinner.OnNothingSelectedListener() {
+        sWilayah.setOnNothingSelectedListener(new MaterialSpinner.OnNothingSelectedListener() {
 
             @Override
             public void onNothingSelected(MaterialSpinner spinner) {
@@ -487,11 +547,11 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
             noplg.requestFocus();
             return;
         } else {
-            AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
-                    , pilihan[posisi], hargaBaru[posisi], lat, lng, "");
+//            AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
+//                    , pilihan[posisi], hargaBaru[posisi], lat, lng, "");
 //        AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
 //                , pilihan[posisi], hargaBaru[posisi], lat, lng, time);
-            cekbiaya.child(str_id).setValue(user);
+            //           cekbiaya.child(str_id).setValue(user);
         }
 //        AmbilData user = new AmbilData(str_alamat);
 
@@ -531,11 +591,11 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
             noplg.requestFocus();
             return;
         } else {
-            AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
-                    , pilihan[posisi], hargaBaru[posisi], lat, lng, "");
+//            AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
+//                    , pilihan[posisi], hargaBaru[posisi], lat, lng, "");
 //        AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
 //                , pilihan[posisi], hargaBaru[posisi], lat, lng, time);
-            pemesanan.child(str_id).setValue(user);
+            //           pemesanan.child(str_id).setValue(user);
             Toast.makeText(PenambahanDaya.this, "Pemesanan sedang di proses", Toast.LENGTH_SHORT).show();
         }
 //        AmbilData user = new AmbilData(str_alamat);
@@ -626,7 +686,7 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
 //    }
 //    // [END write_fan_out]
 
-//    @Override
+    //    @Override
 //    protected void onStart() {
 //        super.onStart();
 //        pesan.addValueEventListener(new ValueEventListener() {
@@ -656,6 +716,757 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
 //            }
 //        });
 //    }
+    private void spinnerCabang() {
+
+        if (coba == 2) {
+            strCabang = new String[]{
+                    "Pilih Cabang",
+                    "" + tempc[0], "" + tempc[1],
+                    "Tambah",
+
+            };
+        } else if (coba == 3) {
+            strCabang = new String[]{
+                    "Pilih Cabang",
+                    tempc[0], tempc[1], tempc[2],
+                    "Tambah",
+
+            };
+        } else if (coba == 4) {
+            strCabang = new String[]{
+                    "Pilih Cabang",
+                    tempc[0], tempc[1], tempc[2], tempc[3],
+                    "Tambah",
+
+            };
+        } else if (coba == 5) {
+            strCabang = new String[]{
+                    "Pilih Cabang",
+                    tempc[0], tempc[1], tempc[2], tempc[3], tempc[4],
+                    "Tambah",
+
+            };
+        }
+
+        sCabang.setItems(strCabang);
+        sCabang.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                switch (position) {
+                    case 0:
+                        System.out.println("cek 1");
+                        break;
+                    case 1:
+                        System.out.println("cek 2");
+                        cobaCabang1 = 2;
+                        wilayah.child("-L8RZ6tzs-N_R2LTlzom").child("cabang").child("-L8W31ly20ZfYmbS5VWk")
+                                .child("rayon").addValueEventListener(new ValueEventListener() {
+
+                                                                          @Override
+                                                                          public void onDataChange(DataSnapshot dataSnapshot) {
+                                                                              System.out.println("OnData Change");
+                                                                              //   ambilDataList.clear();
+                                                                              int i = 0;
+                                                                              cobaCabang2 = 0;
+                                                                              for (DataSnapshot pesanSnpshot : dataSnapshot.getChildren()) {
+                                                                                  //                   pbAll.setVisibility(View.GONE);
+                                                                                  AmbilData ambilData = pesanSnpshot.getValue(AmbilData.class);
+
+                                                                                  tempr1[i] = ambilData.getStr_Rayon();
+                                                                                  tempr1id[i] = ambilData.getId();
+
+                                                                                  System.out.println("NO " + i + 1 + "Ambil Data " + ambilData);
+                                                                                  System.out.println("" + ambilData.getStr_Rayon());
+
+                                                                                  i++;
+
+
+                                                                              }
+
+                                                                              cobaCabang2 = tempr1.length;
+                                                                              System.out.println("cabang " + coba + tempc[1]);
+//                                                                                                            adapter = new Arraylist(DaftarAplikasi.this, ambilDataList);
+//                                                                                                            listView.setAdapter(adapter);
+                                                                              System.out.println("sss " + tempc[0] + tempc[1]);
+                                                                              spinnerRayon();
+                                                                          }
+
+                                                                          @Override
+                                                                          public void onCancelled(DatabaseError databaseError) {
+
+                                                                          }
+
+                                                                      }
+                        );
+
+                        break;
+                    case 2:
+                        System.out.println("cek 3");
+                        cobaCabang1 = 3;
+
+                        Snackbar.make(view, "Segera akan di buka disana", Snackbar.LENGTH_LONG).show();
+//                        wilayah.child("-L8RZ6tzs-N_R2LTlzom").child("cabang").child("-L8WE79wPGisnB2emGcx")
+//                                .child("rayon").addValueEventListener(new ValueEventListener() {
+//
+//                                                                          @Override
+//                                                                          public void onDataChange(DataSnapshot dataSnapshot) {
+//                                                                              System.out.println("OnData Change");
+//                                                                              //   ambilDataList.clear();
+//                                                                              int i = 0;
+//                                                                              for (DataSnapshot pesanSnpshot : dataSnapshot.getChildren()) {
+//                                                                                  //                   pbAll.setVisibility(View.GONE);
+//                                                                                  AmbilData ambilData = pesanSnpshot.getValue(AmbilData.class);
+//
+//                                                                                  tempr1[i] = ambilData.getStr_Rayon();
+//
+//                                                                                  System.out.println("NO " + i + 1 + "Ambil Data " + ambilData);
+//                                                                                  System.out.println("" + ambilData.getStr_Cabang());
+//                                                                                  //    ambilDataList.add(ambilData);
+//                                                                                  i++;
+//
+//
+//                                                                              }
+//
+////                                                                              cobaCabang1 = 3;
+//                                                                              System.out.println("cabang " + coba + tempc[1]);
+////                                                                                                            adapter = new Arraylist(DaftarAplikasi.this, ambilDataList);
+////                                                                                                            listView.setAdapter(adapter);
+//                                                                              System.out.println("sss " + tempc[0] + tempc[1]);
+//                                                                              spinnerRayon();
+//                                                                          }
+//
+//                                                                          @Override
+//                                                                          public void onCancelled(DatabaseError databaseError) {
+//
+//                                                                          }
+//
+//                                                                      }
+//                        );
+
+                        break;
+                    case 3:
+                        System.out.println("cek 3");
+                        Snackbar.make(view, "Nambah Cabang?", Snackbar.LENGTH_LONG).show();
+                        break;
+                    case 4:
+                        System.out.println("cek 3");
+                        break;
+                    case 5:
+                        System.out.println("cek 3");
+                        break;
+                    case 6:
+                        System.out.println("cek 3");
+                        break;
+                    case 7:
+                        System.out.println("cek 3");
+                        break;
+
+                }
+
+                //   Snackbar.make(view, "Besar daya " + pilihan[position] + " seharga " + hargaBaru[position], Snackbar.LENGTH_LONG).show();
+                //  String setHarga = harga.setText();
+                //    Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
+            }
+        });
+
+        sCabang.setOnNothingSelectedListener(new MaterialSpinner.OnNothingSelectedListener() {
+
+            @Override
+            public void onNothingSelected(MaterialSpinner spinner) {
+                Snackbar.make(spinner, "Belum di pilih", Snackbar.LENGTH_LONG).show();
+            }
+        });
+        //     }
+
+    }
+
+    private void spinnerRayon() {
+        if (cobaCabang2 == 2) {
+            strRayon = new String[]{
+                    "Pilih Rayon",
+                    "" + tempr1[0], "" + tempr1[1],
+                    "Tambah",
+
+            };
+        } else if (cobaCabang2 == 3) {
+            strRayon = new String[]{
+                    "Pilih Rayon",
+                    "" + tempr1[0], "" + tempr1[1], "" + tempr1[2],
+                    "Tambah",
+
+            };
+        } else if (cobaCabang2 == 4) {
+            strRayon = new String[]{
+                    "Pilih Rayon",
+                    "" + tempr1[0], tempr1[1], tempr1[2], tempr1[3],
+
+                    "Tambah",
+
+            };
+        } else if (cobaCabang2 == 5) {
+            strRayon = new String[]{
+                    "Pilih Rayon",
+                    tempr1[0], tempr1[1], tempr1[2], tempr1[3], tempr1[4],
+                    "Tambah",
+
+            };
+        } else if (cobaCabang2 == 6) {
+            strRayon = new String[]{
+                    "Pilih Rayon",
+                    tempr1[0], tempr1[1], tempr1[2], tempr1[3], tempr1[4], tempr1[5],
+                    "Tambah",
+
+            };
+        } else if (cobaCabang2 == 7) {
+            strRayon = new String[]{
+                    "Pilih Rayon",
+                    tempr1[0], tempr1[1], tempr1[2], tempr1[3], tempr1[4], tempr1[5], tempr1[6],
+                    "Tambah",
+
+            };
+        }
+
+        sRayon.setItems(strRayon);
+        sRayon.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                switch (position) {
+                    case 0:
+                        System.out.println("cek 1");
+                        break;
+                    case 1:
+                        System.out.println("cek 2");
+                        cobaRayon1 = 2;
+                        wilayah.child("-L8RZ6tzs-N_R2LTlzom").child("cabang").child("-L8W31ly20ZfYmbS5VWk")
+                                .child("rayon").child("-L9mCkiqUTncvvgokQo0")
+                                .child("gerai").addValueEventListener(new ValueEventListener() {
+
+                                                                          @Override
+                                                                          public void onDataChange(DataSnapshot dataSnapshot) {
+                                                                              System.out.println("OnData Change");
+                                                                              //   ambilDataList.clear();
+                                                                              cobaCabang2 = 0;
+                                                                              //tempr1a = new String[2];
+                                                                              int i = 0;
+                                                                              for (DataSnapshot pesanSnpshot : dataSnapshot.getChildren()) {
+                                                                                  //                   pbAll.setVisibility(View.GONE);
+                                                                                  AmbilData ambilData = pesanSnpshot.getValue(AmbilData.class);
+
+                                                                                  tempr1a[i] = ambilData.getStr_Gerai();
+                                                                                  tempr1aid[i] = ambilData.getId();
+                                                                                  System.out.println("NO " + i + 1 + "Ambil Data " + ambilData);
+                                                                                  System.out.println("" + ambilData.getStr_Gerai());
+                                                                                  System.out.println("ssswe" + tempr1aid[i]);
+                                                                                  i++;
+
+
+                                                                              }
+
+                                                                              cobaCabang2 = tempr1a.length;
+
+                                                                              System.out.println("cabang " + coba + tempr1a.length);
+//                                                                                                            adapter = new Arraylist(DaftarAplikasi.this, ambilDataList);
+//                                                                                                            listView.setAdapter(adapter);
+                                                                              System.out.println("sss " + tempc[0] + tempc[1]);
+                                                                              //   cobaPemda1 = 1;
+                                                                              spinnerGerai();
+                                                                          }
+
+                                                                          @Override
+                                                                          public void onCancelled(DatabaseError databaseError) {
+
+                                                                          }
+
+                                                                      }
+                        );
+
+                        break;
+                    case 2:
+                        System.out.println("cek 3");
+                        cobaRayon1 = 3;
+                        wilayah.child("-L8RZ6tzs-N_R2LTlzom").child("cabang").child("-L8W31ly20ZfYmbS5VWk")
+                                .child("rayon").child("-L9mCpS62RIniO2xIhfj")
+                                .child("gerai").addValueEventListener(new ValueEventListener() {
+
+                                                                          @Override
+                                                                          public void onDataChange(DataSnapshot dataSnapshot) {
+                                                                              System.out.println("OnData Change");
+                                                                              //   ambilDataList.clear();
+                                                                              cobaCabang2 = 0;
+                                                                              //tempr1a = new String[2];
+                                                                              int i = 0;
+                                                                              for (DataSnapshot pesanSnpshot : dataSnapshot.getChildren()) {
+                                                                                  //                   pbAll.setVisibility(View.GONE);
+                                                                                  AmbilData ambilData = pesanSnpshot.getValue(AmbilData.class);
+
+                                                                                  tempr1a[i] = ambilData.getStr_Gerai();
+                                                                                  tempr1aid[i] = ambilData.getId();
+                                                                                  System.out.println("NO " + i + 1 + "Ambil Data " + ambilData);
+                                                                                  System.out.println("" + ambilData.getStr_Gerai());
+                                                                                  System.out.println("" + tempr1aid[i]);
+                                                                                  i++;
+
+
+                                                                              }
+
+                                                                              cobaCabang2 = tempr1a.length;
+
+                                                                              System.out.println("cabang " + coba + tempr1a.length);
+//                                                                                                            adapter = new Arraylist(DaftarAplikasi.this, ambilDataList);
+//                                                                                                            listView.setAdapter(adapter);
+                                                                              System.out.println("sss " + tempc[0] + tempc[1]);
+                                                                              //  cobaPemda1 = 2;
+                                                                              spinnerGerai();
+                                                                          }
+
+                                                                          @Override
+                                                                          public void onCancelled(DatabaseError databaseError) {
+
+                                                                          }
+
+                                                                      }
+                        );
+                        break;
+                    case 3:
+                        System.out.println("cek 3");
+                        cobaRayon1 = 4;
+                        wilayah.child("-L8RZ6tzs-N_R2LTlzom").child("cabang").child("-L8W31ly20ZfYmbS5VWk")
+                                .child("rayon").child("-L9mCrzfYhLU4SLga5Qr")
+                                .child("gerai").addValueEventListener(new ValueEventListener() {
+
+                                                                          @Override
+                                                                          public void onDataChange(DataSnapshot dataSnapshot) {
+                                                                              System.out.println("OnData Change");
+                                                                              //   ambilDataList.clear();
+                                                                              cobaCabang2 = 0;
+                                                                              //tempr1a = new String[2];
+                                                                              int i = 0;
+                                                                              for (DataSnapshot pesanSnpshot : dataSnapshot.getChildren()) {
+                                                                                  //                   pbAll.setVisibility(View.GONE);
+                                                                                  AmbilData ambilData = pesanSnpshot.getValue(AmbilData.class);
+
+                                                                                  tempr1a[i] = ambilData.getStr_Gerai();
+                                                                                  tempr1aid[i] = ambilData.getId();
+                                                                                  System.out.println("NO " + i + 1 + "Ambil Data " + ambilData);
+                                                                                  System.out.println("" + ambilData.getStr_Gerai());
+                                                                                  System.out.println("" + tempr1aid[i]);
+                                                                                  i++;
+
+
+                                                                              }
+
+                                                                              cobaCabang2 = tempr1a.length;
+
+                                                                              System.out.println("cabang " + coba + tempr1a.length);
+//                                                                                                            adapter = new Arraylist(DaftarAplikasi.this, ambilDataList);
+//                                                                                                            listView.setAdapter(adapter);
+                                                                              System.out.println("sss " + tempc[0] + tempc[1]);
+                                                                              //   cobaPemda1 = 3;
+                                                                              spinnerGerai();
+                                                                          }
+
+                                                                          @Override
+                                                                          public void onCancelled(DatabaseError databaseError) {
+
+                                                                          }
+
+                                                                      }
+                        );
+                        break;
+                    case 4:
+                        System.out.println("cek 3");
+                        cobaRayon1 = 5;
+                        wilayah.child("-L8RZ6tzs-N_R2LTlzom").child("cabang").child("-L8W31ly20ZfYmbS5VWk")
+                                .child("rayon").child("-L9mCtWcQobc4S2nszUH")
+                                .child("gerai").addValueEventListener(new ValueEventListener() {
+
+                                                                          @Override
+                                                                          public void onDataChange(DataSnapshot dataSnapshot) {
+                                                                              System.out.println("OnData Change");
+                                                                              //   ambilDataList.clear();
+                                                                              cobaCabang2 = 0;
+                                                                              //tempr1a = new String[2];
+                                                                              int i = 0;
+                                                                              for (DataSnapshot pesanSnpshot : dataSnapshot.getChildren()) {
+                                                                                  //                   pbAll.setVisibility(View.GONE);
+                                                                                  AmbilData ambilData = pesanSnpshot.getValue(AmbilData.class);
+
+                                                                                  tempr1a[i] = ambilData.getStr_Gerai();
+                                                                                  tempr1aid[i] = ambilData.getId();
+                                                                                  System.out.println("NO " + i + 1 + "Ambil Data " + ambilData);
+                                                                                  System.out.println("" + ambilData.getStr_Gerai());
+                                                                                  System.out.println("" + tempr1aid[i]);
+                                                                                  i++;
+
+
+                                                                              }
+
+                                                                              cobaCabang2 = tempr1a.length;
+
+                                                                              System.out.println("cabang " + coba + tempr1a.length);
+//                                                                                                            adapter = new Arraylist(DaftarAplikasi.this, ambilDataList);
+//                                                                                                            listView.setAdapter(adapter);
+                                                                              System.out.println("sss " + tempc[0] + tempc[1]);
+                                                                              //   cobaPemda1 = 4;
+                                                                              spinnerGerai();
+                                                                          }
+
+                                                                          @Override
+                                                                          public void onCancelled(DatabaseError databaseError) {
+
+                                                                          }
+
+                                                                      }
+                        );
+                        break;
+                    case 5:
+                        System.out.println("cek 3");
+                        cobaRayon1 = 6;
+                        wilayah.child("-L8RZ6tzs-N_R2LTlzom").child("cabang").child("-L8W31ly20ZfYmbS5VWk")
+                                .child("rayon").child("-L9mCvKP-7QxiXwEyh8G")
+                                .child("gerai").addValueEventListener(new ValueEventListener() {
+
+                                                                          @Override
+                                                                          public void onDataChange(DataSnapshot dataSnapshot) {
+                                                                              System.out.println("OnData Change");
+                                                                              //   ambilDataList.clear();
+                                                                              cobaCabang2 = 0;
+                                                                              //tempr1a = new String[2];
+                                                                              int i = 0;
+                                                                              for (DataSnapshot pesanSnpshot : dataSnapshot.getChildren()) {
+                                                                                  //                   pbAll.setVisibility(View.GONE);
+                                                                                  AmbilData ambilData = pesanSnpshot.getValue(AmbilData.class);
+
+                                                                                  tempr1a[i] = ambilData.getStr_Gerai();
+                                                                                  tempr1aid[i] = ambilData.getId();
+                                                                                  System.out.println("NO " + i + 1 + "Ambil Data " + ambilData);
+                                                                                  System.out.println("" + ambilData.getStr_Gerai());
+                                                                                  System.out.println("" + tempr1aid[i]);
+                                                                                  i++;
+
+
+                                                                              }
+
+                                                                              cobaCabang2 = tempr1a.length;
+
+                                                                              System.out.println("cabang " + coba + tempr1a.length);
+//                                                                                                            adapter = new Arraylist(DaftarAplikasi.this, ambilDataList);
+//                                                                                                            listView.setAdapter(adapter);
+                                                                              System.out.println("sss " + tempc[0] + tempc[1]);
+                                                                              // cobaPemda1 = 5;
+                                                                              spinnerGerai();
+                                                                          }
+
+                                                                          @Override
+                                                                          public void onCancelled(DatabaseError databaseError) {
+
+                                                                          }
+
+                                                                      }
+                        );
+                        break;
+                    case 6:
+                        System.out.println("cek 3");
+                        cobaRayon1 = 7;
+                        wilayah.child("-L8RZ6tzs-N_R2LTlzom").child("cabang").child("-L8W31ly20ZfYmbS5VWk")
+                                .child("rayon").child("-L9mCwkwmL6ByVCJlIhv")
+                                .child("gerai").addValueEventListener(new ValueEventListener() {
+
+                                                                          @Override
+                                                                          public void onDataChange(DataSnapshot dataSnapshot) {
+                                                                              System.out.println("OnData Change");
+                                                                              //   ambilDataList.clear();
+                                                                              cobaCabang2 = 0;
+                                                                              //tempr1a = new String[2];
+                                                                              int i = 0;
+                                                                              for (DataSnapshot pesanSnpshot : dataSnapshot.getChildren()) {
+                                                                                  //                   pbAll.setVisibility(View.GONE);
+                                                                                  AmbilData ambilData = pesanSnpshot.getValue(AmbilData.class);
+
+                                                                                  tempr1a[i] = ambilData.getStr_Gerai();
+                                                                                  tempr1aid[i] = ambilData.getStr_Gerai();
+                                                                                  System.out.println("NO " + i + 1 + "Ambil Data " + ambilData);
+                                                                                  System.out.println("" + ambilData.getStr_Gerai());
+                                                                                  System.out.println("" + tempr1aid[i]);
+                                                                                  i++;
+
+
+                                                                              }
+
+                                                                              cobaCabang2 = tempr1a.length;
+
+                                                                              System.out.println("cabang " + coba + tempr1a.length);
+//                                                                                                            adapter = new Arraylist(DaftarAplikasi.this, ambilDataList);
+//                                                                                                            listView.setAdapter(adapter);
+                                                                              System.out.println("sss " + tempc[0] + tempc[1]);
+                                                                              // cobaPemda1 = 6;
+                                                                              spinnerGerai();
+                                                                          }
+
+                                                                          @Override
+                                                                          public void onCancelled(DatabaseError databaseError) {
+
+                                                                          }
+
+                                                                      }
+                        );
+                        break;
+                    case 7:
+                        System.out.println("cek 3");
+                        cobaRayon1 = 8;
+                        wilayah.child("-L8RZ6tzs-N_R2LTlzom").child("cabang").child("-L8W31ly20ZfYmbS5VWk")
+                                .child("rayon").child("-L9mCyPJvrjbFUNv2Dch")
+                                .child("gerai").addValueEventListener(new ValueEventListener() {
+
+                                                                          @Override
+                                                                          public void onDataChange(DataSnapshot dataSnapshot) {
+                                                                              System.out.println("OnData Change");
+                                                                              //   ambilDataList.clear();
+                                                                              cobaCabang2 = 0;
+                                                                              //tempr1a = new String[2];
+                                                                              int i = 0;
+                                                                              for (DataSnapshot pesanSnpshot : dataSnapshot.getChildren()) {
+                                                                                  //                   pbAll.setVisibility(View.GONE);
+                                                                                  AmbilData ambilData = pesanSnpshot.getValue(AmbilData.class);
+
+                                                                                  tempr1a[i] = ambilData.getStr_Gerai();
+                                                                                  tempr1aid[i] = ambilData.getId();
+
+                                                                                  System.out.println("NO " + i + 1 + "Ambil Data " + ambilData);
+                                                                                  System.out.println("" + ambilData.getStr_Gerai());
+                                                                                  System.out.println("" + tempr1aid[i]);
+
+                                                                                  i++;
+
+
+                                                                              }
+
+                                                                              cobaCabang2 = tempr1a.length;
+                                                                              // cobaPemda1 = 7;
+                                                                              System.out.println("cabang " + coba + tempr1a.length);
+//                                                                                                            adapter = new Arraylist(DaftarAplikasi.this, ambilDataList);
+//                                                                                                            listView.setAdapter(adapter);
+                                                                              System.out.println("sss " + tempc[0] + tempc[1]);
+
+                                                                              spinnerGerai();
+                                                                          }
+
+                                                                          @Override
+                                                                          public void onCancelled(DatabaseError databaseError) {
+
+                                                                          }
+
+                                                                      }
+                        );
+                        break;
+                    case 8: {
+                        Snackbar.make(view, "Ada rayon baru?", Snackbar.LENGTH_LONG).show();
+                    }
+
+                }
+
+                //   Snackbar.make(view, "Besar daya " + pilihan[position] + " seharga " + hargaBaru[position], Snackbar.LENGTH_LONG).show();
+                //  String setHarga = harga.setText();
+                //    Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
+            }
+        });
+
+        sRayon.setOnNothingSelectedListener(new MaterialSpinner.OnNothingSelectedListener() {
+
+            @Override
+            public void onNothingSelected(MaterialSpinner spinner) {
+                Snackbar.make(spinner, "Belum di pilih", Snackbar.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void spinnerGerai() {
+
+        if (cobaCabang2 == 1) {
+            strGerai = new String[]{
+                    "" + tempr1a[0],
+                    "Tambah",
+
+            };
+        } else if (cobaCabang2 == 2) {
+            strGerai = new String[]{
+                    "" + tempr1a[0], "" + tempr1a[1],
+                    "Tambah",
+
+            };
+        } else if (cobaCabang2 == 3) {
+            strGerai = new String[]{
+                    "" + tempr1a[0], "" + tempr1a[1], "" + tempr1a[2],
+                    "Tambah",
+
+            };
+        } else if (cobaCabang2 == 4) {
+            strGerai = new String[]{
+                    "" + tempr1a[0], tempr1a[1], tempr1a[2], tempr1a[3],
+                    "Tambah",
+
+            };
+        } else if (cobaCabang2 == 5) {
+            strGerai = new String[]{
+                    tempr1a[0], tempr1a[1], tempr1a[2], tempr1a[3], tempr1a[4],
+                    "Tambah",
+
+            };
+        } else if (cobaCabang2 == 6) {
+            strGerai = new String[]{
+                    tempr1a[0], tempr1a[1], tempr1a[2], tempr1a[3], tempr1a[4], tempr1a[5],
+                    "Tambah",
+
+            };
+        } else if (cobaCabang2 == 7) {
+            strGerai = new String[]{
+                    tempr1a[0], tempr1a[1], tempr1a[2], tempr1a[3], tempr1a[4], tempr1a[5], tempr1a[6],
+                    "Tambah",
+
+            };
+        } else if (cobaCabang2 == 8) {
+            strGerai = new String[]{
+                    tempr1a[0], tempr1a[1], tempr1a[2], tempr1a[3], tempr1a[4], tempr1a[5], tempr1a[6], tempr1a[7],
+                    "Tambah",
+
+            };
+        }
+
+        sGerai.setItems(strGerai);
+        sGerai.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                switch (position) {
+                    case 0:
+                        System.out.println("cek 2");
+                        cobaPemda1 = 1;
+                        cobaRayon2 = 2;
+                        System.out.println("COba Pemda " + cobaPemda1);
+                        //            Toast.makeText(DaftarAplikasi.this, "coba " + cobaPemda1 + " df " + tempr1aid[cobaPemda1 - 1], Toast.LENGTH_SHORT).show();
+                        break;
+                    case 1:
+                        System.out.println("cek 3");
+                        cobaPemda1 = 2;
+                        cobaRayon2 = 3;
+                        //          Toast.makeText(DaftarAplikasi.this, "coba " + cobaPemda1, Toast.LENGTH_SHORT).show();
+                        break;
+                    case 2:
+                        cobaPemda1 = 3;
+                        cobaRayon2 = 4;
+                        System.out.println("cek 3");
+                        break;
+                    case 3:
+                        cobaPemda1 = 4;
+                        cobaRayon2 = 5;
+                        System.out.println("cek 3");
+                        //lGerai.setVisibility(View.VISIBLE);
+                        break;
+                    case 4:
+                        cobaPemda1 = 5;
+                        System.out.println("cek 3");
+                        break;
+                    case 5:
+                        cobaPemda1 = 6;
+                        System.out.println("cek 3");
+                        break;
+                    case 6:
+                        cobaPemda1 = 7;
+                        System.out.println("cek 3");
+                        break;
+
+                }
+
+                //   Snackbar.make(view, "Besar daya " + pilihan[position] + " seharga " + hargaBaru[position], Snackbar.LENGTH_LONG).show();
+                //  String setHarga = harga.setText();
+                //    Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
+            }
+        });
+
+        sGerai.setOnNothingSelectedListener(new MaterialSpinner.OnNothingSelectedListener() {
+
+            @Override
+            public void onNothingSelected(MaterialSpinner spinner) {
+                Snackbar.make(spinner, "Belum di pilih", Snackbar.LENGTH_LONG).show();
+            }
+        });
+        strDayaDaya = new String[]{
+                "Daya Saat ini",
+                "450 VA",
+                "900 VA",
+                "1300 VA",
+                "2200 VA",
+                "3500 VA",
+                "4400 VA",
+                "5500 VA",
+                "6600 VA",
+                "7700 VA",
+                "110000 VA",
+                "132000 VA",
+                "165000 VA",
+                "230000 VA",
+                "330000 VA",
+                "415000 VA"
+        };
+        sDayaDaya.setItems(strDayaDaya);
+        sDayaDaya.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                posisi = position;
+                //     Snackbar.make(view, "Besar daya " + strDayaBaru[position], Snackbar.LENGTH_LONG).show();
+                //  String setHarga = harga.setText();
+                //    Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
+            }
+        });
+        sDayaDaya.setOnNothingSelectedListener(new MaterialSpinner.OnNothingSelectedListener() {
+
+            @Override
+            public void onNothingSelected(MaterialSpinner spinner) {
+                Snackbar.make(spinner, "Belum di pilih", Snackbar.LENGTH_LONG).show();
+            }
+        });
+        strDayaDayaBaru = new String[]{
+                "Tambah ke Daya",
+                "450 VA",
+                "900 VA",
+                "1300 VA",
+                "2200 VA",
+                "3500 VA",
+                "4400 VA",
+                "5500 VA",
+                "6600 VA",
+                "7700 VA",
+                "110000 VA",
+                "132000 VA",
+                "165000 VA",
+                "230000 VA",
+                "330000 VA",
+                "415000 VA"
+        };
+        sDayaDayaBaru.setItems( strDayaDayaBaru );
+        sDayaDayaBaru.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                posisi = position;
+                //     Snackbar.make(view, "Besar daya " + strDayaBaru[position], Snackbar.LENGTH_LONG).show();
+                //  String setHarga = harga.setText();
+                //    Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
+            }
+        });
+        sDayaDayaBaru.setOnNothingSelectedListener(new MaterialSpinner.OnNothingSelectedListener() {
+
+            @Override
+            public void onNothingSelected(MaterialSpinner spinner) {
+                Snackbar.make(spinner, "Belum di pilih", Snackbar.LENGTH_LONG).show();
+            }
+        });
+
+
+    }
 
     private void sendNotication() {
         AsyncTask.execute(new Runnable() {
