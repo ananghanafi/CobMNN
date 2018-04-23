@@ -7,11 +7,11 @@ import java.util.Map;
  */
 
 public class AmbilData {
-    String pesan, nama, alamat, nohp, daya, harga, id, lat, lon, time, noplg, kelurahan, noBangunan, fitting, mcb, sContact;
+    String pesan, nama, alamat, nohp, daya, harga, id, lat, lon, time, noplg, kelurahan, noBangunan, fitting, mcb, sContact, dayaBaru;
     String str_Wilayah, str_Cabang, str_Rayon, str_Pemda, str_Gerai,
             str_bpPLN, str_Instalasi, str_Slo, str_gInstalasi, str_Materai,
             str_adminDaya, str_tokenDaya, str_materaiDaya, str_daya, str_dayaDaya,
-            str_eLampOut, str_eLampIn, str_elContactOut, str_elContactIn;
+            str_eLampOut, str_eLampIn, str_elContactOut, str_elContactIn, str_voucher;
 
 
 //   Map time;
@@ -106,7 +106,7 @@ public class AmbilData {
         this.str_elContactIn = str_elContactIn;
     }
 
-    public AmbilData(String id, String pesan, String nama, String alamat, String daya,
+    public AmbilData(String id, String pesan, String nama, String alamat, String daya, String dayaBaru,
                      String harga, String lat, String lon, String noplg,
                      String str_Wilayah, String str_Cabang, String str_Rayon, String str_Gerai) {
         this.pesan = pesan;
@@ -122,10 +122,11 @@ public class AmbilData {
         this.str_Cabang = str_Cabang;
         this.str_Rayon = str_Rayon;
         this.str_Gerai = str_Gerai;
+        this.dayaBaru = dayaBaru;
     }
 
     public AmbilData(String id, String pesan, String nama, String alamat, String nohp, String daya, String harga,
-                     String lat, String lon, String noplg, String kelurahan, String noBangunan, String fitting,
+                     String lat, String lon, String noplg, String kelurahan, String noBangunan, String fitting, String voucher,
                      String mcb, String sContact, String str_Wilayah, String str_Cabang, String str_Rayon, String str_Gerai) {
         this.pesan = pesan;
         this.nama = nama;
@@ -145,6 +146,7 @@ public class AmbilData {
         this.str_Wilayah = str_Wilayah;
         this.str_Cabang = str_Cabang;
         this.str_Rayon = str_Rayon;
+        this.str_voucher = voucher;
         this.str_Gerai = str_Gerai;
     }
 //
@@ -386,6 +388,14 @@ public class AmbilData {
         this.lon = lon;
     }
 
+    public String getStr_voucher() {
+        return str_voucher;
+    }
+
+    public void setStr_voucher(String str_voucher) {
+        this.str_voucher = str_voucher;
+    }
+
     //
 //    public Map getTime() {
 //        return time;
@@ -448,6 +458,14 @@ public class AmbilData {
 
     public void setStr_elContactIn(String str_elContactIn) {
         this.str_elContactIn = str_elContactIn;
+    }
+
+    public String getDayaBaru() {
+        return dayaBaru;
+    }
+
+    public void setDayaBaru(String dayaBaru) {
+        this.dayaBaru = dayaBaru;
     }
 
     public String getKelurahan() {

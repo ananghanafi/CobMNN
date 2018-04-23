@@ -11,10 +11,72 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:padding="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="10dp"></LinearLayout>
+
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/spinnerWilBaru"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                app:ms_dropdown_height="wrap_content"
+                app:ms_dropdown_max_height="350dp" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="10dp"></LinearLayout>
+
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/spinnerCabangBaru"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                app:ms_dropdown_height="wrap_content"
+                app:ms_dropdown_max_height="350dp" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="10dp"></LinearLayout>
+
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/spinnerRayonBaru"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                app:ms_dropdown_height="wrap_content"
+                app:ms_dropdown_max_height="350dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="10dp"></LinearLayout>
+
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/spinnerGeraiBaru"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                app:ms_dropdown_height="wrap_content"
+                app:ms_dropdown_max_height="350dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="10dp"></LinearLayout>
 
             <!--<TextView-->
             <!--android:layout_width="wrap_content"-->
@@ -130,8 +192,45 @@
                 android:paddingTop="16dp"
                 android:text="Pilih Daya" />
 
+
+            <!--<Button-->
+            <!--android:id="@+id/btCekBiaya"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="@color/colorPrimary"-->
+            <!--android:onClick="btCekBiayaDaya"-->
+            <!--android:text="Cek Biaya (telp gerai)" />-->
+
+
+            <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="16dp">-->
+
+            <!--</LinearLayout>-->
+
+            <!--<Button-->
+            <!--android:id="@+id/btPesanTambahDaya"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="@color/colorAccent"-->
+            <!--android:onClick="btPesanTambahDaya"-->
+            <!--android:text="Pesan" />-->
+
+            <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="16dp">-->
+
+            <!--</LinearLayout>-->
+
+            <!--<Button-->
+            <!--android:id="@+id/uploadGmailFormDaya"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="@color/colorAccent"-->
+            <!--android:onClick="btUploadFileFormDaya"-->
+            <!--android:text="Kirim file dengan Gmail" />-->
             <com.jaredrummler.materialspinner.MaterialSpinner
-                android:id="@+id/spinnerBaru"
+                android:id="@+id/sDayaDaya"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="16dp"
@@ -139,42 +238,43 @@
                 app:ms_dropdown_height="wrap_content"
                 app:ms_dropdown_max_height="350dp" />
 
-            <!--<Button-->
-                <!--android:id="@+id/btCekBiaya"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:background="@color/colorPrimary"-->
-                <!--android:onClick="btCekBiayaDaya"-->
-                <!--android:text="Cek Biaya (telp gerai)" />-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="10dp"></LinearLayout>
 
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/sDayaDayaBaru"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                app:ms_dropdown_height="wrap_content"
+                app:ms_dropdown_max_height="350dp" />
 
-            <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="16dp">-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="10dp"></LinearLayout>
 
-            <!--</LinearLayout>-->
+            <LinearLayout
+                android:id="@+id/tampilBiaya"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimary"
+                android:orientation="vertical"
+                android:paddingBottom="16dp"
+                android:visibility="gone">
 
-            <!--<Button-->
-                <!--android:id="@+id/btPesanTambahDaya"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:background="@color/colorAccent"-->
-                <!--android:onClick="btPesanTambahDaya"-->
-                <!--android:text="Pesan" />-->
+                <TextView
+                    android:id="@+id/jumlahBiaya"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingBottom="5dp"
+                    android:text=""
+                    android:textColor="@android:color/white"
+                    android:textSize="18dp" />
 
-            <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="16dp">-->
-
-            <!--</LinearLayout>-->
-
-            <!--<Button-->
-                <!--android:id="@+id/uploadGmailFormDaya"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:background="@color/colorAccent"-->
-                <!--android:onClick="btUploadFileFormDaya"-->
-                <!--android:text="Kirim file dengan Gmail" />-->
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
@@ -210,7 +310,7 @@
                 android:layout_gravity="fill_horizontal"
                 android:background="@color/colorAccent"
                 android:onClick="btUploadFileFormDaya"
-                android:text="Kirim file dengan Gmail"  />
+                android:text="Kirim file dengan Gmail" />
 
         </GridLayout>
 

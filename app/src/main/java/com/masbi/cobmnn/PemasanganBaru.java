@@ -81,12 +81,12 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
     private OnInfoWindowElemTouchListener infoButtonListener;
     FirebaseDatabase database;
     DatabaseReference myRef, pesan, pemesanan, wilayah;
-    EditText nama, alamat, nohp, fittingPaket, sContactPaket, fittingManual, sContactManual;
+    EditText nama, alamat, nohp, kelurahan, noBangunan, fittingPaket, sContactPaket, fittingManual, sContactManual;
     int userId;
     String namaS, alamatS, nohpS, id;
     RadioGroup rg1, rg2;
     RadioButton rb1, rb2, hh, hh1;
-    LinearLayout denganInstakasi, tanpaInstalasi, paket, manual, pildaya;
+    LinearLayout denganInstakasi, tanpaInstalasi, paket, manual, pildaya, tampilBiaya;
     String[] tempc = new String[2];
     String[] tempr1 = new String[7];
     String[] tempr1id = new String[7];
@@ -94,30 +94,46 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
     String[] tempr1aid = new String[3];
     String[] tempr1adayabaru = new String[15];
     String[] tempr1adayadaya = new String[15];
+    String[] tempr1adayaBP = new String[15];
+    String[] tempr1adayaSLO = new String[15];
+    String[] tempr1adayaGI = new String[15];
+    String[] tempr1adayaM = new String[15];
+    String[] tempr1adayaI = new String[15];
+    String[] tempr1adayaOB = new String[15];
+    String[] tempr1adayaIB = new String[15];
+    String[] tempr1adayaSOB = new String[15];
+    String[] tempr1adayaSIB = new String[15];
+    String[] tempr1adayaVou = new String[15];
     String[] tempCabang1 = new String[2];
     int coba, cobaCabang1, cobaCabang2, cobaRayon1, cobaRayon2, cobaRayon3, cobaRayon4, cobaRayon5, cobaRayon6, cobaRayon7, cobaRayon8,
             cobaPemda1, cobaPemda2, cobaPemda3, cobaPemda4;
-    String str_Wilayah, str_Cabang, str_Rayon, str_Pemda, str_Gerai,
+    String str_Wilayah, str_Cabang, str_Rayon, str_Pemda, str_Gerai,strLamp, strCont,
             str_bpPLN, str_Instalasi, str_Slo, str_gInstalasi, str_Materai,
             str_adminDaya, str_tokenDaya, str_MateraiDaya, str_daya, str_dayaDaya,
             str_eLampOut, str_eLampIn, str_elContactOut, str_elContactIn;
-    MaterialSpinner sWilayah, sCabang, sRayon, sPemda, sGerai, sForm, sDayaBaru, sDayaDaya;
+    MaterialSpinner sWilayah, sCabang, sRayon, sPemda, sGerai, sForm, sDayaBaru, sDayaDaya, sLamp, sCont;
     String strWilayah[], strCabang[], strRayon[], strPemda[], strGerai[], strForm[], strDayaBaru[], strDayaDaya[];
+    TextView t_bpPLN, t_Instalasi, t_Slo, t_gInstalasi, t_Materai, t_jumlah, t_daya, t_vou;
+    int inFM, inFP, inSM, inSP, inMCB, p;
+    double jumlah;
+    int lamp, cont;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pemasangan_baru);
-        harga = (TextView) findViewById(R.id.harga);
+        //    harga = (TextView) findViewById(R.id.harga);
         nama = (EditText) findViewById(R.id.namaBaru);
         alamat = (EditText) findViewById(R.id.alamatBaru);
         nohp = (EditText) findViewById(R.id.nohpBaru);
+        kelurahan = (EditText) findViewById(R.id.kelurahanBaru);
+        noBangunan = (EditText) findViewById(R.id.noBangunanBaru);
         fittingPaket = (EditText) findViewById(R.id.fittingLampuBaruPaket);
         sContactPaket = (EditText) findViewById(R.id.StopContactLampuBaruPaket);
         fittingManual = (EditText) findViewById(R.id.fittingLampuBaruManual);
         sContactManual = (EditText) findViewById(R.id.StopContactLampuManual);
-        String setHarga;
+        //   String setHarga;
         final int[] cek;
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
@@ -131,7 +147,7 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
         tanpaInstalasi = (LinearLayout) findViewById(R.id.tanpaInstalasi);
         paket = (LinearLayout) findViewById(R.id.pilihanPaketPaket);
         manual = (LinearLayout) findViewById(R.id.pilihanPaketManual);
-       // pildaya = (LinearLayout) findViewById(R.id.pilDaya);
+        // pildaya = (LinearLayout) findViewById(R.id.pilDaya);
         rb1 = (RadioButton) findViewById(R.id.pilihanManual);
         rb2 = (RadioButton) findViewById(R.id.pilihanPaket);
         sWilayah = (MaterialSpinner) findViewById(R.id.spinnerWilBaru);
@@ -140,13 +156,19 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
         //    sPemda = (MaterialSpinner) findViewById(R.id.spinnerPemdaBaru);
         sGerai = (MaterialSpinner) findViewById(R.id.spinnerGeraiBaru);
         sDayaBaru = (MaterialSpinner) findViewById(R.id.sDayaBaru);
+        tampilBiaya = (LinearLayout) findViewById(R.id.tampilBiaya);
         wilayah = FirebaseDatabase.getInstance().getReference("wilayah");
+        t_bpPLN = (TextView) findViewById(R.id.textBP);
+        t_daya = (TextView) findViewById(R.id.tDaya);
+        t_gInstalasi = (TextView) findViewById(R.id.textGinstalasi);
+        t_Instalasi = (TextView) findViewById(R.id.textIntalasi);
+        t_Slo = (TextView) findViewById(R.id.textSLO);
+        t_Materai = (TextView) findViewById(R.id.textMaterai);
+        t_vou = (TextView) findViewById(R.id.textVoucher);
 
         strWilayah = new String[]{
                 "Pilih Wilayah",
                 "Kalimantan Selatan dan Tengah",
-                "Tambah",
-
         };
         sWilayah.setItems(strWilayah);
         sWilayah.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
@@ -316,26 +338,27 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
                 // Setting the title for the marker.
                 // This will be displayed on taping the marker
 
+                System.out.println("Lat " + latLng.latitude + "long " + latLng.longitude);
 
-                addresses = new ArrayList<>();
-                try {
-                    addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                android.location.Address address = addresses.get(0);
-
-                if (address != null) {
-                    StringBuilder sb = new StringBuilder();
-                    for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
-                        if (i == (address.getMaxAddressLineIndex() - 1)) {
-                            sb.append(address.getAddressLine(i));
-                        } else {
-                            sb.append(address.getAddressLine(i) + ", ");
-                        }
-                    }
-                    mSearchView.setSearchText(sb.toString());
-                }
+//                addresses = new ArrayList<>();
+//                try {
+//                    addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                android.location.Address address = addresses.get(0);
+//
+//                if (address != null) {
+//                    StringBuilder sb = new StringBuilder();
+//                    for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
+//                        if (i == (address.getMaxAddressLineIndex() - 1)) {
+//                            sb.append(address.getAddressLine(i));
+//                        } else {
+//                            sb.append(address.getAddressLine(i) + ", ");
+//                        }
+//                    }
+//                    mSearchView.setSearchText(sb.toString());
+//                }
                 markerOptions.title("Pilih Lokasi");
                 markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
 
@@ -467,31 +490,165 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
 
 
     public void btCekBiaya(View view) {
-        harga.setText("Besar daya " + pilihan[posisi] + " seharga " + hargaBaru[posisi]);
-        AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
-        alBuilder.setTitle("Cek Biaya");
-        //  alBuilder.setIcon(R.drawable.ic_clear_black_24dp);
-        alBuilder.setMessage(" " + pilihan[posisi]
-                + " seharga " + hargaBaru[posisi]).setCancelable(false)
-                .setPositiveButton("Lihat Rincian", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        System.out.println("Pilihan Ya");
-                        startActivity(new Intent(PemasanganBaru.this, DriveMcc.class));
-                        System.out.println("Cek Pemasangan baru");
-                    }
-                }).setNegativeButton("Oke", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                System.out.println("Pilihan Tidak");
 
-                harga.requestFocus();
-                //  startActivity(new Intent(PemasanganBaru.this, RecycleActivity.class));
-                dialogInterface.cancel();
-            }
-        });
-        AlertDialog alertDialog = alBuilder.create();
-        alertDialog.show();
+//        wilayah.child("-L8RZ6tzs-N_R2LTlzom").child("cabang").child("-L8W31ly20ZfYmbS5VWk")
+//                .child("rayon").child("" + tempr1id[cobaRayon1 - 2]).child("gerai")
+//                .child("" + tempr1aid[cobaPemda1 - 1]).child("penambahan").
+//                addValueEventListener(new ValueEventListener() {
+//
+//                                          @Override
+//                                          public void onDataChange(DataSnapshot dataSnapshot) {
+//                                              System.out.println("OnData Change");
+//                                              //   ambilDataList.clear();
+//                                              cobaCabang2 = 0;
+//                                              //tempr1a = new String[2];
+//                                              int i = 0;
+//                                              for (DataSnapshot pesanSnpshot : dataSnapshot.getChildren()) {
+//                                                  //                   pbAll.setVisibility(View.GONE);
+//                                                  AmbilData ambilData = pesanSnpshot.getValue(AmbilData.class);
+//
+////                                                                  tempr1a[i] = ambilData.getStr_Gerai();
+////                                                                  tempr1aid[i] = ambilData.getId();
+//                                                  tempr1adayadaya[i] = ambilData.getStr_dayaDaya();
+//                                                  tempr1adayaBP[i] = ambilData.getStr_bpPLN();
+//                                                  tempr1adayaI[i] = ambilData.getStr_Instalasi();
+//                                                  tempr1adayaSLO[i] = ambilData.getStr_Slo();
+//                                                  tempr1adayaGI[i] = ambilData.getStr_gInstalasi();
+//                                                  tempr1adayaM[i] = ambilData.getStr_Materai();
+//                                                  tempr1adayaIB[i] = ambilData.getStr_eLampIn();
+//                                                  tempr1adayaOB[i] = ambilData.getStr_eLampOut();
+//                                                  tempr1adayaSOB[i] = ambilData.getStr_elContactOut();
+//                                                  tempr1adayaSIB[i] = ambilData.getStr_elContactIn();
+//                                                  tempr1adayaVou[i] = ambilData.getStr_voucher();
+//
+//
+//                                                  System.out.println("NO " + i + 1 + "Ambil Data " + ambilData);
+//                                                  System.out.println("" + ambilData.getStr_Gerai());
+//                                                  System.out.println("" + tempr1aid[i]);
+//
+//                                                  i++;
+//
+//
+//                                              }
+//
+//                                              cobaCabang2 = tempr1a.length;
+//                                              cobaPemda1 = 1;
+//                                              System.out.println("cabang " + coba + tempr1a.length);
+////                                                                                                            adapter = new Arraylist(DaftarAplikasi.this, ambilDataList);
+////                                                                                                            listView.setAdapter(adapter);
+//                                              System.out.println("sss " + tempc[0] + tempc[1]);
+//
+//                                              spinnerGerai();
+//                                          }
+//
+//                                          @Override
+//                                          public void onCancelled(DatabaseError databaseError) {
+//
+//                                          }
+//
+//                                      }
+//                );
+
+//        harga.setText("Besar daya " + pilihan[posisi] + " seharga " + hargaBaru[posisi]);
+
+//        inFM = Integer.parseInt(fittingManual.getText().toString()) - 3;
+//        inSM = Integer.parseInt(sContactManual.getText().toString()) - 1;
+//        inFP = 3;
+//        inSP = 1;
+//  //      if (p == 1) {
+//            AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
+//            alBuilder.setTitle("Cek Biaya");
+//
+//            alBuilder.setMessage(" " + pilihan[posisi]
+//                    + " seharga " + hargaBaru[posisi]).setCancelable(false)
+//                    .setPositiveButton("Lihat Rincian", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialogInterface, int i) {
+//                            System.out.println("Pilihan Ya");
+//                            //   startActivity(new Intent(PemasanganBaru.this, DriveMcc.class));
+//                            double jumlah = Double.parseDouble(tempr1adayaI[cobaPemda1] + (inFM * Double.parseDouble(tempr1adayaIB[cobaPemda1])
+//                                    + (inSM * Double.parseDouble(tempr1adayaSIB[cobaPemda1])))) +
+//                                    Double.parseDouble(tempr1adayaI[cobaPemda1]) +
+//                                    Double.parseDouble(tempr1adayaGI[cobaPemda1]) +
+//                                    Double.parseDouble(tempr1adayaSLO[cobaPemda1]) +
+//                                    Double.parseDouble(tempr1adayaM[cobaPemda1]);
+//                            t_bpPLN.setText(String.valueOf(Double.parseDouble(tempr1adayaBP[cobaPemda1])));
+//                            t_daya.setText("Biaya dengan daya " + String.valueOf(Double.parseDouble(tempr1adayadaya[cobaPemda1])));
+//                            t_Instalasi.setText(String.valueOf(Double.parseDouble(tempr1adayaI[cobaPemda1] + (inFM * Double.parseDouble(tempr1adayaIB[cobaPemda1])
+//                                    + (inSM * Double.parseDouble(tempr1adayaSIB[cobaPemda1]))))));
+//                            t_gInstalasi.setText(String.valueOf(Double.parseDouble(tempr1adayaGI[cobaPemda1])));
+//                            t_Slo.setText(String.valueOf(Double.parseDouble(tempr1adayaSLO[cobaPemda1])));
+//                            t_Materai.setText(String.valueOf(Double.parseDouble(tempr1adayaM[cobaPemda1])));
+//
+//                            if (tempr1adayaVou[cobaPemda1] != null) {
+//                                double voucher = jumlah * Double.parseDouble(tempr1adayaVou[cobaPemda1]);
+//                                t_jumlah.setText(String.valueOf(jumlah - voucher));
+//                                t_vou.setText(String.valueOf(voucher));
+//
+//                            } else {
+//                                t_jumlah.setText(String.valueOf(jumlah));
+//                            }
+//                            tampilBiaya.setVisibility(View.VISIBLE);
+//                            System.out.println("Cek Pemasangan baru");
+//                            dialogInterface.cancel();
+//                        }
+//                    }).setNegativeButton("Oke", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialogInterface, int i) {
+//                    System.out.println("Pilihan Tidak");
+//                    jumlah = Double.parseDouble(tempr1adayaI[cobaPemda1] + (inFM * Double.parseDouble(tempr1adayaOB[cobaPemda1])
+//                            + (inSM * Double.parseDouble(tempr1adayaSOB[cobaPemda1])))) +
+//                            Double.parseDouble(tempr1adayaI[cobaPemda1]) +
+//                            Double.parseDouble(tempr1adayaGI[cobaPemda1]) +
+//                            Double.parseDouble(tempr1adayaSLO[cobaPemda1]) +
+//                            Double.parseDouble(tempr1adayaM[cobaPemda1]);
+//                    t_bpPLN.setText(String.valueOf(Double.parseDouble(tempr1adayaBP[cobaPemda1])));
+//                    t_daya.setText("Biaya dengan daya " + String.valueOf(Double.parseDouble(tempr1adayadaya[cobaPemda1])));
+//                    t_Instalasi.setText(String.valueOf(Double.parseDouble(tempr1adayaI[cobaPemda1] + (inFM * Double.parseDouble(tempr1adayaOB[cobaPemda1])
+//                            + (inSM * Double.parseDouble(tempr1adayaSOB[cobaPemda1]))))));
+//                    t_gInstalasi.setText(String.valueOf(Double.parseDouble(tempr1adayaGI[cobaPemda1])));
+//                    t_Slo.setText(String.valueOf(Double.parseDouble(tempr1adayaSLO[cobaPemda1])));
+//                    t_Materai.setText(String.valueOf(Double.parseDouble(tempr1adayaM[cobaPemda1])));
+//
+//                    if (tempr1adayaVou[cobaPemda1] != null) {
+//                        double voucher = jumlah * Double.parseDouble(tempr1adayaVou[cobaPemda1]);
+//                        t_jumlah.setText(String.valueOf(jumlah - voucher));
+//                        t_vou.setText(String.valueOf(voucher));
+//
+//                    } else {
+//                        t_jumlah.setText(String.valueOf(jumlah));
+//                    }
+//                    tampilBiaya.setVisibility(View.VISIBLE);
+//                    dialogInterface.cancel();
+//                }
+//            });
+//            AlertDialog alertDialog = alBuilder.create();
+//            alertDialog.show();
+//            t_daya.setText("Biaya dengan daya " + String.valueOf(Double.parseDouble(tempr1adayadaya[cobaPemda1])));
+//            t_Instalasi.setText(String.valueOf(Double.parseDouble(tempr1adayaI[cobaPemda1])));
+//            t_gInstalasi.setText(String.valueOf(Double.parseDouble(tempr1adayaGI[cobaPemda1])));
+//            t_Slo.setText(String.valueOf(Double.parseDouble(tempr1adayaSLO[cobaPemda1])));
+//            t_Materai.setText(String.valueOf(Double.parseDouble(tempr1adayaM[cobaPemda1])));
+//            t_jumlah.setText();
+//            if (tempr1adayaVou[cobaPemda1] != null) {
+//
+//            }
+//            tampilBiaya.setVisibility(View.VISIBLE);
+        //  } else {
+//            t_daya.setText("Biaya dengan daya " + String.valueOf(Double.parseDouble(tempr1adayadaya[cobaPemda1])));
+//            t_bpPLN.setText(String.valueOf(Double.parseDouble(tempr1adayaBP[cobaPemda1])));
+//            t_Instalasi.setText(String.valueOf(Double.parseDouble(tempr1adayaI[cobaPemda1])));
+//            t_gInstalasi.setText(String.valueOf(Double.parseDouble(tempr1adayaGI[cobaPemda1])));
+//            t_Slo.setText(String.valueOf(Double.parseDouble(tempr1adayaSLO[cobaPemda1])));
+//            t_Materai.setText(String.valueOf(Double.parseDouble(tempr1adayaM[cobaPemda1])));
+//            tampilBiaya.setVisibility(View.VISIBLE);
+        //   }
+
+        //   double gg = inFM * Double.parseDouble(tempr1adayaBP[cobaPemda1]);
+
+        //  Integer.parseInt()
+        //  alBuilder.setIcon(R.drawable.ic_clear_black_24dp);
+
 
     }
 
@@ -501,12 +658,11 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
         System.out.println("Alamatbt " + addresses);
         System.out.println("latitude " + lat);
         System.out.println("longitude " + lng);
-        harga.setText("Besar daya " + pilihan[posisi] + " seharga " + hargaBaru[posisi]);
+        //     harga.setText("Besar daya " + pilihan[posisi] + " seharga " + hargaBaru[posisi]);
         AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
         alBuilder.setTitle("Pemesanan");
         //  alBuilder.setIcon(R.drawable.ic_clear_black_24dp);
-        alBuilder.setMessage("Anda yakin pesan penambahan baru dengan besar daya " + pilihan[posisi]
-                + " seharga " + hargaBaru[posisi]).setCancelable(false)
+        alBuilder.setMessage("Anda yakin pesan pasang baru dengan besar daya " + strDayaBaru[posisi]).setCancelable(false)
                 .setPositiveButton("ya", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -540,7 +696,12 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
         String str_nama = nama.getText().toString();
         String str_alamat = alamat.getText().toString();
         String str_nohp = nohp.getText().toString();
-        String str_id = pemesanan.push().getKey();
+        String str_kelurahan = kelurahan.getText().toString();
+        String str_nBangunan = noBangunan.getText().toString();
+        String fitting = fittingManual.getText().toString();
+        String sContact = sContactManual.getText().toString();
+
+        // String str_id = pemesanan.push().getKey();
         timesmap = ServerValue.TIMESTAMP;
         time = String.valueOf(timesmap);
         System.out.println("timestamp " + timesmap);
@@ -557,12 +718,45 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
             nohp.requestFocus();
             return;
         } else {
+            String str_id;
+            System.out.println("COba cabang1 " + cobaRayon1);
+            int i = cobaRayon1;
+
+            int h = 0;
+            for (int g = 0; g < tempr1adayabaru.length; g++) {
+                if (strDayaBaru[posisi].equals(tempr1adayabaru[g])) {
+                    Toast.makeText(PemasanganBaru.this, "Daya " + tempr1adayabaru[g] + " sudah ada di database ", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                h++;
+                System.out.println("cek " + h);
+                //              Toast.makeText(DaftarAplikasi.this, "Daya " + tempr1adayabaru[g] + " tudak ada di database ", Toast.LENGTH_SHORT).show();
+            }
+            if (h == 15) {
+                str_Wilayah = "Kalimantaan Selatan dan Kalimantan Tengah";
+                str_Cabang = "Banjarmasin";
+                str_Rayon = tempr1[cobaRayon1 - 2];
+                str_Gerai = tempr1a[cobaPemda1];
+
+                str_id = wilayah.child("-L8RZ6tzs-N_R2LTlzom").child("cabang").child("-L8W31ly20ZfYmbS5VWk")
+                        .child("rayon").child("" + tempr1id[cobaRayon1 - 2]).child("gerai")
+                        .child("" + tempr1aid[cobaPemda1 - 1]).child("pemesanan").push().getKey();
+                AmbilData wil = new AmbilData(str_id, "Pemasangan Baru", str_nama, str_alamat, str_nohp, "Biaya " + strDayaBaru[posisi], String.valueOf(jumlah),
+                        lat, lng, "", str_kelurahan, str_nBangunan, fitting, "voucher",
+                        "mcb 1", sContact, str_Wilayah, str_Cabang, str_Rayon, str_Gerai);
+                wilayah.child("-L8RZ6tzs-N_R2LTlzom").child("cabang")
+                        .child("-L8W31ly20ZfYmbS5VWk").child("rayon").
+                        child("" + tempr1id[cobaRayon1 - 2]).child("gerai")
+                        .child("" + tempr1aid[cobaPemda1 - 1]).child("pemesanan").child(str_id).setValue(wil);
+                System.out.println(cobaPemda1);
+                System.out.println("dsds" + cobaPemda1);
 //            AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
 //                    , pilihan[posisi], hargaBaru[posisi], lat, lng, "");
 //        AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
 //                , pilihan[posisi], hargaBaru[posisi], lat, lng, time);
 //            pemesanan.child(str_id).setValue(user);
-            Toast.makeText(PemasanganBaru.this, "Pemesanan sedang di proses", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PemasanganBaru.this, "Pemesanan sedang di proses", Toast.LENGTH_SHORT).show();
+            }
         }
 //        AmbilData user = new AmbilData(str_alamat);
 
@@ -600,83 +794,85 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
                     tanpaInstalasi.setVisibility(LinearLayout.VISIBLE);
                     manual.setVisibility(LinearLayout.GONE);
                     paket.setVisibility(LinearLayout.GONE);
-                  //  pildaya.setVisibility(LinearLayout.VISIBLE);
+                    //  pildaya.setVisibility(LinearLayout.VISIBLE);
 
-                    strDayaBaru = new String[]{
-                            "Pilih Daya",
-                            "450 VA",
-                            "900 VA",
-                            "1300 VA",
-                            "2200 VA",
-                            "3500 VA",
-                            "4400 VA",
-                            "5500 VA",
-                            "6600 VA",
-                            "7700 VA",
-                            "110000 VA",
-                            "132000 VA",
-                            "165000 VA",
-                            "230000 VA",
-                            "330000 VA",
-                            "415000 VA"
-                    };
-                    sDayaBaru.setItems(strDayaBaru);
-                    sDayaBaru.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
 
-                        @Override
-                        public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                            posisi = position;
-                            //         Snackbar.make(view, "Besar daya " + strDayaBaru[position], Snackbar.LENGTH_LONG).show();
-                            //  String setHarga = harga.setText();
-                            //    Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
-                        }
-                    });
-                    sDayaBaru.setOnNothingSelectedListener(new MaterialSpinner.OnNothingSelectedListener() {
-
-                        @Override
-                        public void onNothingSelected(MaterialSpinner spinner) {
-                            Snackbar.make(spinner, "Belum di pilih", Snackbar.LENGTH_LONG).show();
-                        }
-                    });
                 }
                 break;
             case R.id.tpInstalasi:
                 if (pilCek) {
-                    Toast.makeText(PemasanganBaru.this, "coba", Toast.LENGTH_SHORT).show();
+                    //          Toast.makeText(PemasanganBaru.this, "coba", Toast.LENGTH_SHORT).show();
                     hh1.setChecked(false);
                     denganInstakasi.setVisibility(LinearLayout.GONE);
                     tanpaInstalasi.setVisibility(LinearLayout.VISIBLE);
-                //    pildaya.setVisibility(LinearLayout.VISIBLE);
-                    strDayaBaru = new String[]{
-                            "Pilih Daya",
-                            "450 VA",
-                            "900 VA",
-                            "1300 VA",
-                            "2200 VA",
-                            "3500 VA",
-                            "4400 VA",
-                            "5500 VA",
-                            "6600 VA",
-                            "7700 VA",
-                            "110000 VA",
-                            "132000 VA",
-                            "165000 VA",
-                            "230000 VA",
-                            "330000 VA",
-                            "415000 VA"
+                    //    pildaya.setVisibility(LinearLayout.VISIBLE);
+
+                    strWilayah = new String[]{
+                            "Pilih Wilayah",
+                            "Kalimantan Selatan dan Tengah",
+
                     };
-                    sDayaBaru.setItems(strDayaBaru);
-                    sDayaBaru.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+                    sWilayah.setItems(strWilayah);
+                    sWilayah.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
 
                         @Override
                         public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                            posisi = position;
-                            //         Snackbar.make(view, "Besar daya " + strDayaBaru[position], Snackbar.LENGTH_LONG).show();
-                            //  String setHarga = harga.setText();
-                            //    Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
+                            switch (position) {
+                                case 0:
+                                    System.out.println("cek 1");
+                                    break;
+                                case 1:
+                                    System.out.println("cek 3");
+                                    wilayah.child("-L8RZ6tzs-N_R2LTlzom")
+                                            .child("cabang").addValueEventListener(new ValueEventListener() {
+
+                                                                                       @Override
+                                                                                       public void onDataChange(DataSnapshot dataSnapshot) {
+                                                                                           System.out.println("OnData Change");
+                                                                                           //           ambilDataList.clear();
+                                                                                           int i = 0;
+                                                                                           for (DataSnapshot pesanSnpshot : dataSnapshot.getChildren()) {
+                                                                                               //                   pbAll.setVisibility(View.GONE);
+                                                                                               AmbilData ambilData = pesanSnpshot.getValue(AmbilData.class);
+                                                                                               //  ambilDataList.add(ambilData);
+                                                                                               tempc[i] = ambilData.getStr_Cabang();
+                                                                                               //   tempId[i] = ambilData.getId();
+                                                                                               System.out.println("NO " + i + 1 + "Ambil Data " + ambilData);
+                                                                                               System.out.println("" + ambilData.getStr_Cabang());
+                                                                                               //  listView.setAdapter(ambilData.getId());
+                                                                                               i++;
+
+
+                                                                                           }
+
+                                                                                           coba = tempc.length;
+                                                                                           System.out.println("cabang " + coba + tempc[1]);
+//                                                                                                            adapter = new Arraylist(DaftarAplikasi.this, ambilDataList);
+//                                                                                                            listView.setAdapter(adapter);
+
+                                                                                           System.out.println("sss " + tempc[0] + tempc[1]);
+                                                                                           spinnerCabang();
+                                                                                       }
+
+                                                                                       @Override
+                                                                                       public void onCancelled(DatabaseError databaseError) {
+
+                                                                                       }
+
+                                                                                   }
+                                    );
+
+                                    break;
+                                case 2:
+                                    System.out.println("cek 4");
+                                    Snackbar.make(view, "Segera", Snackbar.LENGTH_LONG).show();
+                                    break;
+                            }
+
+
                         }
                     });
-                    sDayaBaru.setOnNothingSelectedListener(new MaterialSpinner.OnNothingSelectedListener() {
+                    sWilayah.setOnNothingSelectedListener(new MaterialSpinner.OnNothingSelectedListener() {
 
                         @Override
                         public void onNothingSelected(MaterialSpinner spinner) {
@@ -696,6 +892,7 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
                     manual.setVisibility(LinearLayout.GONE);
                     paket.setVisibility(LinearLayout.VISIBLE);
                     rb1.setChecked(false);
+
                 }
                 break;
             case R.id.pilihanManual:
@@ -703,6 +900,7 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
                     paket.setVisibility(LinearLayout.GONE);
                     manual.setVisibility(LinearLayout.VISIBLE);
                     rb2.setChecked(false);
+
                 }
                 break;
         }
@@ -714,14 +912,12 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
             strCabang = new String[]{
                     "Pilih Cabang",
                     "" + tempc[0], "" + tempc[1],
-                    "Tambah",
 
             };
         } else if (coba == 3) {
             strCabang = new String[]{
                     "Pilih Cabang",
                     tempc[0], tempc[1], tempc[2],
-                    "Tambah",
 
             };
         } else if (coba == 4) {
@@ -878,14 +1074,12 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
             strRayon = new String[]{
                     "Pilih Rayon",
                     "" + tempr1[0], "" + tempr1[1],
-                    "Tambah",
 
             };
         } else if (cobaCabang2 == 3) {
             strRayon = new String[]{
                     "Pilih Rayon",
                     "" + tempr1[0], "" + tempr1[1], "" + tempr1[2],
-                    "Tambah",
 
             };
         } else if (cobaCabang2 == 4) {
@@ -893,28 +1087,23 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
                     "Pilih Rayon",
                     "" + tempr1[0], tempr1[1], tempr1[2], tempr1[3],
 
-                    "Tambah",
-
             };
         } else if (cobaCabang2 == 5) {
             strRayon = new String[]{
                     "Pilih Rayon",
                     tempr1[0], tempr1[1], tempr1[2], tempr1[3], tempr1[4],
-                    "Tambah",
 
             };
         } else if (cobaCabang2 == 6) {
             strRayon = new String[]{
                     "Pilih Rayon",
                     tempr1[0], tempr1[1], tempr1[2], tempr1[3], tempr1[4], tempr1[5],
-                    "Tambah",
 
             };
         } else if (cobaCabang2 == 7) {
             strRayon = new String[]{
                     "Pilih Rayon",
                     tempr1[0], tempr1[1], tempr1[2], tempr1[3], tempr1[4], tempr1[5], tempr1[6],
-                    "Tambah",
 
             };
         }
@@ -1276,52 +1465,52 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
 
     public void spinnerGerai() {
 
+
         if (cobaCabang2 == 1) {
             strGerai = new String[]{
+                    "Pilih Gerai",
                     "" + tempr1a[0],
-                    "Tambah",
 
             };
         } else if (cobaCabang2 == 2) {
             strGerai = new String[]{
+                    "Pilih Gerai",
                     "" + tempr1a[0], "" + tempr1a[1],
-                    "Tambah",
 
             };
         } else if (cobaCabang2 == 3) {
             strGerai = new String[]{
+                    "Pilih Gerai",
                     "" + tempr1a[0], "" + tempr1a[1], "" + tempr1a[2],
-                    "Tambah",
 
             };
         } else if (cobaCabang2 == 4) {
             strGerai = new String[]{
+                    "Pilih Gerai",
                     "" + tempr1a[0], tempr1a[1], tempr1a[2], tempr1a[3],
-                    "Tambah",
 
             };
         } else if (cobaCabang2 == 5) {
             strGerai = new String[]{
+                    "Pilih Gerai",
                     tempr1a[0], tempr1a[1], tempr1a[2], tempr1a[3], tempr1a[4],
-                    "Tambah",
 
             };
         } else if (cobaCabang2 == 6) {
             strGerai = new String[]{
+                    "Pilih Gerai",
                     tempr1a[0], tempr1a[1], tempr1a[2], tempr1a[3], tempr1a[4], tempr1a[5],
-                    "Tambah",
-
             };
         } else if (cobaCabang2 == 7) {
             strGerai = new String[]{
+                    "Pilih Gerai",
                     tempr1a[0], tempr1a[1], tempr1a[2], tempr1a[3], tempr1a[4], tempr1a[5], tempr1a[6],
-                    "Tambah",
 
             };
         } else if (cobaCabang2 == 8) {
             strGerai = new String[]{
+                    "Pilih Gerai",
                     tempr1a[0], tempr1a[1], tempr1a[2], tempr1a[3], tempr1a[4], tempr1a[5], tempr1a[6], tempr1a[7],
-                    "Tambah",
 
             };
         }
@@ -1334,37 +1523,44 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
                 switch (position) {
                     case 0:
                         System.out.println("cek 2");
-                        cobaPemda1 = 1;
-                        cobaRayon2 = 2;
+                        cobaPemda1 = 0;
+                        //    cobaRayon2 = 2;
                         System.out.println("COba Pemda " + cobaPemda1);
                         //            Toast.makeText(DaftarAplikasi.this, "coba " + cobaPemda1 + " df " + tempr1aid[cobaPemda1 - 1], Toast.LENGTH_SHORT).show();
                         break;
                     case 1:
-                        System.out.println("cek 3");
-                        cobaPemda1 = 2;
-                        cobaRayon2 = 3;
-                        //          Toast.makeText(DaftarAplikasi.this, "coba " + cobaPemda1, Toast.LENGTH_SHORT).show();
+                        System.out.println("cek 2");
+                        cobaPemda1 = 1;
+                        //    cobaRayon2 = 2;
+                        System.out.println("COba Pemda " + cobaPemda1);
+                        //            Toast.makeText(DaftarAplikasi.this, "coba " + cobaPemda1 + " df " + tempr1aid[cobaPemda1 - 1], Toast.LENGTH_SHORT).show();
                         break;
                     case 2:
-                        cobaPemda1 = 3;
-                        cobaRayon2 = 4;
                         System.out.println("cek 3");
+                        cobaPemda1 = 2;
+//                        cobaRayon2 = 3;
+                        //          Toast.makeText(DaftarAplikasi.this, "coba " + cobaPemda1, Toast.LENGTH_SHORT).show();
                         break;
                     case 3:
+                        cobaPemda1 = 3;
+                        //  cobaRayon2 = 4;
+                        System.out.println("cek 3");
+                        break;
+                    case 4:
                         cobaPemda1 = 4;
-                        cobaRayon2 = 5;
+                        //  cobaRayon2 = 5;
                         System.out.println("cek 3");
                         //lGerai.setVisibility(View.VISIBLE);
                         break;
-                    case 4:
+                    case 5:
                         cobaPemda1 = 5;
                         System.out.println("cek 3");
                         break;
-                    case 5:
+                    case 6:
                         cobaPemda1 = 6;
                         System.out.println("cek 3");
                         break;
-                    case 6:
+                    case 7:
                         cobaPemda1 = 7;
                         System.out.println("cek 3");
                         break;
@@ -1385,7 +1581,42 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
             }
         });
 
+        strDayaBaru = new String[]{
+                "Pilih Daya",
+                "450 VA",
+                "900 VA",
+                "1300 VA",
+                "2200 VA",
+                "3500 VA",
+                "4400 VA",
+                "5500 VA",
+                "6600 VA",
+                "7700 VA",
+                "110000 VA",
+                "132000 VA",
+                "165000 VA",
+                "230000 VA",
+                "330000 VA",
+                "415000 VA"
+        };
+        sDayaBaru.setItems(strDayaBaru);
+        sDayaBaru.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
 
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                posisi = position;
+                //         Snackbar.make(view, "Besar daya " + strDayaBaru[position], Snackbar.LENGTH_LONG).show();
+                //  String setHarga = harga.setText();
+                //    Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
+            }
+        });
+        sDayaBaru.setOnNothingSelectedListener(new MaterialSpinner.OnNothingSelectedListener() {
+
+            @Override
+            public void onNothingSelected(MaterialSpinner spinner) {
+                Snackbar.make(spinner, "Belum di pilih", Snackbar.LENGTH_LONG).show();
+            }
+        });
     }
 
 

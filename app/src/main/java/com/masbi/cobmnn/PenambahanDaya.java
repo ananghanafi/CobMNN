@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -74,10 +75,11 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
     private DatabaseReference databaseReference;
     private StorageReference storageReference;
     FirebaseDatabase database;
-    DatabaseReference myRef, pesan, pemesanan, cekbiaya, wilayah;
-    TextView harga;
+    DatabaseReference myRef, pesan, pemesanan, cekbiaya;
+    TextView harga, jBiaya;
     String time;
     String pilihan[];
+    LinearLayout tampilBiaya;
     String[] hargaBaru;
     EditText nama, alamat, nohp, noplg;
     int userId;
@@ -91,7 +93,8 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
     String[] tempr1adayabaru = new String[15];
     String[] tempr1adayadaya = new String[15];
     String[] tempCabang1 = new String[2];
-    int posisi;
+    int posisi, posisi2;
+DatabaseReference wilayah;
     int coba, cobaCabang1, cobaCabang2, cobaRayon1, cobaRayon2, cobaRayon3, cobaRayon4, cobaRayon5, cobaRayon6, cobaRayon7, cobaRayon8,
             cobaPemda1, cobaPemda2, cobaPemda3, cobaPemda4;
     String str_Wilayah, str_Cabang, str_Rayon, str_Pemda, str_Gerai,
@@ -100,17 +103,20 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
             str_eLampOut, str_eLampIn, str_elContactOut, str_elContactIn;
     MaterialSpinner sWilayah, sCabang, sRayon, sPemda, sGerai, sForm, sDayaDayaBaru, sDayaDaya;
     String strWilayah[], strCabang[], strRayon[], strPemda[], strGerai[], strForm[], strDayaDayaBaru[], strDayaDaya[];
+    double hargaDaya[];
+    double jumlah;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_penambahan_daya);
-        harga = (TextView) findViewById(R.id.harga);
+        //     harga = (TextView) findViewById(R.id.harga);
         nama = (EditText) findViewById(R.id.namaDaya);
         alamat = (EditText) findViewById(R.id.alamatDaya);
         nohp = (EditText) findViewById(R.id.nohpDaya);
         noplg = (EditText) findViewById(R.id.noplg);
+        jBiaya = (TextView) findViewById(R.id.jumlahBiaya);
 
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("message");
@@ -128,12 +134,14 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
         sGerai = (MaterialSpinner) findViewById(R.id.spinnerGeraiBaru);
         sDayaDaya = (MaterialSpinner) findViewById(R.id.sDayaDaya);
         sDayaDayaBaru = (MaterialSpinner) findViewById(R.id.sDayaDayaBaru);
+        tampilBiaya = (LinearLayout) findViewById(R.id.tampilBiaya);
         wilayah = FirebaseDatabase.getInstance().getReference("wilayah");
-
+        hargaDaya = new double[]{0, 421000, 843000, 1218000, 2062000,
+                2062000, 2062000, 2062000, 2062000, 2062000, 2062000, 2062000, 2062000,
+                2062000, 2062000, 2062000};
         strWilayah = new String[]{
                 "Pilih Wilayah",
                 "Kalimantan Selatan dan Tengah",
-                "Tambah",
 
         };
         sWilayah.setItems(strWilayah);
@@ -293,10 +301,10 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
         mMap.setMyLocationEnabled(true);
 
         mMap.getUiSettings().setMapToolbarEnabled(false);
+
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                // Creating a marker
                 MarkerOptions markerOptions = new MarkerOptions();
 
                 // Setting the position for the marker
@@ -305,26 +313,27 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
                 // Setting the title for the marker.
                 // This will be displayed on taping the marker
 
-
-                addresses = new ArrayList<>();
-                try {
-                    addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                android.location.Address address = addresses.get(0);
-
-                if (address != null) {
-                    StringBuilder sb = new StringBuilder();
-                    for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
-                        if (i == (address.getMaxAddressLineIndex() - 1)) {
-                            sb.append(address.getAddressLine(i));
-                        } else {
-                            sb.append(address.getAddressLine(i) + ", ");
-                        }
-                    }
-                    mSearchView.setSearchText(sb.toString());
-                }
+//
+//                addresses = new ArrayList<>();
+//                try {
+//                    addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+                System.out.println("Lat " + latLng.latitude + "long " + latLng.longitude);
+//                android.location.Address address = addresses.get(0);
+//
+//                if (address != null) {
+//                    StringBuilder sb = new StringBuilder();
+//                    for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
+//                        if (i == (address.getMaxAddressLineIndex() - 1)) {
+//                            sb.append(address.getAddressLine(i));
+//                        } else {
+//                            sb.append(address.getAddressLine(i) + ", ");
+//                        }
+//                    }
+//                    mSearchView.setSearchText(sb.toString());
+//                }
                 markerOptions.title("Pilih Lokasi");
                 markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
 
@@ -336,10 +345,55 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
 
                 // Placing a marker on the touched position
                 mMap.addMarker(markerOptions);
-
-
             }
         });
+//        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+//            @Override
+//            public void onMapClick(LatLng latLng) {
+//                // Creating a marker
+//                MarkerOptions markerOptions = new MarkerOptions();
+//
+//                // Setting the position for the marker
+//                markerOptions.position(latLng);
+//
+//                // Setting the title for the marker.
+//                // This will be displayed on taping the marker
+//
+//
+//                addresses = new ArrayList<>();
+//                try {
+//                    addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                android.location.Address address = addresses.get(0);
+//
+//                if (address != null) {
+//                    StringBuilder sb = new StringBuilder();
+//                    for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
+//                        if (i == (address.getMaxAddressLineIndex() - 1)) {
+//                            sb.append(address.getAddressLine(i));
+//                        } else {
+//                            sb.append(address.getAddressLine(i) + ", ");
+//                        }
+//                    }
+//                    mSearchView.setSearchText(sb.toString());
+//                }
+//                markerOptions.title("Pilih Lokasi");
+//                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+//
+//                // Clears the previously touched position
+//                mMap.clear();
+//
+//                // Animating to the touched position
+//                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+//
+//                // Placing a marker on the touched position
+//                mMap.addMarker(markerOptions);
+//
+//
+//            }
+//        });
 
         // MapWrapperLayout initialization
         // 39 - default marker height
@@ -455,30 +509,41 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
             noplg.setError("Masukan no pelanggan/no meter dengan benar");
             noplg.requestFocus();
             return;
-        }
-        AlertDialog.Builder blBuilder = new AlertDialog.Builder(this);
-        blBuilder.setTitle("Pemesanan");
-        //  alBuilder.setIcon(R.drawable.ic_clear_black_24dp);
-        blBuilder.setMessage("Biaya untuk penanabahan daya setiap pelanggan beda-beda, untuk itu isi no pelanggan/no meter nanti kami bantu" +
-                " cek biaya (Sambung Telp Gerai MCC)").setCancelable(false)
-                .setPositiveButton("ya", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        System.out.println("Pilihan Ya");
-                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:05116723591")));
-                        saveDatabaseDaya();
-                        System.out.println("Cek Pmasangan daya");
-                    }
-                }).setNegativeButton("tidak", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                System.out.println("Pilihan Tidak");
+        } else {
 
-                dialogInterface.cancel();
-            }
-        });
-        AlertDialog alertDialog = blBuilder.create();
-        alertDialog.show();
+            AlertDialog.Builder blBuilder = new AlertDialog.Builder(this);
+            blBuilder.setTitle("Cek biaya dari daya " + strDayaDaya[posisi] + " ke daya " + strDayaDayaBaru[posisi]);
+            //  alBuilder.setIcon(R.drawable.ic_clear_black_24dp);
+            blBuilder.setMessage("dss").setCancelable(false)
+                    .setPositiveButton("ya", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            System.out.println("Pilihan Ya");
+//                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:05116723591")));
+                            if (posisi2 == 1) {
+                                jumlah = hargaDaya[posisi2];
+                            } else if (posisi2 <= 4) {
+                                jumlah = hargaDaya[posisi2] + ((Double.parseDouble(strDayaDayaBaru[posisi]) - Double.parseDouble(strDayaDaya[posisi2])) * 937);
+                            } else {
+                                jumlah = hargaDaya[posisi2] + ((Double.parseDouble(strDayaDayaBaru[posisi]) - Double.parseDouble(strDayaDaya[posisi2])) * 969);
+                            }
+                            jBiaya.setText(String.valueOf("Biaya tambah daya = " + jumlah));
+                            tampilBiaya.setVisibility(View.VISIBLE);
+                            //   saveDatabaseDaya();
+                            System.out.println("Cek Pmasangan daya");
+                        }
+                    }).setNegativeButton("tidak", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    System.out.println("Pilihan Tidak");
+
+                    dialogInterface.cancel();
+                }
+            });
+            AlertDialog alertDialog = blBuilder.create();
+            alertDialog.show();
+
+        }
 
 
     }
@@ -494,8 +559,7 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
         AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
         alBuilder.setTitle("Pemesanan");
         //  alBuilder.setIcon(R.drawable.ic_clear_black_24dp);
-        alBuilder.setMessage("Anda yakin pesan penambahan daya dengan besar daya " + pilihan[posisi]
-                + " seharga yang disebutkan tadi ").setCancelable(false)
+        alBuilder.setMessage("Anda yakin pesan penambahan daya dari " + strDayaDaya[posisi] + " ke daya " + strDayaDayaBaru[posisi2]).setCancelable(false)
                 .setPositiveButton("ya", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -523,48 +587,6 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
 
     }
 
-    private void saveDatabaseDaya() {
-        String str_nama = nama.getText().toString();
-        String str_alamat = alamat.getText().toString();
-        String str_nohp = nohp.getText().toString();
-        String str_noplg = noplg.getText().toString();
-        String str_id = cekbiaya.push().getKey();
-        time = String.valueOf(ServerValue.TIMESTAMP);
-        if (str_nama.isEmpty()) {
-            nama.setError("Nama harus diisi");
-            nama.requestFocus();
-            return;
-        } else if (str_alamat.isEmpty()) {
-            alamat.setError("Alamat harus diisi");
-            alamat.requestFocus();
-            return;
-        } else if (str_nohp.length() < 10) {
-            nohp.setError("Masukan no hanphone dengan benar");
-            nohp.requestFocus();
-            return;
-        } else if (str_noplg.length() < 11) {
-            noplg.setError("Masukan no pelanggan/no meter dengan benar");
-            noplg.requestFocus();
-            return;
-        } else {
-//            AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
-//                    , pilihan[posisi], hargaBaru[posisi], lat, lng, "");
-//        AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
-//                , pilihan[posisi], hargaBaru[posisi], lat, lng, time);
-            //           cekbiaya.child(str_id).setValue(user);
-        }
-//        AmbilData user = new AmbilData(str_alamat);
-
-//        AmbilData user = new AmbilData("Pemasangan Baru ", str_nama, str_alamat, str_nohp
-//                , pilihan[posisi], hargaBaru[posisi], lat, lng);
-//        pesan.push().setValue(user);
-//        AmbilData user = new AmbilData(str_id, "Penambahan Daya ", str_nama, str_alamat, str_nohp
-//                , pilihan[posisi], hargaBaru[posisi], lat, lng, str_noplg);
-
-//        AmbilData user = new AmbilData(str_id, "Pemasangan Daya ", str_nama, str_alamat, str_nohp
-//                , pilihan[posisi], hargaBaru[posisi], lat, lng, time);
-//        cekbiaya.child(str_id).setValue(user);
-    }
 
     private void saveDatabase() {
         //Tidak Boleh Kosong
@@ -572,7 +594,8 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
         String str_alamat = alamat.getText().toString();
         String str_nohp = nohp.getText().toString();
         String str_noplg = noplg.getText().toString();
-        String str_id = pemesanan.push().getKey();
+        String str_id;
+        //  String str_id = pemesanan.push().getKey();
         time = String.valueOf(ServerValue.TIMESTAMP);
         if (str_nama.isEmpty()) {
             nama.setError("Nama harus diisi");
@@ -591,6 +614,25 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
             noplg.requestFocus();
             return;
         } else {
+
+            str_Wilayah = "Kalimantaan Selatan dan Kalimantan Tengah";
+            str_Cabang = "Banjarmasin";
+            str_Rayon = tempr1[cobaRayon1 - 2];
+            str_Gerai = tempr1a[cobaPemda1];
+
+            str_id = wilayah.child("-L8RZ6tzs-N_R2LTlzom").child("cabang").child("-L8W31ly20ZfYmbS5VWk")
+                    .child("rayon").child("" + tempr1id[cobaRayon1 - 2]).child("gerai")
+                    .child("" + tempr1aid[cobaPemda1 - 1]).child("pemesanan").push().getKey();
+            AmbilData wil = new AmbilData(str_id, "Penambahan Daya", str_nama, str_alamat, strDayaDaya[posisi], strDayaDayaBaru[posisi2],
+                    String.valueOf(jumlah), lat, lng, str_noplg,
+                    str_Wilayah, str_Cabang, str_Rayon, str_Gerai);
+            wilayah.child("-L8RZ6tzs-N_R2LTlzom").child("cabang")
+                    .child("-L8W31ly20ZfYmbS5VWk").child("rayon").
+                    child("" + tempr1id[cobaRayon1 - 2]).child("gerai")
+                    .child("" + tempr1aid[cobaPemda1 - 1]).child("pemesanan").child(str_id).setValue(wil);
+//                Toast.makeText(DaftarAplikasi.this, "Telah disimpan", Toast.LENGTH_SHORT).show();
+
+
 //            AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
 //                    , pilihan[posisi], hargaBaru[posisi], lat, lng, "");
 //        AmbilData user = new AmbilData(str_id, "Pemasangan Baru ", str_nama, str_alamat, str_nohp
@@ -621,129 +663,34 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
 //        Toast.makeText(PemasanganBaru.this, "Nama " + value, Toast.LENGTH_SHORT).show();
         System.out.println("Storage Firebase = gs://mapsplnbp-1517890549610.appspot.com");
         System.out.println("Database Firebase = https://mapsplnbp-1517890549610.firebaseio.com/");
-//        pesan.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-//        final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        //       final String userId = "nama";
-//        pesan.child("users").child(userId).addListenerForSingleValueEvent(
-//                new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(DataSnapshot dataSnapshot) {
-//                        // Get user value
-//
-//                        writeNewPost(str_nama, str_alamat, str_nohp, userId);
-//
-////                        // [START_EXCLUDE]
-////                        if (user == null) {
-////                            // User is null, error out
-////                            Toast.makeText(PemasanganBaru.this,
-////                                    "Error: could not fetch user.",
-////                                    Toast.LENGTH_SHORT).show();
-////                        } else {
-////                            // Write new post
-////                            writeNewPost(userId, nama, alamat, nohp);
-////                        }
-//
-//                        // Finish this Activity, back to the stream
-//                        //   setEditingEnabled(true);
-//                        finish();
-//                        // [END_EXCLUDE]
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//
-//                        // [START_EXCLUDE]
-//                        //   setEditingEnabled(true);
-//                        // [END_EXCLUDE]
-//                    }
-//                });
-//        // [END single_value_read]
+
     }
 
-//    // [START write_fan_out]
-//    private void writeNewPost(String userId, String username, String title, String body) {
-//        // Create new post at /user-posts/$userid/$postid and at
-//        // /posts/$postid simultaneously
-//        String key = pesan.child("posts").push().getKey();
-//        Post post = new Post(userId, username, title, body);
-//        Map<String, Object> postValues = post.toMap();
-//
-//        Map<String, Object> childUpdates = new HashMap<>();
-//        childUpdates.put("/posts/" + key, postValues);
-//        childUpdates.put("/user-posts/" + userId + "/" + key, postValues);
-//
-//        pesan.updateChildren(childUpdates);
-//    }
-//    // [END write_fan_out]
 
-    //    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        pesan.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                AmbilData ambilData = dataSnapshot.getValue(AmbilData.class);
-//                System.out.println(ambilData);
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-//        pesan.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//
-//                String value = dataSnapshot.getValue(String.class);
-//            //    Toast.makeText(PemasanganBaru.this, "Nama " + value , Toast.LENGTH_SHORT).show();
-//                System.out.println("Value "+value);
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                Toast.makeText(PemasanganBaru.this, "Error", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
     private void spinnerCabang() {
 
         if (coba == 2) {
             strCabang = new String[]{
                     "Pilih Cabang",
                     "" + tempc[0], "" + tempc[1],
-                    "Tambah",
 
             };
         } else if (coba == 3) {
             strCabang = new String[]{
                     "Pilih Cabang",
                     tempc[0], tempc[1], tempc[2],
-                    "Tambah",
 
             };
         } else if (coba == 4) {
             strCabang = new String[]{
                     "Pilih Cabang",
                     tempc[0], tempc[1], tempc[2], tempc[3],
-                    "Tambah",
 
             };
         } else if (coba == 5) {
             strCabang = new String[]{
                     "Pilih Cabang",
                     tempc[0], tempc[1], tempc[2], tempc[3], tempc[4],
-                    "Tambah",
 
             };
         }
@@ -886,14 +833,12 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
             strRayon = new String[]{
                     "Pilih Rayon",
                     "" + tempr1[0], "" + tempr1[1],
-                    "Tambah",
 
             };
         } else if (cobaCabang2 == 3) {
             strRayon = new String[]{
                     "Pilih Rayon",
                     "" + tempr1[0], "" + tempr1[1], "" + tempr1[2],
-                    "Tambah",
 
             };
         } else if (cobaCabang2 == 4) {
@@ -901,29 +846,22 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
                     "Pilih Rayon",
                     "" + tempr1[0], tempr1[1], tempr1[2], tempr1[3],
 
-                    "Tambah",
-
             };
         } else if (cobaCabang2 == 5) {
             strRayon = new String[]{
                     "Pilih Rayon",
                     tempr1[0], tempr1[1], tempr1[2], tempr1[3], tempr1[4],
-                    "Tambah",
 
             };
         } else if (cobaCabang2 == 6) {
             strRayon = new String[]{
                     "Pilih Rayon",
                     tempr1[0], tempr1[1], tempr1[2], tempr1[3], tempr1[4], tempr1[5],
-                    "Tambah",
-
             };
         } else if (cobaCabang2 == 7) {
             strRayon = new String[]{
                     "Pilih Rayon",
                     tempr1[0], tempr1[1], tempr1[2], tempr1[3], tempr1[4], tempr1[5], tempr1[6],
-                    "Tambah",
-
             };
         }
 
@@ -1286,50 +1224,49 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
 
         if (cobaCabang2 == 1) {
             strGerai = new String[]{
+                    "Pilih Gerai",
                     "" + tempr1a[0],
-                    "Tambah",
 
             };
         } else if (cobaCabang2 == 2) {
             strGerai = new String[]{
+                    "Pilih Gerai",
                     "" + tempr1a[0], "" + tempr1a[1],
-                    "Tambah",
 
             };
         } else if (cobaCabang2 == 3) {
             strGerai = new String[]{
+                    "Pilih Gerai",
                     "" + tempr1a[0], "" + tempr1a[1], "" + tempr1a[2],
-                    "Tambah",
-
             };
         } else if (cobaCabang2 == 4) {
             strGerai = new String[]{
+                    "Pilih Gerai",
                     "" + tempr1a[0], tempr1a[1], tempr1a[2], tempr1a[3],
-                    "Tambah",
 
             };
         } else if (cobaCabang2 == 5) {
             strGerai = new String[]{
+                    "Pilih Gerai",
                     tempr1a[0], tempr1a[1], tempr1a[2], tempr1a[3], tempr1a[4],
-                    "Tambah",
 
             };
         } else if (cobaCabang2 == 6) {
             strGerai = new String[]{
+                    "Pilih Gerai",
                     tempr1a[0], tempr1a[1], tempr1a[2], tempr1a[3], tempr1a[4], tempr1a[5],
-                    "Tambah",
 
             };
         } else if (cobaCabang2 == 7) {
             strGerai = new String[]{
+                    "Pilih Gerai",
                     tempr1a[0], tempr1a[1], tempr1a[2], tempr1a[3], tempr1a[4], tempr1a[5], tempr1a[6],
-                    "Tambah",
 
             };
         } else if (cobaCabang2 == 8) {
             strGerai = new String[]{
+                    "Pilih Gerai",
                     tempr1a[0], tempr1a[1], tempr1a[2], tempr1a[3], tempr1a[4], tempr1a[5], tempr1a[6], tempr1a[7],
-                    "Tambah",
 
             };
         }
@@ -1342,37 +1279,44 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
                 switch (position) {
                     case 0:
                         System.out.println("cek 2");
-                        cobaPemda1 = 1;
-                        cobaRayon2 = 2;
+                        cobaPemda1 = 0;
+                        //    cobaRayon2 = 2;
                         System.out.println("COba Pemda " + cobaPemda1);
                         //            Toast.makeText(DaftarAplikasi.this, "coba " + cobaPemda1 + " df " + tempr1aid[cobaPemda1 - 1], Toast.LENGTH_SHORT).show();
                         break;
                     case 1:
-                        System.out.println("cek 3");
-                        cobaPemda1 = 2;
-                        cobaRayon2 = 3;
-                        //          Toast.makeText(DaftarAplikasi.this, "coba " + cobaPemda1, Toast.LENGTH_SHORT).show();
+                        System.out.println("cek 2");
+                        cobaPemda1 = 1;
+                        //    cobaRayon2 = 2;
+                        System.out.println("COba Pemda " + cobaPemda1);
+                        //            Toast.makeText(DaftarAplikasi.this, "coba " + cobaPemda1 + " df " + tempr1aid[cobaPemda1 - 1], Toast.LENGTH_SHORT).show();
                         break;
                     case 2:
-                        cobaPemda1 = 3;
-                        cobaRayon2 = 4;
                         System.out.println("cek 3");
+                        cobaPemda1 = 2;
+//                        cobaRayon2 = 3;
+                        //          Toast.makeText(DaftarAplikasi.this, "coba " + cobaPemda1, Toast.LENGTH_SHORT).show();
                         break;
                     case 3:
+                        cobaPemda1 = 3;
+                        //  cobaRayon2 = 4;
+                        System.out.println("cek 3");
+                        break;
+                    case 4:
                         cobaPemda1 = 4;
-                        cobaRayon2 = 5;
+                        //  cobaRayon2 = 5;
                         System.out.println("cek 3");
                         //lGerai.setVisibility(View.VISIBLE);
                         break;
-                    case 4:
+                    case 5:
                         cobaPemda1 = 5;
                         System.out.println("cek 3");
                         break;
-                    case 5:
+                    case 6:
                         cobaPemda1 = 6;
                         System.out.println("cek 3");
                         break;
-                    case 6:
+                    case 7:
                         cobaPemda1 = 7;
                         System.out.println("cek 3");
                         break;
@@ -1394,21 +1338,21 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
         });
         strDayaDaya = new String[]{
                 "Daya Saat ini",
-                "450 VA",
-                "900 VA",
-                "1300 VA",
-                "2200 VA",
-                "3500 VA",
-                "4400 VA",
-                "5500 VA",
-                "6600 VA",
-                "7700 VA",
-                "110000 VA",
-                "132000 VA",
-                "165000 VA",
-                "230000 VA",
-                "330000 VA",
-                "415000 VA"
+                "450",
+                "900",
+                "1300",
+                "2200",
+                "3500",
+                "4400",
+                "5500",
+                "6600",
+                "7700",
+                "110000",
+                "132000",
+                "165000",
+                "230000",
+                "330000",
+                "415000"
         };
         sDayaDaya.setItems(strDayaDaya);
         sDayaDaya.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
@@ -1430,28 +1374,28 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
         });
         strDayaDayaBaru = new String[]{
                 "Tambah ke Daya",
-                "450 VA",
-                "900 VA",
-                "1300 VA",
-                "2200 VA",
-                "3500 VA",
-                "4400 VA",
-                "5500 VA",
-                "6600 VA",
-                "7700 VA",
-                "110000 VA",
-                "132000 VA",
-                "165000 VA",
-                "230000 VA",
-                "330000 VA",
-                "415000 VA"
+                "450",
+                "900",
+                "1300",
+                "2200",
+                "3500",
+                "4400",
+                "5500",
+                "6600",
+                "7700",
+                "110000",
+                "132000",
+                "165000",
+                "230000",
+                "330000",
+                "415000"
         };
-        sDayaDayaBaru.setItems( strDayaDayaBaru );
+        sDayaDayaBaru.setItems(strDayaDayaBaru);
         sDayaDayaBaru.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
 
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                posisi = position;
+                posisi2 = position;
                 //     Snackbar.make(view, "Besar daya " + strDayaBaru[position], Snackbar.LENGTH_LONG).show();
                 //  String setHarga = harga.setText();
                 //    Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();

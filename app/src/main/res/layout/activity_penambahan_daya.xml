@@ -16,9 +16,9 @@
     <!--<RelativeLayout-->
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="wrap_content">-->
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <!--<ScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -269,6 +269,7 @@
                             android:layout_height="10dp"></LinearLayout>
 
                         <LinearLayout
+                            android:visibility="gone"
                             android:id="@+id/tampilBiaya"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -277,106 +278,15 @@
                             android:paddingBottom="16dp">
 
                             <TextView
+                                android:id="@+id/jumlahBiaya"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
                                 android:paddingBottom="5dp"
-                                android:text="Biaya"
+                                android:text=""
                                 android:textColor="@android:color/white"
                                 android:textSize="18dp" />
 
-                            <TableLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:stretchColumns="1">
-
-                                <TableRow>
-
-                                    <TextView
-                                        android:layout_column="1"
-                                        android:padding="5dp"
-                                        android:text="BP PLN" />
-
-                                    <TextView
-                                        android:id="@+id/textBP"
-                                        android:layout_column="1"
-                                        android:padding="5dp"
-                                        android:text="12" />
-                                </TableRow>
-
-                                <TableRow>
-
-                                    <TextView
-                                        android:layout_column="1"
-                                        android:padding="5dp"
-                                        android:text="Biaya Intalasi" />
-
-                                    <TextView
-                                        android:id="@+id/textIntalasi"
-                                        android:layout_column="1"
-                                        android:padding="5dp"
-                                        android:text="12" />
-                                </TableRow>
-
-                                <TableRow>
-
-                                    <TextView
-                                        android:layout_column="1"
-                                        android:padding="5dp"
-                                        android:text="SLO" />
-
-                                    <TextView
-                                        android:id="@+id/textSLO"
-                                        android:layout_column="1"
-                                        android:padding="5dp"
-                                        android:text="12" />
-                                </TableRow>
-
-                                <TableRow>
-
-                                    <TextView
-                                        android:layout_column="1"
-                                        android:padding="5dp"
-                                        android:text="Gambar \nInstalasi" />
-
-                                    <TextView
-                                        android:id="@+id/textGinstalasi"
-                                        android:layout_column="1"
-                                        android:padding="5dp"
-                                        android:text="12" />
-                                </TableRow>
-
-                                <TableRow>
-
-                                    <TextView
-                                        android:layout_column="1"
-                                        android:padding="5dp"
-                                        android:text="Materai" />
-
-                                    <TextView
-                                        android:id="@+id/textMaterai"
-                                        android:layout_column="1"
-                                        android:padding="5dp"
-                                        android:text="12" />
-                                </TableRow>
-                                <TableRow>
-
-                                    <TextView
-                                        android:textColor="@android:color/white"
-                                        android:textSize="18dp"
-                                        android:layout_column="1"
-                                        android:padding="5dp"
-                                        android:text="Jumlah" />
-
-                                    <TextView
-                                        android:textColor="@android:color/white"
-                                        android:textSize="18dp"
-                                        android:id="@+id/textJumlah"
-                                        android:layout_column="1"
-                                        android:padding="5dp"
-                                        android:text="12" />
-                                </TableRow>
-                            </TableLayout>
                         </LinearLayout>
 
                         <!--<Button-->
@@ -425,7 +335,7 @@
             </ScrollView>
         </LinearLayout>
 
-    </ScrollView>
+    <!--</ScrollView>-->
 
     <LinearLayout
         android:id="@+id/button"
