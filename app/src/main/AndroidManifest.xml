@@ -25,7 +25,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/logo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/logo"
         android:supportsRtl="true"
@@ -81,7 +81,8 @@
         <activity
             android:name=".SendGmail"
             android:label="mcc.gerai1@gmail.com" />
-        <activity android:name=".Perbaikan"></activity>
+        <activity android:name=".Perbaikan" />
+        <activity android:name=".InfoPLN"></activity>
     </application>
 
 </manifest>

@@ -12,6 +12,7 @@ public class AmbilData {
             str_bpPLN, str_Instalasi, str_Slo, str_gInstalasi, str_Materai,
             str_adminDaya, str_tokenDaya, str_materaiDaya, str_daya, str_dayaDaya,
             str_eLampOut, str_eLampIn, str_elContactOut, str_elContactIn, str_voucher;
+    String promosi1, promosi2, promosi3, promosi4, promosi5;
 
 
 //   Map time;
@@ -506,5 +507,45 @@ public class AmbilData {
 
     public void setsContact(String sContact) {
         this.sContact = sContact;
+    }
+
+    public String getPromosi1() {
+        return promosi1;
+    }
+
+    public void setPromosi1(String promosi1) {
+        this.promosi1 = promosi1;
+    }
+
+    public String getPromosi2() {
+        return promosi2;
+    }
+
+    public void setPromosi2(String promosi2) {
+        this.promosi2 = promosi2;
+    }
+
+    public String getPromosi3() {
+        return promosi3;
+    }
+
+    public void setPromosi3(String promosi3) {
+        this.promosi3 = promosi3;
+    }
+
+    public String getPromosi4() {
+        return promosi4;
+    }
+
+    public void setPromosi4(String promosi4) {
+        this.promosi4 = promosi4;
+    }
+
+    public String getPromosi5() {
+        return promosi5;
+    }
+
+    public void setPromosi5(String promosi5) {
+        this.promosi5 = promosi5;
     }
 }

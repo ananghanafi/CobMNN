@@ -94,7 +94,7 @@ public class PenambahanDaya extends FragmentActivity implements OnMapReadyCallba
     String[] tempr1adayadaya = new String[15];
     String[] tempCabang1 = new String[2];
     int posisi, posisi2;
-DatabaseReference wilayah;
+    DatabaseReference wilayah;
     int coba, cobaCabang1, cobaCabang2, cobaRayon1, cobaRayon2, cobaRayon3, cobaRayon4, cobaRayon5, cobaRayon6, cobaRayon7, cobaRayon8,
             cobaPemda1, cobaPemda2, cobaPemda3, cobaPemda4;
     String str_Wilayah, str_Cabang, str_Rayon, str_Pemda, str_Gerai,
@@ -120,7 +120,7 @@ DatabaseReference wilayah;
 
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("message");
-        harga = (TextView) findViewById(R.id.harga);
+        //  harga = (TextView) findViewById(R.id.harga);
         String setHarga;
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
@@ -523,9 +523,9 @@ DatabaseReference wilayah;
                             if (posisi2 == 1) {
                                 jumlah = hargaDaya[posisi2];
                             } else if (posisi2 <= 4) {
-                                jumlah = hargaDaya[posisi2] + ((Double.parseDouble(strDayaDayaBaru[posisi]) - Double.parseDouble(strDayaDaya[posisi2])) * 937);
+                                jumlah = hargaDaya[posisi2] + (Double.parseDouble(strDayaDayaBaru[posisi2]) - (Double.parseDouble(strDayaDaya[posisi])) * 937);
                             } else {
-                                jumlah = hargaDaya[posisi2] + ((Double.parseDouble(strDayaDayaBaru[posisi]) - Double.parseDouble(strDayaDaya[posisi2])) * 969);
+                                jumlah = hargaDaya[posisi2] + (Double.parseDouble(strDayaDayaBaru[posisi2]) - (Double.parseDouble(strDayaDaya[posisi])) * 969);
                             }
                             jBiaya.setText(String.valueOf("Biaya tambah daya = " + jumlah));
                             tampilBiaya.setVisibility(View.VISIBLE);

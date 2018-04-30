@@ -38,6 +38,7 @@
         <!--android:background="@mipmap/ic_launcher" />-->
 
         <ScrollView
+            android:id="@+id/scrollBaru"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -45,7 +46,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -263,7 +265,7 @@
                             android:layout_height="wrap_content"
                             android:layout_columnWeight="1"
                             android:onClick="pilInstall"
-                            android:text="Tanpa Instalasi" />
+                            android:text="Sudah berinstalasi lengkap" />
                     </GridLayout>
 
                 </RadioGroup>
@@ -313,6 +315,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="10dp"></LinearLayout>
@@ -331,8 +334,9 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="10dp"></LinearLayout>
+
                         <LinearLayout
-                            android:id="@+id/geraiBaruLin"
+                            android:id="@+id/lampLin"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
@@ -347,21 +351,12 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:gravity="top|left"
-                                    android:hint="Jumlah Fitting Lampu dan Saklar"
+                                    android:hint="Jumlah titik lampu"
                                     android:scrollbars="vertical" />
                             </android.support.design.widget.TextInputLayout>
 
 
-                            <Button
-                                android:id="@+id/geraiAddg"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="right"
-
-                                android:text="tambah" />
                         </LinearLayout>
-
-
 
 
                         <com.jaredrummler.materialspinner.MaterialSpinner
@@ -377,8 +372,9 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="10dp"></LinearLayout>
+
                         <LinearLayout
-                            android:id="@+id/geraiBaruLind"
+                            android:id="@+id/contLin"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
@@ -393,21 +389,11 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:gravity="top|left"
-                                    android:hint="Jumlah Stop Contact"
+                                    android:hint="Jumlah Stop Kontak"
                                     android:scrollbars="vertical" />
                             </android.support.design.widget.TextInputLayout>
 
-                            <Button
-                                android:id="@+id/geraiAdd"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="right"
-
-                                android:text="tambah" />
                         </LinearLayout>
-
-
-
 
 
                         <android.support.design.widget.TextInputLayout
@@ -422,7 +408,7 @@
                                 android:editable="false"
                                 android:focusable="false"
                                 android:gravity="top|left"
-                                android:hint="1"
+                                android:hint="1 paket MCB, arde dan kabel HI"
                                 android:scrollbars="vertical" />
                         </android.support.design.widget.TextInputLayout>
                     </LinearLayout>
@@ -446,7 +432,7 @@
                                 android:editable="true"
                                 android:focusable="false"
                                 android:gravity="top|left"
-                                android:hint="3"
+                                android:hint="3 titik lampu"
                                 android:scrollbars="vertical" />
                         </android.support.design.widget.TextInputLayout>
 
@@ -462,7 +448,7 @@
                                 android:editable="true"
                                 android:focusable="false"
                                 android:gravity="top|left"
-                                android:hint="1"
+                                android:hint="1 titik stop kontak"
                                 android:scrollbars="vertical" />
                         </android.support.design.widget.TextInputLayout>
 
@@ -478,7 +464,7 @@
                                 android:editable="true"
                                 android:focusable="false"
                                 android:gravity="top|left"
-                                android:hint="1"
+                                android:hint="1 paket MCB, arde dan kabel HI"
                                 android:scrollbars="vertical" />
                         </android.support.design.widget.TextInputLayout>
                     </LinearLayout>
@@ -576,7 +562,7 @@
                                 android:id="@+id/textIntalasi"
                                 android:layout_column="1"
                                 android:padding="5dp"
-                                android:text="12" />
+                                android:text="" />
                         </TableRow>
 
                         <TableRow>
@@ -620,25 +606,20 @@
                                 android:padding="5dp"
                                 android:text="" />
                         </TableRow>
-
                         <TableRow>
 
                             <TextView
                                 android:layout_column="1"
                                 android:padding="5dp"
                                 android:text="Jumlah"
-                                android:textColor="@android:color/white"
                                 android:textSize="18dp" />
 
                             <TextView
-                                android:id="@+id/textJumlah"
+                                android:id="@+id/textJumlahNow"
                                 android:layout_column="1"
-                                android:padding="5dp"
                                 android:text=""
-                                android:textColor="@android:color/white"
                                 android:textSize="18dp" />
                         </TableRow>
-
                         <TableRow>
 
                             <TextView
@@ -656,6 +637,25 @@
                                 android:textColor="@android:color/white"
                                 android:textSize="18dp" />
                         </TableRow>
+                        <TableRow>
+
+                            <TextView
+                                android:layout_column="1"
+                                android:padding="5dp"
+                                android:text="Jumlah Dibayar"
+                                android:textColor="@android:color/white"
+                                android:textSize="18dp" />
+
+                            <TextView
+                                android:id="@+id/textJumlah"
+                                android:layout_column="1"
+                                android:padding="5dp"
+                                android:text=""
+                                android:textColor="@android:color/white"
+                                android:textSize="18dp" />
+                        </TableRow>
+
+
                     </TableLayout>
 
                 </LinearLayout>

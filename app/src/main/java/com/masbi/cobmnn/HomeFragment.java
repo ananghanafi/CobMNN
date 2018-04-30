@@ -24,6 +24,11 @@ import java.util.HashMap;
 
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class HomeFragment extends Fragment implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
@@ -38,6 +43,8 @@ public class HomeFragment extends Fragment implements BaseSliderView.OnSliderCli
     private SliderLayout mDemoSlider;
 
     private OnFragmentInteractionListener mListener;
+    DatabaseReference promosi;
+    String promosiAtas[] = new String[5];
 
     public HomeFragment() {
         // Required empty public constructor
@@ -74,11 +81,49 @@ public class HomeFragment extends Fragment implements BaseSliderView.OnSliderCli
         CardView imgTambah = (CardView) view.findViewById(R.id.penambahanDaya);
         CardView imgPasang = (CardView) view.findViewById(R.id.pemasanganBaru);
         CardView imgPerbaikan = (CardView) view.findViewById(R.id.perbaikan);
-      //  FloatingActionButton fabLogin = (FloatingActionButton) view.findViewById(R.id.fab);
+        CardView imgPLn = (CardView) view.findViewById(R.id.infoPLN);
+        promosi = FirebaseDatabase.getInstance().getReference("promosi");
+        //  FloatingActionButton fabLogin = (FloatingActionButton) view.findViewById(R.id.fab);
+//        promosi.addValueEventListener(new ValueEventListener() {
+//
+//                                          @Override
+//                                          public void onDataChange(DataSnapshot dataSnapshot) {
+//                                              System.out.println("OnData Change");
+//                                              //           ambilDataList.clear();
+//                                              int i = 0;
+//                                              for (DataSnapshot pesanSnpshot : dataSnapshot.getChildren()) {
+//                                                  //                   pbAll.setVisibility(View.GONE);
+//                                                  AmbilData ambilData = pesanSnpshot.getValue(AmbilData.class);
+//                                                  //  ambilDataList.add(ambilData);
+//                                                  promosiAtas[i] = ambilData.getPromosi1();
+//                                                  System.out.println("cek Promosi "+promosiAtas[1]);
+//
+//                                                  i++;
+//
+//                                              }
+//                                          }
+//                                          @Override
+//                                          public void onCancelled(DatabaseError databaseError) {
+//
+//                                          }
+//
+//                                      }
+//        );
         HashMap<String, String> url_maps = new HashMap<String, String>();
-        url_maps.put("Hannibal", "http://www.lesprivatinggrisjogja.com/wp-content/uploads/2015/05/les-privat2.jpg");
-        url_maps.put("House of Cards", "http://qualityprivat.com/wp-content/uploads/2016/04/cours-413x265.jpg");
-        url_maps.put("Game of Thrones", "http://se-lesprivat.weebly.com/uploads/3/9/6/1/39616049/7336871_orig.jpg");
+        url_maps.put("Promosi 1", "https://1.bp.blogspot.com/-55MSTK-khkg/WuPE5HNxIbI/AAAAAAAAADw/Aj6kvxnSqNAWHnMCM4bHo41pvupF2pKwgCLcBGAs/s1600/Promosi2.png");
+        url_maps.put("Promosi 2", "https://1.bp.blogspot.com/-55MSTK-khkg/WuPE5HNxIbI/AAAAAAAAADw/Aj6kvxnSqNAWHnMCM4bHo41pvupF2pKwgCLcBGAs/s1600/Promosi2.png");
+        url_maps.put("Promosi 3", "https://1.bp.blogspot.com/-55MSTK-khkg/WuPE5HNxIbI/AAAAAAAAADw/Aj6kvxnSqNAWHnMCM4bHo41pvupF2pKwgCLcBGAs/s1600/Promosi2.png");
+//        url_maps.put("Promosi 3", "https://1.bp.blogspot.com/-55MSTK-khkg/WuPE5HNxIbI/AAAAAAAAADw/Aj6kvxnSqNAWHnMCM4bHo41pvupF2pKwgCLcBGAs/s1600/Promosi2.png");
+//        url_maps.put("Promosi 4", "https://1.bp.blogspot.com/-55MSTK-khkg/WuPE5HNxIbI/AAAAAAAAADw/Aj6kvxnSqNAWHnMCM4bHo41pvupF2pKwgCLcBGAs/s1600/Promosi2.png");
+//        url_maps.put("Promosi 5", "https://1.bp.blogspot.com/-55MSTK-khkg/WuPE5HNxIbI/AAAAAAAAADw/Aj6kvxnSqNAWHnMCM4bHo41pvupF2pKwgCLcBGAs/s1600/Promosi2.png");
+//
+
+//        url_maps.put("Promosi 1", ""+promosiAtas[0]);
+//        url_maps.put("Promosi 2", ""+promosiAtas[1]);
+//        url_maps.put("Promosi 3", ""+promosiAtas[2]);
+//        url_maps.put("Promosi 3", ""+promosiAtas[3]);
+//        url_maps.put("Promosi 4", ""+promosiAtas[4]);
+//        url_maps.put("Promosi 5", "https://1.bp.blogspot.com/-55MSTK-khkg/WuPE5HNxIbI/AAAAAAAAADw/Aj6kvxnSqNAWHnMCM4bHo41pvupF2pKwgCLcBGAs/s1600/Promosi2.png");
 
         for (String name : url_maps.keySet()) {
             TextSliderView textSliderView = new TextSliderView(getActivity());
@@ -118,6 +163,13 @@ public class HomeFragment extends Fragment implements BaseSliderView.OnSliderCli
             @Override
             public void onClick(View view) {
                 Intent pemasangan = new Intent(getActivity(), PemasanganBaru.class);
+                startActivity(pemasangan);
+            }
+        });
+        imgPLn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent pemasangan = new Intent(getActivity(), InfoPLN.class);
                 startActivity(pemasangan);
             }
         });
@@ -161,7 +213,7 @@ public class HomeFragment extends Fragment implements BaseSliderView.OnSliderCli
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
-            Toast.makeText(context, "Home", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, "Home", Toast.LENGTH_SHORT).show();
         }
     }
 

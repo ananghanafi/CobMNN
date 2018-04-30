@@ -33,25 +33,24 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:paddingTop="16dp"
-                    android:text="Gerai Layanan Listrik"
+                    android:text="MCC"
                     android:textColor="@color/colorPrimary"
                     android:textSize="24dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Gerai MCC"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="24dp" />
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:text="Gerai MCC"-->
+                    <!--android:textColor="@color/colorPrimary"-->
+                    <!--android:textSize="24dp" />-->
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:paddingTop="16dp"
-                    android:text="JL.HKSN Ruko No. 4 RT. 25RW.02 Banjarmasin Utara
-                70125 (Samping Amalia Tour and Travel" />
+                    android:text="JL.HKSN Ruko No. 4 RT. 25RW.02 Banjarmasin Utara 70125 " />
             </LinearLayout>
 
             <LinearLayout
@@ -221,7 +220,7 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
-                    android:text="     Sabtu (08.00 - 13.00 WITA)"
+                    android:text="Sabtu (08.00 - 13.00 WITA)"
 
                     />
 

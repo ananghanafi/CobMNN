@@ -107,7 +107,7 @@ public class FormOrderDaya extends AppCompatActivity {
         setContentView(R.layout.activity_form_order_daya);
         lat = getIntent().getExtras().getString("lat");
         lng = getIntent().getExtras().getString("lon");
-        harga = (TextView) findViewById(R.id.harga);
+    //    harga = (TextView) findViewById(R.id.harga);
         nama = (EditText) findViewById(R.id.namaFormDaya);
         alamat = (EditText) findViewById(R.id.alamatFormDaya);
         nohp = (EditText) findViewById(R.id.nohpFormDaya);
@@ -115,7 +115,7 @@ public class FormOrderDaya extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("message");
-        harga = (TextView) findViewById(R.id.harga);
+      //  harga = (TextView) findViewById(R.id.harga);
         String setHarga;
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();
@@ -126,7 +126,7 @@ public class FormOrderDaya extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("message");
-        harga = (TextView) findViewById(R.id.harga);
+      //  harga = (TextView) findViewById(R.id.harga);
    //     String setHarga;
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference();

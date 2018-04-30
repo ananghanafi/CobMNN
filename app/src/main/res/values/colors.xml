@@ -10,6 +10,8 @@
     <color name="colorPrimaryDark">#ff6f00</color>
     <color name="colorAccent">#F57F17</color>
 
+    <color name="black_overlay">#66000000</color>
+
     <!--<color name="colorPrimary">#FCCB11</color>-->
     <!--&lt;!&ndash;<color name="colorPrimaryDark">#CCCBCB</color>&ndash;&gt;-->
     <!--<color name="colorPrimaryDark">#C2000B</color>-->

@@ -10,10 +10,12 @@ import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.StrictMode;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
@@ -23,12 +25,19 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.SearchSuggestionsAdapter;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -37,6 +46,10 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.safetynet.SafetyNet;
+import com.google.android.gms.safetynet.SafetyNetApi;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -50,20 +63,30 @@ import com.masbi.cobmnn.tools.MapWrapperLayout;
 import com.masbi.cobmnn.tools.OnInfoWindowElemTouchListener;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.Executor;
+
+import static com.google.android.gms.location.GeofenceStatusCodes.getStatusCodeString;
 
 public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallback {
 
+    //  private static final String TAG = "Tag";
     private GoogleMap mMap;
     Geocoder geocoder;
     String lat, lng, sendLat, sendLng;
@@ -107,16 +130,27 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
     String[] tempCabang1 = new String[2];
     int coba, cobaCabang1, cobaCabang2, cobaRayon1, cobaRayon2, cobaRayon3, cobaRayon4, cobaRayon5, cobaRayon6, cobaRayon7, cobaRayon8,
             cobaPemda1, cobaPemda2, cobaPemda3, cobaPemda4;
-    String str_Wilayah, str_Cabang, str_Rayon, str_Pemda, str_Gerai,strLamp, strCont,
+    String str_Wilayah, str_Cabang, str_Rayon, str_Pemda, str_Gerai,
             str_bpPLN, str_Instalasi, str_Slo, str_gInstalasi, str_Materai,
             str_adminDaya, str_tokenDaya, str_MateraiDaya, str_daya, str_dayaDaya,
             str_eLampOut, str_eLampIn, str_elContactOut, str_elContactIn;
     MaterialSpinner sWilayah, sCabang, sRayon, sPemda, sGerai, sForm, sDayaBaru, sDayaDaya, sLamp, sCont;
-    String strWilayah[], strCabang[], strRayon[], strPemda[], strGerai[], strForm[], strDayaBaru[], strDayaDaya[];
-    TextView t_bpPLN, t_Instalasi, t_Slo, t_gInstalasi, t_Materai, t_jumlah, t_daya, t_vou;
+    String strWilayah[], strCabang[], strRayon[], strPemda[], strGerai[], strForm[], strDayaBaru[], strDayaDaya[], strLamp[], strCont[];
+    TextView t_bpPLN, t_Instalasi, t_Slo, t_gInstalasi, t_Materai, t_jumlah, t_daya, t_vou, t_jumlahNow;
     int inFM, inFP, inSM, inSP, inMCB, p;
-    double jumlah;
     int lamp, cont;
+    LinearLayout contLin, lampLin;
+    String lonCLick, latClick;
+    String SITE_KEY = "6LfhcVUUAAAAAPdOegz6qETdhHEXqDJlki3W2ijZ";
+    String SECRET_KEY = " 6LfhcVUUAAAAAHVLfztHyzASQNSXlH8TwkVfWGXh";
+    String userResponseToken;
+    NumberFormat formatIndo;
+    DecimalFormat kursIndo = (DecimalFormat) DecimalFormat.getCurrencyInstance();
+    DecimalFormatSymbols formatRP = new DecimalFormatSymbols();
+    String formatUang;
+    int jumlah, alihPilPaket;
+    double voucher;
+    ScrollView scroll;
 
 
     @Override
@@ -156,6 +190,8 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
         //    sPemda = (MaterialSpinner) findViewById(R.id.spinnerPemdaBaru);
         sGerai = (MaterialSpinner) findViewById(R.id.spinnerGeraiBaru);
         sDayaBaru = (MaterialSpinner) findViewById(R.id.sDayaBaru);
+        sLamp = (MaterialSpinner) findViewById(R.id.spinnerLamp);
+        sCont = (MaterialSpinner) findViewById(R.id.spinnerCont);
         tampilBiaya = (LinearLayout) findViewById(R.id.tampilBiaya);
         wilayah = FirebaseDatabase.getInstance().getReference("wilayah");
         t_bpPLN = (TextView) findViewById(R.id.textBP);
@@ -165,6 +201,43 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
         t_Slo = (TextView) findViewById(R.id.textSLO);
         t_Materai = (TextView) findViewById(R.id.textMaterai);
         t_vou = (TextView) findViewById(R.id.textVoucher);
+        t_jumlah = (TextView) findViewById(R.id.textJumlah);
+        t_jumlahNow = (TextView) findViewById(R.id.textJumlahNow);
+        lampLin = (LinearLayout) findViewById(R.id.lampLin);
+        contLin = (LinearLayout) findViewById(R.id.contLin);
+        formatRP.setCurrencySymbol("Rp. ");
+        formatRP.setMonetaryDecimalSeparator(',');
+        formatRP.setGroupingSeparator('.');
+        kursIndo.setDecimalFormatSymbols(formatRP);
+        formatUang = "%s %n";
+       scroll = (ScrollView) findViewById(R.id.scrollBaru);
+
+        System.out.println("Site Key : 6LfhcVUUAAAAAPdOegz6qETdhHEXqDJlki3W2ijZ");
+        System.out.println("Sercet Key : 6LfhcVUUAAAAAHVLfztHyzASQNSXlH8TwkVfWGXh");
+
+        //Client Side Itegration
+
+//        SafetyNet.getClient(this).verifyWithRecaptcha("6LfhcVUUAAAAAPdOegz6qETdhHEXqDJlki3W2ijZ")
+//                .addOnSuccessListener(this, new OnSuccessListener<SafetyNetApi.RecaptchaTokenResponse>() {
+//                    @Override
+//                    public void onSuccess(SafetyNetApi.RecaptchaTokenResponse response) {
+//                        if (!response.getTokenResult().isEmpty()) {
+//                            handleSiteVerify(response.getTokenResult());
+//                        }
+//                    }
+//                })
+//                .addOnFailureListener(this, new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        if (e instanceof ApiException) {
+//                            ApiException apiException = (ApiException) e;
+//                            Log.d(TAG, "Error message: " +
+//                                    CommonStatusCodes.getStatusCodeString(apiException.getStatusCode()));
+//                        } else {
+//                            Log.d(TAG, "Unknown type of error: " + e.getMessage());
+//                        }
+//                    }
+//                });
 
         strWilayah = new String[]{
                 "Pilih Wilayah",
@@ -239,6 +312,8 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
                 Snackbar.make(spinner, "Belum di pilih", Snackbar.LENGTH_LONG).show();
             }
         });
+
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -326,10 +401,10 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
         mMap.setMyLocationEnabled(true);
 
         mMap.getUiSettings().setMapToolbarEnabled(false);
+
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                // Creating a marker
                 MarkerOptions markerOptions = new MarkerOptions();
 
                 // Setting the position for the marker
@@ -338,14 +413,16 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
                 // Setting the title for the marker.
                 // This will be displayed on taping the marker
 
-                System.out.println("Lat " + latLng.latitude + "long " + latLng.longitude);
-
+//
 //                addresses = new ArrayList<>();
 //                try {
 //                    addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
 //                } catch (IOException e) {
 //                    e.printStackTrace();
 //                }
+                System.out.println("Lat " + latLng.latitude + "long " + latLng.longitude);
+                latClick = String.valueOf(latLng.latitude);
+                lonCLick = String.valueOf(latLng.longitude);
 //                android.location.Address address = addresses.get(0);
 //
 //                if (address != null) {
@@ -370,10 +447,55 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
 
                 // Placing a marker on the touched position
                 mMap.addMarker(markerOptions);
-
-
             }
         });
+//        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+//            @Override
+//            public void onMapClick(LatLng latLng) {
+//                // Creating a marker
+//                MarkerOptions markerOptions = new MarkerOptions();
+//
+//                // Setting the position for the marker
+//                markerOptions.position(latLng);
+//
+//                // Setting the title for the marker.
+//                // This will be displayed on taping the marker
+//
+//
+//                addresses = new ArrayList<>();
+//                try {
+//                    addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                android.location.Address address = addresses.get(0);
+//
+//                if (address != null) {
+//                    StringBuilder sb = new StringBuilder();
+//                    for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
+//                        if (i == (address.getMaxAddressLineIndex() - 1)) {
+//                            sb.append(address.getAddressLine(i));
+//                        } else {
+//                            sb.append(address.getAddressLine(i) + ", ");
+//                        }
+//                    }
+//                    mSearchView.setSearchText(sb.toString());
+//                }
+//                markerOptions.title("Pilih Lokasi");
+//                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+//
+//                // Clears the previously touched position
+//                mMap.clear();
+//
+//                // Animating to the touched position
+//                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+//
+//                // Placing a marker on the touched position
+//                mMap.addMarker(markerOptions);
+//
+//
+//            }
+//        });
 
         // MapWrapperLayout initialization
         // 39 - default marker height
@@ -387,46 +509,26 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
 
         // Setting custom OnTouchListener which deals with the pressed state
         // so it shows up
-//        this.infoButtonListener = new GoogleMap.OnInfoWindowLongClickListener(infoWindow,
-//                getResources().getDrawable(R.color.black),
-//                getResources().getDrawable(R.color.colorAccent)) //btn_default_pressed_holo_light
-//
-//        {
-//
-//            @Override
-//            public void onInfoWindowLongClick (Marker marker){
-//
-//        }
-//        } ;
         this.infoButtonListener = new OnInfoWindowElemTouchListener(infoWindow,
                 getResources().getDrawable(R.color.black), //btn_default_normal_holo_light
                 getResources().getDrawable(R.color.colorAccent)) //btn_default_pressed_holo_light
         {
             @Override
             protected void onClickConfirmed(View v, Marker marker) {
-
+                // Here we can perform some action triggered after clicking the button
+                Intent page = new Intent(PemasanganBaru.this, FormOrder.class);
 
 //                System.out.println("Alamat " + addresses);
 //                lat = String.valueOf(mMap.getMyLocation().getLatitude());
 //                lng = String.valueOf(mMap.getMyLocation().getLongitude());
-//
-//                sendLat = String.valueOf(mMap.getMyLocation().getLatitude());
-//                sendLng = String.valueOf(mMap.getMyLocation().getLongitude());
-                sendLat = String.valueOf(mMap.getMyLocation().getLatitude());
-                sendLng = String.valueOf(mMap.getMyLocation().getLongitude());
+
+                sendLat = latClick;
+                sendLng = lonCLick;
 //                Intent page = new Intent();
-
-
-                Toast.makeText(PemasanganBaru.this, "lat " + sendLat + " lng " + sendLng, Toast.LENGTH_SHORT).show();
-                System.out.println("Alamatbt " + addresses);
-                System.out.println("latitude " + lat);
-                System.out.println("longitude " + lng);
-                // Here we can perform some action triggered after clicking the button
-                Intent page = new Intent(PemasanganBaru.this, FormOrder.class);
                 page.putExtra("lat", sendLat);
                 page.putExtra("lon", sendLng);
                 startActivity(page);
-                //  Toast.makeText(PenambahanDaya.this, marker.getTitle() + "'s button clicked!", Toast.LENGTH_SHORT).show();
+
             }
         };
         this.infoWindow.setOnTouchListener(infoButtonListener);
@@ -490,200 +592,390 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
 
 
     public void btCekBiaya(View view) {
+        System.out.println("Sebelum " + tempr1aid[cobaPemda1 - 1]);
+        wilayah.child("-L8RZ6tzs-N_R2LTlzom").child("cabang").child("-L8W31ly20ZfYmbS5VWk")
+                .child("rayon").child("" + tempr1id[cobaRayon1 - 2]).child("gerai")
+                .child("" + tempr1aid[cobaPemda1 - 1]).child("penambahan").
+                addValueEventListener(new ValueEventListener() {
 
-//        wilayah.child("-L8RZ6tzs-N_R2LTlzom").child("cabang").child("-L8W31ly20ZfYmbS5VWk")
-//                .child("rayon").child("" + tempr1id[cobaRayon1 - 2]).child("gerai")
-//                .child("" + tempr1aid[cobaPemda1 - 1]).child("penambahan").
-//                addValueEventListener(new ValueEventListener() {
-//
-//                                          @Override
-//                                          public void onDataChange(DataSnapshot dataSnapshot) {
-//                                              System.out.println("OnData Change");
-//                                              //   ambilDataList.clear();
-//                                              cobaCabang2 = 0;
-//                                              //tempr1a = new String[2];
-//                                              int i = 0;
-//                                              for (DataSnapshot pesanSnpshot : dataSnapshot.getChildren()) {
-//                                                  //                   pbAll.setVisibility(View.GONE);
-//                                                  AmbilData ambilData = pesanSnpshot.getValue(AmbilData.class);
-//
-////                                                                  tempr1a[i] = ambilData.getStr_Gerai();
-////                                                                  tempr1aid[i] = ambilData.getId();
-//                                                  tempr1adayadaya[i] = ambilData.getStr_dayaDaya();
-//                                                  tempr1adayaBP[i] = ambilData.getStr_bpPLN();
-//                                                  tempr1adayaI[i] = ambilData.getStr_Instalasi();
-//                                                  tempr1adayaSLO[i] = ambilData.getStr_Slo();
-//                                                  tempr1adayaGI[i] = ambilData.getStr_gInstalasi();
-//                                                  tempr1adayaM[i] = ambilData.getStr_Materai();
-//                                                  tempr1adayaIB[i] = ambilData.getStr_eLampIn();
-//                                                  tempr1adayaOB[i] = ambilData.getStr_eLampOut();
-//                                                  tempr1adayaSOB[i] = ambilData.getStr_elContactOut();
-//                                                  tempr1adayaSIB[i] = ambilData.getStr_elContactIn();
-//                                                  tempr1adayaVou[i] = ambilData.getStr_voucher();
-//
-//
-//                                                  System.out.println("NO " + i + 1 + "Ambil Data " + ambilData);
-//                                                  System.out.println("" + ambilData.getStr_Gerai());
-//                                                  System.out.println("" + tempr1aid[i]);
-//
-//                                                  i++;
-//
-//
-//                                              }
-//
-//                                              cobaCabang2 = tempr1a.length;
-//                                              cobaPemda1 = 1;
-//                                              System.out.println("cabang " + coba + tempr1a.length);
-////                                                                                                            adapter = new Arraylist(DaftarAplikasi.this, ambilDataList);
-////                                                                                                            listView.setAdapter(adapter);
-//                                              System.out.println("sss " + tempc[0] + tempc[1]);
-//
-//                                              spinnerGerai();
-//                                          }
-//
-//                                          @Override
-//                                          public void onCancelled(DatabaseError databaseError) {
-//
-//                                          }
-//
-//                                      }
-//                );
+                                          @Override
+                                          public void onDataChange(DataSnapshot dataSnapshot) {
+                                              System.out.println("Cek id " + tempr1aid[cobaPemda1 - 1]);
+                                              System.out.println("OnData Change");
+                                              //   ambilDataList.clear();
+                                              //   cobaCabang2 = 0;
+                                              //tempr1a = new String[2];
+                                              int i = 0;
+                                              for (DataSnapshot pesanSnpshot : dataSnapshot.getChildren()) {
+                                                  //                   pbAll.setVisibility(View.GONE);
+                                                  AmbilData ambilData = pesanSnpshot.getValue(AmbilData.class);
 
-//        harga.setText("Besar daya " + pilihan[posisi] + " seharga " + hargaBaru[posisi]);
+//                                                                  tempr1a[i] = ambilData.getStr_Gerai();
+//                                                                  tempr1aid[i] = ambilData.getId();
+                                                  tempr1adayadaya[i] = ambilData.getStr_dayaDaya();
+                                                  tempr1adayaBP[i] = ambilData.getStr_bpPLN();
+                                                  tempr1adayaI[i] = ambilData.getStr_Instalasi();
+                                                  tempr1adayaSLO[i] = ambilData.getStr_Slo();
+                                                  tempr1adayaGI[i] = ambilData.getStr_gInstalasi();
+                                                  tempr1adayaM[i] = ambilData.getStr_Materai();
+                                                  tempr1adayaIB[i] = ambilData.getStr_eLampIn();
+                                                  tempr1adayaOB[i] = ambilData.getStr_eLampOut();
+                                                  tempr1adayaSOB[i] = ambilData.getStr_elContactOut();
+                                                  tempr1adayaSIB[i] = ambilData.getStr_elContactIn();
+                                                  tempr1adayaVou[i] = ambilData.getStr_voucher();
 
-//        inFM = Integer.parseInt(fittingManual.getText().toString()) - 3;
-//        inSM = Integer.parseInt(sContactManual.getText().toString()) - 1;
-//        inFP = 3;
-//        inSP = 1;
-//  //      if (p == 1) {
-//            AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
-//            alBuilder.setTitle("Cek Biaya");
-//
-//            alBuilder.setMessage(" " + pilihan[posisi]
-//                    + " seharga " + hargaBaru[posisi]).setCancelable(false)
-//                    .setPositiveButton("Lihat Rincian", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialogInterface, int i) {
-//                            System.out.println("Pilihan Ya");
-//                            //   startActivity(new Intent(PemasanganBaru.this, DriveMcc.class));
-//                            double jumlah = Double.parseDouble(tempr1adayaI[cobaPemda1] + (inFM * Double.parseDouble(tempr1adayaIB[cobaPemda1])
-//                                    + (inSM * Double.parseDouble(tempr1adayaSIB[cobaPemda1])))) +
-//                                    Double.parseDouble(tempr1adayaI[cobaPemda1]) +
-//                                    Double.parseDouble(tempr1adayaGI[cobaPemda1]) +
-//                                    Double.parseDouble(tempr1adayaSLO[cobaPemda1]) +
-//                                    Double.parseDouble(tempr1adayaM[cobaPemda1]);
-//                            t_bpPLN.setText(String.valueOf(Double.parseDouble(tempr1adayaBP[cobaPemda1])));
-//                            t_daya.setText("Biaya dengan daya " + String.valueOf(Double.parseDouble(tempr1adayadaya[cobaPemda1])));
-//                            t_Instalasi.setText(String.valueOf(Double.parseDouble(tempr1adayaI[cobaPemda1] + (inFM * Double.parseDouble(tempr1adayaIB[cobaPemda1])
-//                                    + (inSM * Double.parseDouble(tempr1adayaSIB[cobaPemda1]))))));
-//                            t_gInstalasi.setText(String.valueOf(Double.parseDouble(tempr1adayaGI[cobaPemda1])));
-//                            t_Slo.setText(String.valueOf(Double.parseDouble(tempr1adayaSLO[cobaPemda1])));
-//                            t_Materai.setText(String.valueOf(Double.parseDouble(tempr1adayaM[cobaPemda1])));
-//
-//                            if (tempr1adayaVou[cobaPemda1] != null) {
-//                                double voucher = jumlah * Double.parseDouble(tempr1adayaVou[cobaPemda1]);
-//                                t_jumlah.setText(String.valueOf(jumlah - voucher));
-//                                t_vou.setText(String.valueOf(voucher));
-//
-//                            } else {
-//                                t_jumlah.setText(String.valueOf(jumlah));
-//                            }
-//                            tampilBiaya.setVisibility(View.VISIBLE);
-//                            System.out.println("Cek Pemasangan baru");
-//                            dialogInterface.cancel();
-//                        }
-//                    }).setNegativeButton("Oke", new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialogInterface, int i) {
-//                    System.out.println("Pilihan Tidak");
-//                    jumlah = Double.parseDouble(tempr1adayaI[cobaPemda1] + (inFM * Double.parseDouble(tempr1adayaOB[cobaPemda1])
-//                            + (inSM * Double.parseDouble(tempr1adayaSOB[cobaPemda1])))) +
-//                            Double.parseDouble(tempr1adayaI[cobaPemda1]) +
-//                            Double.parseDouble(tempr1adayaGI[cobaPemda1]) +
-//                            Double.parseDouble(tempr1adayaSLO[cobaPemda1]) +
-//                            Double.parseDouble(tempr1adayaM[cobaPemda1]);
-//                    t_bpPLN.setText(String.valueOf(Double.parseDouble(tempr1adayaBP[cobaPemda1])));
-//                    t_daya.setText("Biaya dengan daya " + String.valueOf(Double.parseDouble(tempr1adayadaya[cobaPemda1])));
-//                    t_Instalasi.setText(String.valueOf(Double.parseDouble(tempr1adayaI[cobaPemda1] + (inFM * Double.parseDouble(tempr1adayaOB[cobaPemda1])
-//                            + (inSM * Double.parseDouble(tempr1adayaSOB[cobaPemda1]))))));
-//                    t_gInstalasi.setText(String.valueOf(Double.parseDouble(tempr1adayaGI[cobaPemda1])));
-//                    t_Slo.setText(String.valueOf(Double.parseDouble(tempr1adayaSLO[cobaPemda1])));
-//                    t_Materai.setText(String.valueOf(Double.parseDouble(tempr1adayaM[cobaPemda1])));
-//
-//                    if (tempr1adayaVou[cobaPemda1] != null) {
-//                        double voucher = jumlah * Double.parseDouble(tempr1adayaVou[cobaPemda1]);
-//                        t_jumlah.setText(String.valueOf(jumlah - voucher));
-//                        t_vou.setText(String.valueOf(voucher));
-//
-//                    } else {
-//                        t_jumlah.setText(String.valueOf(jumlah));
-//                    }
-//                    tampilBiaya.setVisibility(View.VISIBLE);
-//                    dialogInterface.cancel();
-//                }
-//            });
-//            AlertDialog alertDialog = alBuilder.create();
-//            alertDialog.show();
-//            t_daya.setText("Biaya dengan daya " + String.valueOf(Double.parseDouble(tempr1adayadaya[cobaPemda1])));
-//            t_Instalasi.setText(String.valueOf(Double.parseDouble(tempr1adayaI[cobaPemda1])));
-//            t_gInstalasi.setText(String.valueOf(Double.parseDouble(tempr1adayaGI[cobaPemda1])));
-//            t_Slo.setText(String.valueOf(Double.parseDouble(tempr1adayaSLO[cobaPemda1])));
-//            t_Materai.setText(String.valueOf(Double.parseDouble(tempr1adayaM[cobaPemda1])));
-//            t_jumlah.setText();
-//            if (tempr1adayaVou[cobaPemda1] != null) {
-//
-//            }
-//            tampilBiaya.setVisibility(View.VISIBLE);
-        //  } else {
-//            t_daya.setText("Biaya dengan daya " + String.valueOf(Double.parseDouble(tempr1adayadaya[cobaPemda1])));
-//            t_bpPLN.setText(String.valueOf(Double.parseDouble(tempr1adayaBP[cobaPemda1])));
-//            t_Instalasi.setText(String.valueOf(Double.parseDouble(tempr1adayaI[cobaPemda1])));
-//            t_gInstalasi.setText(String.valueOf(Double.parseDouble(tempr1adayaGI[cobaPemda1])));
-//            t_Slo.setText(String.valueOf(Double.parseDouble(tempr1adayaSLO[cobaPemda1])));
-//            t_Materai.setText(String.valueOf(Double.parseDouble(tempr1adayaM[cobaPemda1])));
-//            tampilBiaya.setVisibility(View.VISIBLE);
-        //   }
+                                                  i++;
 
-        //   double gg = inFM * Double.parseDouble(tempr1adayaBP[cobaPemda1]);
 
-        //  Integer.parseInt()
-        //  alBuilder.setIcon(R.drawable.ic_clear_black_24dp);
+                                              }
+                                              System.out.println(" " + tempr1adayaI[posisi]);
+                                              System.out.println("Lamp " + lamp);
+                                              System.out.println("Cont " + cont);
+                                              System.out.println("cek " +
+                                                      Integer.parseInt(tempr1adayaI[posisi]) + "\n" +
+                                                      Integer.parseInt(tempr1adayaGI[posisi]) + "\n" +
+                                                      Integer.parseInt(tempr1adayaSLO[posisi]) + "\n" +
+                                                      Integer.parseInt(tempr1adayaM[posisi]));
+                                              if (alihPilPaket == 1) {
+                                                  int intalasi = Integer.parseInt(tempr1adayaI[posisi]);
+                                                  System.out.println("ins " + jumlah);
 
+                                                  t_bpPLN.setText(String.format(formatUang, kursIndo.format(intalasi)));
+                                                  t_daya.setText("Biaya dengan daya " + strDayaBaru[posisi]);
+                                                  t_Instalasi.setText(String.format(formatUang, kursIndo.format(Integer.parseInt(tempr1adayaI[posisi]))));
+                                                  t_gInstalasi.setText(String.format(formatUang, kursIndo.format(Integer.parseInt(tempr1adayaGI[posisi]))));
+                                                  t_Slo.setText(String.format(formatUang, kursIndo.format(Integer.parseInt(tempr1adayaSLO[posisi]))));
+                                                  t_Materai.setText(String.format(formatUang, kursIndo.format(Integer.parseInt(tempr1adayaM[posisi]))));
+
+                                                  jumlah = intalasi + Integer.parseInt(tempr1adayaBP[posisi]) +
+                                                          Integer.parseInt(tempr1adayaGI[posisi]) +
+                                                          Integer.parseInt(tempr1adayaSLO[posisi]) +
+                                                          Integer.parseInt(tempr1adayaM[posisi]);
+                                                  String.format(formatUang, kursIndo.format(jumlah));
+                                                  System.out.println("ins " + jumlah);
+                                                  t_jumlahNow.setText(String.format(formatUang, kursIndo.format(jumlah)));
+
+                                                  if (tempr1adayaVou[posisi] != null) {
+//                                                  double voucher = jumlah * Double.parseDouble(tempr1adayaVou[posisi]);
+                                                      voucher = jumlah * 0.05;
+                                                      double hasil = jumlah - voucher;
+                                                      // System.out.println("gg " + gg);
+                                                      t_jumlah.setText(String.format(formatUang, kursIndo.format(hasil)));
+                                                      //t_jumlah.setText(String.valueOf(jumlah));
+                                                      // t_jumlah.setText(String.valueOf(Double.parseDouble(gg)));
+                                                      t_vou.setText(String.format(formatUang, kursIndo.format(voucher)));
+
+                                                  } else {
+
+                                                      t_jumlahNow.setText(String.format(formatUang, kursIndo.format(jumlah)));
+                                                      t_vou.setText(String.format(formatUang, kursIndo.format(voucher)));
+                                                      t_jumlah.setText(String.format(formatUang, kursIndo.format(jumlah)));
+                                                  }
+                                                  tampilBiaya.setVisibility(View.VISIBLE);
+                                              } else if (alihPilPaket == 2) {
+
+
+                                                  AlertDialog.Builder alBuilder = new AlertDialog.Builder(PemasanganBaru.this);
+                                                  alBuilder.setTitle("Cek Biaya");
+                                                  alBuilder.setMessage("Instalasi pertitik ").setCancelable(false)
+                                                          .setPositiveButton("Inbow", new DialogInterface.OnClickListener() {
+                                                              @Override
+                                                              public void onClick(DialogInterface dialogInterface, int i) {
+                                                                  System.out.println("Pilihan Ya");
+                                                                  int intalasi = Integer.parseInt(tempr1adayaI[posisi]) + (lamp * Integer.parseInt(tempr1adayaIB[posisi])
+                                                                          + (cont * Integer.parseInt(tempr1adayaSIB[posisi])));
+                                                                  System.out.println("ins " + jumlah);
+
+                                                                  t_bpPLN.setText(String.format(formatUang, kursIndo.format(Integer.parseInt(tempr1adayaBP[posisi]))));
+                                                                  t_daya.setText("Biaya dengan daya " + strDayaBaru[posisi]);
+                                                                  t_Instalasi.setText(String.format(formatUang, kursIndo.format(intalasi)));
+                                                                  t_gInstalasi.setText(String.format(formatUang, kursIndo.format(Integer.parseInt(tempr1adayaGI[posisi]))));
+                                                                  t_Slo.setText(String.format(formatUang, kursIndo.format(Integer.parseInt(tempr1adayaSLO[posisi]))));
+                                                                  t_Materai.setText(String.format(formatUang, kursIndo.format(Integer.parseInt(tempr1adayaM[posisi]))));
+
+                                                                  jumlah = intalasi + Integer.parseInt(tempr1adayaBP[posisi]) +
+                                                                          Integer.parseInt(tempr1adayaGI[posisi]) +
+                                                                          Integer.parseInt(tempr1adayaSLO[posisi]) +
+                                                                          Integer.parseInt(tempr1adayaM[posisi]);
+                                                                  String.format(formatUang, kursIndo.format(jumlah));
+                                                                  System.out.println("ins " + jumlah);
+                                                                  t_jumlahNow.setText(String.format(formatUang, kursIndo.format(jumlah)));
+
+                                                                  if (tempr1adayaVou[posisi] != null) {
+//                                                  double voucher = jumlah * Double.parseDouble(tempr1adayaVou[posisi]);
+                                                                      voucher = jumlah * 0.05;
+                                                                      double hasil = jumlah - voucher;
+                                                                      // System.out.println("gg " + gg);
+                                                                      t_jumlah.setText(String.format(formatUang, kursIndo.format(hasil)));
+                                                                      //t_jumlah.setText(String.valueOf(jumlah));
+                                                                      // t_jumlah.setText(String.valueOf(Double.parseDouble(gg)));
+                                                                      t_vou.setText(String.format(formatUang, kursIndo.format(voucher)));
+
+                                                                  } else {
+
+                                                                      t_jumlahNow.setText(String.format(formatUang, kursIndo.format(jumlah)));
+                                                                      t_vou.setText(String.format(formatUang, kursIndo.format(voucher)));
+                                                                      t_jumlah.setText(String.format(formatUang, kursIndo.format(jumlah)));
+                                                                  }
+                                                                  tampilBiaya.setVisibility(View.VISIBLE);
+                                                                  dialogInterface.cancel();
+
+
+                                                              }
+                                                          }).setNegativeButton("Outbow", new DialogInterface.OnClickListener() {
+                                                      @Override
+                                                      public void onClick(DialogInterface dialogInterface, int i) {
+                                                          System.out.println("Pilihan Tidak");
+                                                          int intalasi = Integer.parseInt(tempr1adayaI[posisi]) + (lamp * Integer.parseInt(tempr1adayaOB[posisi])
+                                                                  + (cont * Integer.parseInt(tempr1adayaSOB[posisi])));
+                                                          System.out.println("ins " + jumlah);
+
+                                                          t_bpPLN.setText(String.format(formatUang, kursIndo.format(Integer.parseInt(tempr1adayaBP[posisi]))));
+                                                          t_daya.setText("Biaya dengan daya " + strDayaBaru[posisi]);
+                                                          t_Instalasi.setText(String.format(formatUang, kursIndo.format(0)));
+                                                          t_gInstalasi.setText(String.format(formatUang, kursIndo.format(Integer.parseInt(tempr1adayaGI[posisi]))));
+                                                          t_Slo.setText(String.format(formatUang, kursIndo.format(Integer.parseInt(tempr1adayaSLO[posisi]))));
+                                                          t_Materai.setText(String.format(formatUang, kursIndo.format(Integer.parseInt(tempr1adayaM[posisi]))));
+
+                                                          jumlah = intalasi + Integer.parseInt(tempr1adayaBP[posisi]) +
+                                                                  Integer.parseInt(tempr1adayaGI[posisi]) +
+                                                                  Integer.parseInt(tempr1adayaSLO[posisi]) +
+                                                                  Integer.parseInt(tempr1adayaM[posisi]);
+                                                          String.format(formatUang, kursIndo.format(jumlah));
+                                                          System.out.println("ins " + jumlah);
+                                                          t_jumlahNow.setText(String.format(formatUang, kursIndo.format(jumlah)));
+
+                                                          if (tempr1adayaVou[posisi] != null) {
+//                                                  double voucher = jumlah * Double.parseDouble(tempr1adayaVou[posisi]);
+                                                              voucher = jumlah * 0.05;
+                                                              double hasil = jumlah - voucher;
+                                                              // System.out.println("gg " + gg);
+                                                              t_jumlah.setText(String.format(formatUang, kursIndo.format(hasil)));
+                                                              //t_jumlah.setText(String.valueOf(jumlah));
+                                                              // t_jumlah.setText(String.valueOf(Double.parseDouble(gg)));
+                                                              t_vou.setText(String.format(formatUang, kursIndo.format(voucher)));
+
+                                                          } else {
+
+                                                              t_jumlahNow.setText(String.format(formatUang, kursIndo.format(jumlah)));
+                                                              t_vou.setText(String.format(formatUang, kursIndo.format(voucher)));
+                                                              t_jumlah.setText(String.format(formatUang, kursIndo.format(jumlah)));
+                                                          }
+                                                          tampilBiaya.setVisibility(View.VISIBLE);
+                                                          System.out.println("Cek Pemasangan baru");
+                                                          dialogInterface.cancel();
+                                                      }
+                                                  });
+                                                  AlertDialog alertDialog = alBuilder.create();
+                                                  alertDialog.show();
+                                              } else if (alihPilPaket == 3) {
+                                                  int intalasi = Integer.parseInt(tempr1adayaI[posisi]);
+                                                  System.out.println("ins " + jumlah);
+
+                                                  t_bpPLN.setText(String.format(formatUang, kursIndo.format(intalasi)));
+                                                  t_daya.setText("Biaya dengan daya " + strDayaBaru[posisi]);
+                                                  t_Instalasi.setText(String.format(formatUang, kursIndo.format(Integer.parseInt(tempr1adayaI[posisi]))));
+                                                  t_gInstalasi.setText(String.format(formatUang, kursIndo.format(Integer.parseInt(tempr1adayaGI[posisi]))));
+                                                  t_Slo.setText(String.format(formatUang, kursIndo.format(Integer.parseInt(tempr1adayaSLO[posisi]))));
+                                                  t_Materai.setText(String.format(formatUang, kursIndo.format(Integer.parseInt(tempr1adayaM[posisi]))));
+
+                                                  jumlah = intalasi + Integer.parseInt(tempr1adayaBP[posisi]) +
+                                                          Integer.parseInt(tempr1adayaGI[posisi]) +
+                                                          Integer.parseInt(tempr1adayaSLO[posisi]) +
+                                                          Integer.parseInt(tempr1adayaM[posisi]);
+                                                  String.format(formatUang, kursIndo.format(jumlah));
+                                                  System.out.println("ins " + jumlah);
+                                                  t_jumlahNow.setText(String.format(formatUang, kursIndo.format(jumlah)));
+
+                                                  if (tempr1adayaVou[posisi] != null) {
+//                                                  double voucher = jumlah * Double.parseDouble(tempr1adayaVou[posisi]);
+                                                      voucher = jumlah * 0.05;
+                                                      double hasil = jumlah - voucher;
+                                                      // System.out.println("gg " + gg);
+                                                      t_jumlah.setText(String.format(formatUang, kursIndo.format(hasil)));
+                                                      //t_jumlah.setText(String.valueOf(jumlah));
+                                                      // t_jumlah.setText(String.valueOf(Double.parseDouble(gg)));
+                                                      t_vou.setText(String.format(formatUang, kursIndo.format(voucher)));
+
+                                                  } else {
+
+                                                      t_jumlahNow.setText(String.format(formatUang, kursIndo.format(jumlah)));
+                                                      t_vou.setText(String.format(formatUang, kursIndo.format(voucher)));
+                                                      t_jumlah.setText(String.format(formatUang, kursIndo.format(jumlah)));
+                                                  }
+                                                  tampilBiaya.setVisibility(View.VISIBLE);
+                                              }
+
+
+                                          }
+
+                                          @Override
+                                          public void onCancelled(DatabaseError databaseError) {
+
+                                          }
+
+                                      }
+                );
+        scroll.post(new Runnable() {
+            @Override
+            public void run() {
+                scroll.fullScroll(ScrollView.FOCUS_DOWN);
+            }
+        });
 
     }
 
-    public void btPesanPasangBaru(View view) {
+    public void btPesanPasangBaru(final View view) {
         lat = String.valueOf(mMap.getMyLocation().getLatitude());
         lng = String.valueOf(mMap.getMyLocation().getLongitude());
         System.out.println("Alamatbt " + addresses);
         System.out.println("latitude " + lat);
         System.out.println("longitude " + lng);
         //     harga.setText("Besar daya " + pilihan[posisi] + " seharga " + hargaBaru[posisi]);
-        AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
-        alBuilder.setTitle("Pemesanan");
-        //  alBuilder.setIcon(R.drawable.ic_clear_black_24dp);
-        alBuilder.setMessage("Anda yakin pesan pasang baru dengan besar daya " + strDayaBaru[posisi]).setCancelable(false)
-                .setPositiveButton("ya", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        System.out.println("Pilihan Ya");
+//        SafetyNet.getClient(PemasanganBaru.this).verifyWithRecaptcha(SITE_KEY)
+//                .addOnSuccessListener((Executor) PemasanganBaru.this,
+//                        new OnSuccessListener<SafetyNetApi.RecaptchaTokenResponse>() {
+//                            @Override
+//                            public void onSuccess(SafetyNetApi.RecaptchaTokenResponse response) {
+//                                // Indicates communication with reCAPTCHA service was
+//                                // successful.
+//                                userResponseToken = response.getTokenResult();
+//                                if (!userResponseToken.isEmpty()) {
+//                                    // Validate the user response token using the
+//                                    // reCAPTCHA siteverify API.
+//                                    sendRequest();
+//
+//                                }
+//                            }
+//                        })
+//                .addOnFailureListener((Executor) PemasanganBaru.this, new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        if (e instanceof ApiException) {
+//                            // An error occurred when communicating with the
+//                            // reCAPTCHA service. Refer to the status code to
+//                            // handle the error appropriately.
+//                            ApiException apiException = (ApiException) e;
+//                            int statusCode = apiException.getStatusCode();
+//                            Toast.makeText(PemasanganBaru.this, "Error\n " + getStatusCodeString(statusCode), Toast.LENGTH_SHORT).show();
+//
+//                        } else {
+//                            // A different, unknown type of error occurred.
+//                            Toast.makeText(PemasanganBaru.this, "Error\n " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//
+//                            //                 Log.d(TAG, "Error: " + e.getMessage());
+//                        }
+//                    }
+//                });
 
-                        userId = userId + 1;
-                        //       sendNotication();
-                        saveDatabase(userId);
-                        //   PemasanganBaru.this.finish();
-                        System.out.println("Cek Pmasangan baru");
-                    }
-                }).setNegativeButton("tidak", new DialogInterface.OnClickListener() {
+//        AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
+//        alBuilder.setTitle("Pemesanan");
+//        //  alBuilder.setIcon(R.drawable.ic_clear_black_24dp);
+//        alBuilder.setMessage("Anda yakin pesan pasang baru dengan besar daya " + strDayaBaru[posisi]).setCancelable(false)
+//                .setPositiveButton("ya", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        System.out.println("Pilihan Ya");
+//
+//                        userId = userId + 1;
+//                        SafetyNet.getClient(PemasanganBaru.this).verifyWithRecaptcha(SITE_KEY)
+//                                .addOnSuccessListener((Executor) PemasanganBaru.this,
+//                                        new OnSuccessListener<SafetyNetApi.RecaptchaTokenResponse>() {
+//                                            @Override
+//                                            public void onSuccess(SafetyNetApi.RecaptchaTokenResponse response) {
+//                                                // Indicates communication with reCAPTCHA service was
+//                                                // successful.
+//                                                String userResponseToken = response.getTokenResult();
+//                                                if (!userResponseToken.isEmpty()) {
+//                                                    // Validate the user response token using the
+//                                                    // reCAPTCHA siteverify API.
+//                                                }
+//                                            }
+//                                        })
+//                                .addOnFailureListener((Executor) PemasanganBaru.this, new OnFailureListener() {
+//                                    @Override
+//                                    public void onFailure(@NonNull Exception e) {
+//                                        if (e instanceof ApiException) {
+//                                            // An error occurred when communicating with the
+//                                            // reCAPTCHA service. Refer to the status code to
+//                                            // handle the error appropriately.
+//                                            ApiException apiException = (ApiException) e;
+//                                            int statusCode = apiException.getStatusCode();
+//                                            Toast.makeText(PemasanganBaru.this, "Error\n " + getStatusCodeString(statusCode), Toast.LENGTH_SHORT).show();
+//
+//                                        } else {
+//                                            // A different, unknown type of error occurred.
+//                                            Toast.makeText(PemasanganBaru.this, "Error\n " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//
+//                                            //                 Log.d(TAG, "Error: " + e.getMessage());
+//                                        }
+//                                    }
+//                                });
+//
+//                        //       sendNotication();
+//                        saveDatabase(userId);
+//                        //   PemasanganBaru.this.finish();
+//                        System.out.println("Cek Pmasangan baru");
+//                    }
+//                }).setNegativeButton("tidak", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                System.out.println("Pilihan Tidak");
+//
+//                dialogInterface.cancel();
+//            }
+//        });
+//        AlertDialog alertDialog = alBuilder.create();
+//        alertDialog.show();
+    }
+
+    private void sendRequest() {
+        String URL_VERIFY_ON_SERVER = "https://developers.google.com/recaptcha/docs/verify";
+        StringRequest strReq = new StringRequest(Request.Method.POST,
+                URL_VERIFY_ON_SERVER, new Response.Listener<String>() {
+
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                System.out.println("Pilihan Tidak");
+            public void onResponse(String response) {
+                //        Log.d(TAG, response.toString());
 
-                dialogInterface.cancel();
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    boolean success = jsonObject.getBoolean("success");
+                    String message = jsonObject.getString("message");
+
+                    if (success) {
+                        // Congrats! captcha verified successfully on server
+                        // TODO - submit the feedback to your server
+
+//                        layoutFeedbackForm.setVisibility(View.GONE);
+//                        messageFeedbackDone.setVisibility(View.VISIBLE);
+                        saveDatabase(userId);
+                    } else {
+                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "Json Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+
             }
-        });
-        AlertDialog alertDialog = alBuilder.create();
-        alertDialog.show();
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("recaptcha-response", SECRET_KEY);
+                params.put("user-respon", userResponseToken);
+
+                return params;
+            }
+        };
+        MyApplication.getIntance(this).addToRequestQueue(strReq);
     }
 
     public void btUploadFile(View view) {
@@ -698,8 +990,8 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
         String str_nohp = nohp.getText().toString();
         String str_kelurahan = kelurahan.getText().toString();
         String str_nBangunan = noBangunan.getText().toString();
-        String fitting = fittingManual.getText().toString();
-        String sContact = sContactManual.getText().toString();
+        String fitting = String.valueOf(lamp);
+        String sContact = String.valueOf(cont);
 
         // String str_id = pemesanan.push().getKey();
         timesmap = ServerValue.TIMESTAMP;
@@ -791,12 +1083,12 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
                     tanpaInstalasi.setVisibility(LinearLayout.GONE);
                     denganInstakasi.setVisibility(LinearLayout.VISIBLE);
 //                    rb1.setChecked(true);
-                    tanpaInstalasi.setVisibility(LinearLayout.VISIBLE);
+                    //                   tanpaInstalasi.setVisibility(LinearLayout.VISIBLE);
                     manual.setVisibility(LinearLayout.GONE);
                     paket.setVisibility(LinearLayout.GONE);
                     //  pildaya.setVisibility(LinearLayout.VISIBLE);
-
-
+                    //Toast.makeText(PemasanganBaru.this, "Pilih button cek manual apa paket", Toast.LENGTH_SHORT);
+                    tampilBiaya.setVisibility(View.GONE);
                 }
                 break;
             case R.id.tpInstalasi:
@@ -806,79 +1098,8 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
                     denganInstakasi.setVisibility(LinearLayout.GONE);
                     tanpaInstalasi.setVisibility(LinearLayout.VISIBLE);
                     //    pildaya.setVisibility(LinearLayout.VISIBLE);
-
-                    strWilayah = new String[]{
-                            "Pilih Wilayah",
-                            "Kalimantan Selatan dan Tengah",
-
-                    };
-                    sWilayah.setItems(strWilayah);
-                    sWilayah.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
-
-                        @Override
-                        public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                            switch (position) {
-                                case 0:
-                                    System.out.println("cek 1");
-                                    break;
-                                case 1:
-                                    System.out.println("cek 3");
-                                    wilayah.child("-L8RZ6tzs-N_R2LTlzom")
-                                            .child("cabang").addValueEventListener(new ValueEventListener() {
-
-                                                                                       @Override
-                                                                                       public void onDataChange(DataSnapshot dataSnapshot) {
-                                                                                           System.out.println("OnData Change");
-                                                                                           //           ambilDataList.clear();
-                                                                                           int i = 0;
-                                                                                           for (DataSnapshot pesanSnpshot : dataSnapshot.getChildren()) {
-                                                                                               //                   pbAll.setVisibility(View.GONE);
-                                                                                               AmbilData ambilData = pesanSnpshot.getValue(AmbilData.class);
-                                                                                               //  ambilDataList.add(ambilData);
-                                                                                               tempc[i] = ambilData.getStr_Cabang();
-                                                                                               //   tempId[i] = ambilData.getId();
-                                                                                               System.out.println("NO " + i + 1 + "Ambil Data " + ambilData);
-                                                                                               System.out.println("" + ambilData.getStr_Cabang());
-                                                                                               //  listView.setAdapter(ambilData.getId());
-                                                                                               i++;
-
-
-                                                                                           }
-
-                                                                                           coba = tempc.length;
-                                                                                           System.out.println("cabang " + coba + tempc[1]);
-//                                                                                                            adapter = new Arraylist(DaftarAplikasi.this, ambilDataList);
-//                                                                                                            listView.setAdapter(adapter);
-
-                                                                                           System.out.println("sss " + tempc[0] + tempc[1]);
-                                                                                           spinnerCabang();
-                                                                                       }
-
-                                                                                       @Override
-                                                                                       public void onCancelled(DatabaseError databaseError) {
-
-                                                                                       }
-
-                                                                                   }
-                                    );
-
-                                    break;
-                                case 2:
-                                    System.out.println("cek 4");
-                                    Snackbar.make(view, "Segera", Snackbar.LENGTH_LONG).show();
-                                    break;
-                            }
-
-
-                        }
-                    });
-                    sWilayah.setOnNothingSelectedListener(new MaterialSpinner.OnNothingSelectedListener() {
-
-                        @Override
-                        public void onNothingSelected(MaterialSpinner spinner) {
-                            Snackbar.make(spinner, "Belum di pilih", Snackbar.LENGTH_LONG).show();
-                        }
-                    });
+                    alihPilPaket = 3;
+                    tampilBiaya.setVisibility(View.GONE);
                 }
                 break;
         }
@@ -892,7 +1113,10 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
                     manual.setVisibility(LinearLayout.GONE);
                     paket.setVisibility(LinearLayout.VISIBLE);
                     rb1.setChecked(false);
-
+//                    lamp = 3;
+//                    cont = 1;
+                    alihPilPaket = 1;
+                    tampilBiaya.setVisibility(View.GONE);
                 }
                 break;
             case R.id.pilihanManual:
@@ -900,7 +1124,164 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
                     paket.setVisibility(LinearLayout.GONE);
                     manual.setVisibility(LinearLayout.VISIBLE);
                     rb2.setChecked(false);
+                    alihPilPaket = 2;
+                    tampilBiaya.setVisibility(View.GONE);
+                    strLamp = new String[]{
+                            "Pilih banyak titik lampu",
+                            "1 titik lampu",
+                            "2 titik lampu",
+                            "3 titik lampu",
+                            "4 titik lampu",
+                            "5 titik lampu",
+                            "6 titik lampu",
+                            "7 titik lampu",
+                            "8 titik lampu",
+                            "9 titik lampu",
+                            "10 titik lampu",
+                            "Lain-lain",
 
+                    };
+                    sLamp.setItems(strLamp);
+                    sLamp.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+
+                        @Override
+                        public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                            switch (position) {
+                                case 0:
+                                    System.out.println("cek 1");
+                                    break;
+                                case 1:
+                                    System.out.println("cek 2");
+                                    lamp = 1;
+                                    break;
+                                case 2:
+                                    System.out.println("cek 3");
+                                    lamp = 2;
+                                    break;
+                                case 3:
+                                    System.out.println("cek 4");
+                                    lamp = 3;
+                                    break;
+                                case 4:
+                                    System.out.println("cek 5");
+                                    lamp = 4;
+                                    break;
+                                case 6:
+                                    System.out.println("cek 6");
+                                    lamp = 6;
+                                    break;
+                                case 7:
+                                    System.out.println("cek 6");
+                                    lamp = 7;
+                                    break;
+                                case 8:
+                                    System.out.println("cek 6");
+                                    lamp = 8;
+                                    break;
+                                case 9:
+                                    System.out.println("cek 6");
+                                    lamp = 9;
+                                    break;
+                                case 10:
+                                    System.out.println("cek 6");
+                                    lamp = 10;
+                                    break;
+                                case 11:
+                                    System.out.println("cek 6");
+                                    lampLin.setVisibility(View.VISIBLE);
+                                    contLin.setVisibility(View.GONE);
+                                    lamp = Integer.parseInt(fittingManual.getText().toString());
+                                    break;
+                            }
+
+
+                        }
+                    });
+                    sLamp.setOnNothingSelectedListener(new MaterialSpinner.OnNothingSelectedListener() {
+
+                        @Override
+                        public void onNothingSelected(MaterialSpinner spinner) {
+                            Snackbar.make(spinner, "Belum di pilih", Snackbar.LENGTH_LONG).show();
+                        }
+                    });
+                    strCont = new String[]{
+                            "Pilih banyak titik stop kontak",
+                            "1 titik stop kontak",
+                            "2 titik stop kontak",
+                            "3 titik stop kontak",
+                            "4 titik stop kontak",
+                            "5 titik stop kontak",
+                            "6 titik stop kontak",
+                            "7 titik stop kontak",
+                            "8 titik stop kontak",
+                            "9 titik stop kontak",
+                            "10 titik stop kontak",
+                            "Lain-lain",
+
+                    };
+                    sCont.setItems(strCont);
+                    sCont.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+
+                        @Override
+                        public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                            switch (position) {
+                                case 0:
+                                    System.out.println("cek 1");
+                                    break;
+                                case 1:
+                                    System.out.println("cek 2");
+                                    cont = 1;
+                                    break;
+                                case 2:
+                                    System.out.println("cek 3");
+                                    cont = 2;
+                                    break;
+                                case 3:
+                                    System.out.println("cek 4");
+                                    cont = 3;
+                                    break;
+                                case 4:
+                                    System.out.println("cek 5");
+                                    cont = 4;
+                                    break;
+                                case 6:
+                                    System.out.println("cek 6");
+                                    cont = 6;
+                                    break;
+                                case 7:
+                                    System.out.println("cek 6");
+                                    cont = 7;
+                                    break;
+                                case 8:
+                                    System.out.println("cek 6");
+                                    cont = 8;
+                                    break;
+                                case 9:
+                                    System.out.println("cek 6");
+                                    cont = 9;
+                                    break;
+                                case 10:
+                                    System.out.println("cek 6");
+                                    cont = 10;
+                                    break;
+                                case 11:
+                                    System.out.println("cek 6");
+                                    contLin.setVisibility(View.VISIBLE);
+                                    lampLin.setVisibility(View.GONE);
+                                    cont = Integer.parseInt(sContactManual.getText().toString());
+                                    break;
+                            }
+
+
+                        }
+                    });
+                    sLamp.setOnNothingSelectedListener(new MaterialSpinner.OnNothingSelectedListener() {
+
+                        @Override
+                        public void onNothingSelected(MaterialSpinner spinner) {
+                            Snackbar.make(spinner, "Belum di pilih", Snackbar.LENGTH_LONG).show();
+                        }
+                    });
                 }
                 break;
         }
@@ -924,14 +1305,12 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
             strCabang = new String[]{
                     "Pilih Cabang",
                     tempc[0], tempc[1], tempc[2], tempc[3],
-                    "Tambah",
 
             };
         } else if (coba == 5) {
             strCabang = new String[]{
                     "Pilih Cabang",
                     tempc[0], tempc[1], tempc[2], tempc[3], tempc[4],
-                    "Tambah",
 
             };
         }
@@ -1582,7 +1961,6 @@ public class PemasanganBaru extends FragmentActivity implements OnMapReadyCallba
         });
 
         strDayaBaru = new String[]{
-                "Pilih Daya",
                 "450 VA",
                 "900 VA",
                 "1300 VA",
